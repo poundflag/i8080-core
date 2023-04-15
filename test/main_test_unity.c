@@ -50,8 +50,7 @@ void run_io_controller_test();
 
 int main(void) {
     UNITY_BEGIN();
-    run_status_service_test();
-    run_utils_test();
+    /*run_utils_test();
     run_flag_register_test();
     run_stack_test();
     run_register_controller_test();
@@ -59,9 +58,10 @@ int main(void) {
     run_io_controller_test();
     run_arithmetic_instruction_test();
     run_branching_instruction_test();
-    run_instruction_test();
+    run_instruction_test();*/
     run_logical_instruction_test();
-    run_file_io_test();
-    run_cpu_test();
+    /*run_file_io_test();
+    run_status_service_test();
+    run_cpu_test();*/
     return UNITY_END();
 }

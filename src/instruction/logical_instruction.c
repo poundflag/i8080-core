@@ -1,4 +1,5 @@
 #include "instruction/logical_instruction.h"
+#include "bus_controller.h"
 #include "instruction/instruction.h"
 #include "io/io_controller.h"
 #include "memory/memory_controller.h"
@@ -33,6 +34,31 @@ void read_memory_address(int machine_cycle, uint16_t *temporary_address) {
                         "logical instruction\n");
         break;
     }
+    set_data_bus(read_from_memory(get_program_counter()));
+}
+
+// Writes a memory address and then sets the program counter to it
+void write_memory_address(int machine_cycle, uint16_t *temporary_address) {
+    switch (machine_cycle) {
+    case 0:
+        increment_program_counter();
+        *temporary_address = read_from_memory(get_program_counter());
+        set_data_bus(read_from_memory(get_program_counter()));
+        break;
+    case 1:
+        increment_program_counter();
+        *temporary_address |= read_from_memory(get_program_counter()) << 8;
+        set_data_bus(read_from_memory(get_program_counter()));
+        break;
+    case 2:
+        swap_program_counter_and_value(temporary_address);
+        set_data_bus(0xFF);
+        break;
+    default:
+        fprintf(stderr, "Wrong machine cycle when reading memory address in "
+                        "logical instruction\n");
+        break;
+    }
 }
 
 bool mov(Register destination, Register source) {
@@ -59,10 +85,12 @@ bool lxi(Register_Pair destination, int machine_cycle) {
     switch (machine_cycle) {
     case 0:
         increment_program_counter();
+        set_data_bus(read_from_memory(get_program_counter()));
         break;
     case 1:
         set_register_pair(destination, read_from_memory(get_program_counter()));
         increment_program_counter();
+        set_data_bus(read_from_memory(get_program_counter()));
         break;
     case 2:
         set_register_pair(destination, (read_from_memory(get_program_counter()) << 8) | get_register_pair(destination));
@@ -96,18 +124,19 @@ bool sta(int machine_cycle, uint16_t *temporary_address) {
     switch (machine_cycle) {
     case 0:
     case 1:
-        read_memory_address(machine_cycle, temporary_address);
+        write_memory_address(machine_cycle, temporary_address);
         break;
     case 2:
         set_memory_read(false);
         set_write_output(true);
-        read_memory_address(machine_cycle, temporary_address);
+        write_memory_address(machine_cycle, temporary_address);
         break;
     case 3:
         set_memory_read(true);
         set_write_output(false);
         write_to_memory(get_program_counter(), get_register(REG_A));
         swap_program_counter_and_value(temporary_address);
+        set_data_bus(read_from_memory(get_program_counter()));
         return true;
     default:
         print_error_invalid_cycle("STA");
@@ -126,10 +155,12 @@ bool lhld(int machine_cycle, uint16_t *temporary_address) {
     case 3:
         set_register(REG_L, read_from_memory(get_program_counter()));
         increment_program_counter();
+        set_data_bus(read_from_memory(get_program_counter()));
         break;
     case 4:
         set_register(REG_H, read_from_memory(get_program_counter()));
         swap_program_counter_and_value(temporary_address);
+        set_data_bus(read_from_memory(get_program_counter()));
         return true;
     default:
         print_error_invalid_cycle("LHLD");
@@ -142,12 +173,12 @@ bool shld(int machine_cycle, uint16_t *temporary_address) {
     switch (machine_cycle) {
     case 0:
     case 1:
-        read_memory_address(machine_cycle, temporary_address);
+        write_memory_address(machine_cycle, temporary_address);
         break;
     case 2:
         set_memory_read(false);
         set_write_output(true);
-        read_memory_address(machine_cycle, temporary_address);
+        write_memory_address(machine_cycle, temporary_address);
         break;
     case 3:
         write_to_memory(get_program_counter(), get_register(REG_L));
@@ -158,6 +189,7 @@ bool shld(int machine_cycle, uint16_t *temporary_address) {
         set_write_output(false);
         write_to_memory(get_program_counter(), get_register(REG_H));
         swap_program_counter_and_value(temporary_address);
+        set_data_bus(read_from_memory(get_program_counter()));
         return true;
     default:
         print_error_invalid_cycle("SHLD");
@@ -171,10 +203,12 @@ bool ldax(Register_Pair indirect_pair, int machine_cycle, uint16_t *temporary_ad
     case 0:
         *temporary_address = get_register_pair(indirect_pair);
         swap_program_counter_and_value(temporary_address);
+        set_data_bus(read_from_memory(get_program_counter()));
         break;
     case 1:
         set_register(REG_A, read_from_memory(get_program_counter()));
         swap_program_counter_and_value(temporary_address);
+        set_data_bus(read_from_memory(get_program_counter()));
         return true;
     default:
         print_error_invalid_cycle("LDAX");
@@ -190,12 +224,14 @@ bool stax(Register_Pair indirect_pair, int machine_cycle, uint16_t *temporary_ad
         set_write_output(true);
         *temporary_address = get_register_pair(indirect_pair);
         swap_program_counter_and_value(temporary_address);
+        set_data_bus(0xFF);
         break;
     case 1:
         set_memory_read(true);
         set_write_output(false);
         write_to_memory(get_program_counter(), get_register(REG_A));
         swap_program_counter_and_value(temporary_address);
+        set_data_bus(read_from_memory(get_program_counter()));
         return true;
     default:
         print_error_invalid_cycle("STAX");
@@ -225,9 +261,11 @@ bool push(Register_Pair register_pair, int machine_cycle, uint16_t *temporary_ad
         set_write_output(true);
         *temporary_address = get_program_counter();
         set_program_counter(get_stack_pointer() - 1);
+        set_data_bus(0xFF);
         break;
     case 1:
         set_program_counter(get_program_counter() - 1);
+        set_data_bus(0xFF);
         break;
     case 2:
         set_stack_access(false);
@@ -235,6 +273,7 @@ bool push(Register_Pair register_pair, int machine_cycle, uint16_t *temporary_ad
         set_write_output(false);
         set_program_counter(*temporary_address);
         push_word(get_register_pair(register_pair));
+        set_data_bus(read_from_memory(get_program_counter()));
         return true;
     default:
         break;
@@ -313,7 +352,8 @@ bool out(uint8_t machine_cycle) {
     return false;
 }
 
-bool hlt() { 
+bool hlt() {
     // TODO MODIFY LIGHTS
     set_system_halt(true);
-    return true; }
+    return true;
+}
