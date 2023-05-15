@@ -1,19 +1,21 @@
 #include <check.h>
 #include <stdlib.h>
 
-Suite* suite(void);
+Suite* sample_suite(void);
+Suite* memory_controller_suite(void);
 
 int main(void) {
     int number_failed;
-    Suite* test_suite;
-    SRunner* runner;
+    SRunner* test_runner;
 
-    test_suite = suite();
-    runner = srunner_create(test_suite);
+    // Include the suites
+    test_runner = srunner_create(memory_controller_suite());
+    // srunner_add_suite(test_runner, memory_controller_suite());
 
-    srunner_run_all(runner, CK_NORMAL);
-    number_failed = srunner_ntests_failed(runner);
-    srunner_free(runner);
+    // Run tests
+    srunner_run_all(test_runner, CK_NORMAL);
+    number_failed = srunner_ntests_failed(test_runner);
+    srunner_free(test_runner);
 
     return number_failed == 0 ? EXIT_SUCCESS : EXIT_FAILURE;
 }

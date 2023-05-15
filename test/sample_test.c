@@ -1,14 +1,12 @@
 #include <check.h>
 
-START_TEST(test_addition)
-{
+START_TEST(test_addition) {
     int result = 1 + 1;
     ck_assert_int_eq(result, 2);
 }
 END_TEST
 
-Suite* suite(void)
-{
+Suite* sample_suite(void) {
     Suite* suite;
     TCase* test_case;
 
