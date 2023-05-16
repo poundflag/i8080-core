@@ -1,32 +1,33 @@
 #include <check.h>
-#include "../../src/memory/memory_controller.h"
+#include "../../src/instruction/instruction.h"
 
-START_TEST(read_from_address_and_return_zero) {
-    ck_assert_int_eq(read(1), 0);
+START_TEST(getDestinationIndex_returns_the_valid_index) {
+    ck_assert_int_eq(getDestinationIndex(0x40), 0);
+    ck_assert_int_eq(getDestinationIndex(0x47), 0);
 }
 END_TEST
 
-START_TEST(write_a_value_to_memory) {
-    write(1, 10);
-    ck_assert_int_eq(read(1), 10);
+START_TEST(getSourceIndex_returns_the_valid_index) {
+    ck_assert_int_eq(getSourceIndex(0x0), 0);
 }
 END_TEST
 
 #define TEST_CASE_SIZE 100
 
-Suite* memory_controller_suite(void) {
+Suite* instruction_suite(void) {
     Suite* suite;
 
-    suite = suite_create("Memory Controller");
+    suite = suite_create("Instruction");
 
     char* test_names[TEST_CASE_SIZE] = {
-        "Read from address and return zero",
-        "Write a value to memory",
+        "getDestinationIndex returns the valid index",
+        "getSourceIndex returns the valid index"
     };
 
     const TTest* test_functions[TEST_CASE_SIZE] = {
-        read_from_address_and_return_zero,
-        write_a_value_to_memory,
+        getDestinationIndex_returns_the_valid_index,
+        getSourceIndex_returns_the_valid_index
+
     };
 
     for (int i = 0; i < TEST_CASE_SIZE; i++) {

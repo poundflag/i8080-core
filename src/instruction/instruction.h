@@ -4,5 +4,7 @@
 #define _INSTRUCTION_H_
 
 void decode_execute_instruction(uint8_t opcode);
+uint8_t getDestinationIndex(uint8_t opcode);
+uint8_t getSourceIndex(uint8_t opcode);
 
 #endif //_INSTRUCTION_H_
