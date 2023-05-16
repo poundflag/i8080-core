@@ -1,5 +1,8 @@
 #include <check.h>
 #include "../../src/instruction/logical_instruction.h"
+#include "../../src/instruction/instruction.h"
+#include "../../src/register/register_controller.h"
+#include "../../src/memory/memory_controller.h"
 
 START_TEST(mov_value) {
     uint8_t source = 10;
@@ -12,12 +15,23 @@ START_TEST(mov_value) {
 END_TEST
 
 START_TEST(mvi_value) {
-    /*uint8_t source = 10;
     uint8_t destination = 0;
-    mov(&destination, source);
+    machine_cycle = 0;
+    set_program_counter(0);
+    write(1, 50);
 
-    ck_assert_int_eq(destination, source);
-    ck_assert_int_eq(destination, 10);*/
+    mvi(&destination);
+    ck_assert_int_eq(get_program_counter(), 1);
+    machine_cycle++;
+
+    mvi(&destination);
+    ck_assert_int_eq(destination, 50);
+    ck_assert_int_eq(destination, read(1));
+    machine_cycle++;
+
+    mvi(&destination);
+    ck_assert_int_eq(get_program_counter(), 2);
+    ck_assert_int_eq(machine_cycle, 0);
 }
 END_TEST
 

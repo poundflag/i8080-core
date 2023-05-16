@@ -2,19 +2,47 @@
 #include "../../src/register/register_controller.h"
 
 START_TEST(get_a_register_and_have_the_default_value) {
-    ck_assert_int_eq(register_array[A], 0);
+    ck_assert_int_eq(get_register(REG_A), 0);
 }
 END_TEST
 
 START_TEST(set_a_register_with_an_8_bit_value) {
-    register_array[A] = 15;
-    ck_assert_int_eq(register_array[A], 15);
+    set_register(REG_A, 15);
+    ck_assert_int_eq(get_register(REG_A), 15);
 }
 END_TEST
 
 START_TEST(set_a_register_with_an_16_bit_value) {
-    register_array[A] = 0xFFA;
-    ck_assert_int_eq(register_array[A], 0xFA);
+    set_register(REG_A, 0xFFA);
+    ck_assert_int_eq(get_register(REG_A), 0xFA);
+}
+END_TEST
+
+START_TEST(get_a_register_pair_and_have_the_default_value) {
+    ck_assert_int_eq(get_register_pair(PAIR_B), 0);
+}
+END_TEST
+
+START_TEST(set_a_register_pair) {
+    set_register_pair(PAIR_D, 0x1234);
+    ck_assert_int_eq(get_register_pair(PAIR_D), 0x1234);
+}
+END_TEST
+
+START_TEST(get_a_program_counter_and_have_the_default_value) {
+    ck_assert_int_eq(get_program_counter(), 0);
+}
+END_TEST
+
+START_TEST(set_the_program_counter) {
+    set_program_counter(10);
+    ck_assert_int_eq(get_program_counter(), 10);
+}
+END_TEST
+
+START_TEST(increment_the_program_counter) {
+    increment_program_counter();
+    ck_assert_int_eq(get_program_counter(), 1);
 }
 END_TEST
 
@@ -28,13 +56,23 @@ Suite* register_controller_suite(void) {
     char* test_names[TEST_CASE_SIZE] = {
         "get_a_register_and_have_the_default_value",
         "set_a_register_with_an_8_bit_value",
-        "set_a_register_with_an_16_bit_value"
+        "set_a_register_with_an_16_bit_value",
+        "get_a_register_pair_and_have_the_default_value",
+        "set_a_register_pair",
+        "get_a_program_counter_and_have_the_default_value",
+        "set_the_program_counter",
+        "increment_the_program_counter"
     };
 
     const TTest* test_functions[TEST_CASE_SIZE] = {
         get_a_register_and_have_the_default_value,
         set_a_register_with_an_8_bit_value,
-        set_a_register_with_an_16_bit_value
+        set_a_register_with_an_16_bit_value,
+        get_a_register_pair_and_have_the_default_value,
+        set_a_register_pair,
+        get_a_program_counter_and_have_the_default_value,
+        set_the_program_counter,
+        increment_the_program_counter
     };
 
     for (int i = 0; i < TEST_CASE_SIZE; i++) {
