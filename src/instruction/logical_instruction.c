@@ -99,3 +99,106 @@ bool sta(int machine_cycle, uint16_t* temporary_address) {
     }
     return false;
 }
+
+bool lhld(int machine_cycle, uint16_t* temporary_address) {
+    switch (machine_cycle) {
+    case 0:
+        increment_program_counter();
+        *temporary_address = read(get_program_counter());
+        break;
+    case 1:
+        increment_program_counter();
+        *temporary_address |= read(get_program_counter()) << 8;
+        break;
+    case 2:
+        uint16_t program_counter_value = get_program_counter();
+        set_program_counter(*temporary_address);
+        *temporary_address = program_counter_value;
+        break;
+    case 3:
+        set_register(REG_L, read(get_program_counter()));
+        increment_program_counter();
+        break;
+    case 4:
+        set_register(REG_H, read(get_program_counter()));
+        set_program_counter(*temporary_address);
+        return true;
+    default:
+        print_error_invalid_cycle("LHLD");
+        break;
+    }
+    return false;
+}
+
+bool shld(int machine_cycle, uint16_t* temporary_address) {
+    switch (machine_cycle) {
+    case 0:
+        increment_program_counter();
+        *temporary_address = read(get_program_counter());
+        break;
+    case 1:
+        increment_program_counter();
+        *temporary_address |= read(get_program_counter()) << 8;
+        break;
+    case 2:
+        uint16_t program_counter_value = get_program_counter();
+        set_program_counter(*temporary_address);
+        *temporary_address = program_counter_value;
+        break;
+    case 3:
+        write(get_program_counter(), get_register(REG_L));
+        increment_program_counter();
+        break;
+    case 4:
+        write(get_program_counter(), get_register(REG_H));
+        set_program_counter(*temporary_address);
+        return true;
+    default:
+        print_error_invalid_cycle("SHLD");
+        break;
+    }
+    return false;
+}
+
+bool ldax(Register_Pair indirect_pair, int machine_cycle, uint16_t* temporary_address) {
+    switch (machine_cycle) {
+    case 0:
+        uint16_t program_counter_value = get_program_counter();
+        set_program_counter(get_register_pair(indirect_pair));
+        *temporary_address = program_counter_value;
+        break;
+    case 1:
+        set_register(REG_A, read(get_program_counter()));
+        set_program_counter(*temporary_address);
+        return true;
+    default:
+        print_error_invalid_cycle("LDAX");
+        break;
+    }
+    return false;
+}
+
+bool stax(Register_Pair indirect_pair, int machine_cycle, uint16_t* temporary_address) {
+    switch (machine_cycle) {
+    case 0:
+        uint16_t program_counter_value = get_program_counter();
+        set_program_counter(get_register_pair(indirect_pair));
+        *temporary_address = program_counter_value;
+        break;
+    case 1:
+        write(get_program_counter(), get_register(REG_A));
+        set_program_counter(*temporary_address);
+        return true;
+    default:
+        print_error_invalid_cycle("STAX");
+        break;
+    }
+    return false;
+}
+
+bool xchg() {
+    uint16_t temp_value = get_register_pair(PAIR_D);
+    set_register_pair(PAIR_D, get_register_pair(PAIR_H));
+    set_register_pair(PAIR_H, temp_value);
+    return true;
+}
