@@ -23,10 +23,10 @@ typedef enum {
     PAIR_ENUM_SIZE
 } Register_Pair;
 
-uint8_t get_register(Register source);
-void set_register(Register source, uint8_t value);
-uint16_t get_register_pair(Register_Pair source);
-void set_register_pair(Register_Pair source, uint16_t value);
+uint8_t get_register(Register destination);
+void set_register(Register destination, uint8_t value);
+uint16_t get_register_pair(Register_Pair destination);
+void set_register_pair(Register_Pair destination, uint16_t value);
 uint16_t get_program_counter();
 void set_program_counter(uint16_t value);
 void increment_program_counter();

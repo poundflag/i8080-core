@@ -26,6 +26,8 @@ END_TEST
 START_TEST(set_a_register_pair) {
     set_register_pair(PAIR_D, 0x1234);
     ck_assert_int_eq(get_register_pair(PAIR_D), 0x1234);
+    ck_assert_int_eq(get_register(REG_D), 0x34);
+    ck_assert_int_eq(get_register(REG_E), 0x12);
 }
 END_TEST
 
