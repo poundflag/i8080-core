@@ -1,5 +1,6 @@
 CC = gcc
-TEST_ARGS = -lcheck
+ARGS = -Wall -Wextra
+TEST_ARGS = $(ARGS) -lcheck
 
 SRC_DIR = src
 TEST_DIR = test
@@ -19,7 +20,7 @@ all: $(EXECUTABLE)
 	$(EXECUTABLE)
 
 $(EXECUTABLE): $(SRC_FILES) $(HEADER_FILES)
-	$(CC) $(MAIN_FILE) $(SRC_FILES) $(HEADER_FILES) -o $(EXECUTABLE)
+	$(CC) $(ARGS) $(MAIN_FILE) $(SRC_FILES) $(HEADER_FILES) -o $(EXECUTABLE)
 
 test: $(TEST_EXECUTABLE)
 	$(TEST_EXECUTABLE)
