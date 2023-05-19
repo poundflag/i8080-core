@@ -282,6 +282,63 @@ START_TEST(dcx_test) {
 }
 END_TEST
 
+START_TEST(dad_test) {
+    set_register_pair(PAIR_B, 0x1234);
+    set_register_pair(PAIR_H, 0x1234);
+
+    bool result = dad(PAIR_B);
+    ck_assert_int_eq(get_register_pair(PAIR_H), 0x2468);
+    ck_assert_int_eq(result, true);
+}
+END_TEST
+
+START_TEST(dad_overflow) {
+    set_register_pair(PAIR_B, 0x4444);
+    set_register_pair(PAIR_H, 0xFFFF);
+
+    bool result = dad(PAIR_B);
+    ck_assert_int_eq(get_register_pair(PAIR_H), 0x4443);
+    ck_assert_int_eq((get_register(REG_F) & 1), 1);
+    ck_assert_int_eq(result, true);
+}
+END_TEST
+
+START_TEST(daa_test) {
+    bool result = daa();
+    ck_assert_int_eq(result, true);
+}
+END_TEST
+
+START_TEST(ana_test) {
+    bool result = ana(REG_B);
+    ck_assert_int_eq(result, true);
+}
+END_TEST
+
+START_TEST(ani_test) {
+    bool result = ani(0);
+    ck_assert_int_eq(result, true);
+}
+END_TEST
+
+START_TEST(ora_test) {
+    bool result = ora(REG_B);
+    ck_assert_int_eq(result, true);
+}
+END_TEST
+
+START_TEST(ori_test) {
+    bool result = ori(0);
+    ck_assert_int_eq(result, true);
+}
+END_TEST
+
+START_TEST(xra_test) {
+    bool result = xra(REG_B);
+    ck_assert_int_eq(result, true);
+}
+END_TEST
+
 #define TEST_CASE_SIZE 100
 
 Suite* arithmetic_instruction_suite(void) {
@@ -312,7 +369,15 @@ Suite* arithmetic_instruction_suite(void) {
         "DCR Auxiliary",
         "DCR Overflow",
         "INX",
-        "DCX"
+        "DCX",
+        "DAD",
+        "DAD Overflow",
+        "DAA",
+        "ANA",
+        "ANI",
+        "ORA",
+        "ORI",
+        "XRA"
     };
 
     const TTest* test_functions[TEST_CASE_SIZE] = {
@@ -338,7 +403,15 @@ Suite* arithmetic_instruction_suite(void) {
         dcr_test_1,
         dcr_overflow,
         inx_test,
-        dcx_test
+        dcx_test,
+        dad_test,
+        dad_overflow,
+        daa_test,
+        ana_test,
+        ani_test,
+        ora_test,
+        ori_test,
+        xra_test
     };
 
     for (int i = 0; i < TEST_CASE_SIZE; i++) {

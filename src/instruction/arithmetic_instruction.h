@@ -40,4 +40,28 @@ bool inx(Register_Pair source);
 // DCX RP    00RP1011          -       Decrement register pair
 bool dcx(Register_Pair source);
 
+// DAD RP    00RP1001          C       Add register pair to HL (16 bit add)
+bool dad(Register_Pair source);
+
+// DAA       00100111          ZSPCA   Decimal Adjust accumulator
+bool daa();
+
+// ANA S     10100SSS          ZSCPA   AND register with A
+bool ana(Register source);
+
+// ANI #     11100110 db       ZSPCA   AND immediate with A
+bool ani(int machine_cycle);
+
+// ORA S     10110SSS          ZSPCA   OR  register with A
+bool ora(Register source);
+
+// ORI #     11110110          ZSPCA   OR  immediate with A
+bool ori(int machine_cycle);
+
+// XRA S     10101SSS          ZSPCA   ExclusiveOR register with A
+bool xra(Register source);
+
+// XRI #     11101110 db       ZSPCA   ExclusiveOR immediate with A
+bool xri(int machine_cycle);
+
 #endif //_ARITHMETIC_INSTRUCTION_H_

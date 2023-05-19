@@ -147,3 +147,36 @@ bool dcx(Register_Pair source) {
     set_register_pair(source, get_register_pair(source) - 1);
     return true;
 }
+
+bool dad(Register_Pair source) {
+    uint16_t h_value = get_register_pair(PAIR_H);
+    uint16_t source_value = get_register_pair(source);
+    set_register_pair(PAIR_H, (h_value + source_value) & 0xFFFF);
+    bool carry = (h_value + source_value) > 0xFFFF;
+    set_register(REG_F, ((get_register(REG_F) >> 1) << 1) | carry);
+    return true;
+}
+
+bool daa() {
+    return false;
+}
+
+bool ana(Register source){
+    return false;
+}
+
+bool ani(int machine_cycle){
+    return false;
+}
+
+bool ora(Register source){
+    return false;
+}
+
+bool ori(int machine_cycle){
+    return false;
+}
+
+bool xra(Register source){
+    return false;
+}
