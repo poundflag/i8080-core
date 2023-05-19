@@ -186,6 +186,102 @@ START_TEST(sbb_carry) {
 }
 END_TEST
 
+START_TEST(sbi_no_carry) {
+    set_program_counter(0);
+    write(1, 1);
+    set_register(REG_A, 5);
+
+    bool result = sbi(false, 0);
+    ck_assert_int_eq(get_program_counter(), 1);
+
+    result = sbi(false, 1);
+    ck_assert_int_eq(get_program_counter(), 1);
+    ck_assert_int_eq(get_register(REG_A), 0x4);
+    ck_assert_int_eq(result, true);
+}
+END_TEST
+
+START_TEST(sbi_carry) {
+    set_program_counter(0);
+    write(1, 1);
+    set_register(REG_A, 5);
+
+    bool result = sbi(true, 0);
+    ck_assert_int_eq(get_program_counter(), 1);
+
+    result = sbi(true, 1);
+    ck_assert_int_eq(get_program_counter(), 1);
+    ck_assert_int_eq(get_register(REG_A), 0x3);
+    ck_assert_int_eq(result, true);
+}
+END_TEST
+
+START_TEST(inr_test) {
+    set_register(REG_B, 1);
+
+    bool result = inr(REG_B);
+    ck_assert_int_eq(get_register(REG_B), 2);
+    ck_assert_int_eq(result, true);
+}
+END_TEST
+
+START_TEST(inr_overflow) {
+    set_register(REG_B, 0xFF);
+
+    bool result = inr(REG_B);
+    ck_assert_int_eq(get_register(REG_B), 0);
+    ck_assert_int_eq(get_register(REG_F), 0b01010110);
+    ck_assert_int_eq(result, true);
+}
+END_TEST
+
+START_TEST(dcr_test) {
+    set_register(REG_B, 1);
+
+    bool result = dcr(REG_B);
+    ck_assert_int_eq(get_register(REG_B), 0);
+    ck_assert_int_eq(result, true);
+}
+END_TEST
+
+START_TEST(dcr_test_1) {
+    set_register(REG_B, 2);
+
+    bool result = dcr(REG_B);
+    ck_assert_int_eq(get_register(REG_B), 1);
+    ck_assert_int_eq(((get_register(REG_F) >> 4) & 1), 1);
+    ck_assert_int_eq(result, true);
+}
+END_TEST
+
+START_TEST(dcr_overflow) {
+    set_register(REG_B, 0);
+
+    bool result = dcr(REG_B);
+    ck_assert_int_eq(get_register(REG_B), 0xFF);
+    ck_assert_int_eq(get_register(REG_F), 0b10000110);
+    ck_assert_int_eq(result, true);
+}
+END_TEST
+
+START_TEST(inx_test) {
+    set_register_pair(PAIR_B, 0x44);
+
+    bool result = inx(PAIR_B);
+    ck_assert_int_eq(get_register_pair(PAIR_B), 0x45);
+    ck_assert_int_eq(result, true);
+}
+END_TEST
+
+START_TEST(dcx_test) {
+    set_register_pair(PAIR_B, 0x44);
+
+    bool result = dcx(PAIR_B);
+    ck_assert_int_eq(get_register_pair(PAIR_B), 0x43);
+    ck_assert_int_eq(result, true);
+}
+END_TEST
+
 #define TEST_CASE_SIZE 100
 
 Suite* arithmetic_instruction_suite(void) {
@@ -208,6 +304,15 @@ Suite* arithmetic_instruction_suite(void) {
         "SUI Overflow",
         "SBB No Carry",
         "SBB Carry",
+        "SBI No Carry",
+        "SBI Carry",
+        "INR",
+        "INR Overflow",
+        "DCR",
+        "DCR Auxiliary",
+        "DCR Overflow",
+        "INX",
+        "DCX"
     };
 
     const TTest* test_functions[TEST_CASE_SIZE] = {
@@ -224,7 +329,16 @@ Suite* arithmetic_instruction_suite(void) {
         sui_test,
         sui_overflow,
         sbb_no_carry,
-        sbb_carry
+        sbb_carry,
+        sbi_no_carry,
+        sbi_carry,
+        inr_test,
+        inr_overflow,
+        dcr_test,
+        dcr_test_1,
+        dcr_overflow,
+        inx_test,
+        dcx_test
     };
 
     for (int i = 0; i < TEST_CASE_SIZE; i++) {
