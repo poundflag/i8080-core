@@ -310,31 +310,70 @@ START_TEST(daa_test) {
 END_TEST
 
 START_TEST(ana_test) {
+    set_register(REG_A, 4);
+    set_register(REG_B, 6);
+
     bool result = ana(REG_B);
+    ck_assert_int_eq(get_register(REG_A), 4);
     ck_assert_int_eq(result, true);
 }
 END_TEST
 
 START_TEST(ani_test) {
+    set_register(REG_A, 4);
+    write(1, 6);
+
     bool result = ani(0);
+    ck_assert_int_eq(get_program_counter(), 1);
+
+    result = ani(1);
+    ck_assert_int_eq(get_register(REG_A), 4);
     ck_assert_int_eq(result, true);
 }
 END_TEST
 
 START_TEST(ora_test) {
+    set_register(REG_A, 1);
+    set_register(REG_B, 2);
+
     bool result = ora(REG_B);
+    ck_assert_int_eq(get_register(REG_A), 3);
     ck_assert_int_eq(result, true);
 }
 END_TEST
 
 START_TEST(ori_test) {
+    set_register(REG_A, 1);
+    write(1, 2);
+
     bool result = ori(0);
+    ck_assert_int_eq(get_program_counter(), 1);
+
+    result = ori(1);
+    ck_assert_int_eq(get_register(REG_A), 3);
     ck_assert_int_eq(result, true);
 }
 END_TEST
 
 START_TEST(xra_test) {
+    set_register(REG_A, 2);
+    set_register(REG_B, 2);
+
     bool result = xra(REG_B);
+    ck_assert_int_eq(get_register(REG_A), 0);
+    ck_assert_int_eq(result, true);
+}
+END_TEST
+
+START_TEST(xri_test) {
+    set_register(REG_A, 2);
+    write(1, 2);
+
+    bool result = xri(0);
+    ck_assert_int_eq(get_program_counter(), 1);
+
+    result = xri(1);
+    ck_assert_int_eq(get_register(REG_A), 0);
     ck_assert_int_eq(result, true);
 }
 END_TEST
@@ -377,7 +416,8 @@ Suite* arithmetic_instruction_suite(void) {
         "ANI",
         "ORA",
         "ORI",
-        "XRA"
+        "XRA",
+        "XRI"
     };
 
     const TTest* test_functions[TEST_CASE_SIZE] = {
@@ -411,7 +451,8 @@ Suite* arithmetic_instruction_suite(void) {
         ani_test,
         ora_test,
         ori_test,
-        xra_test
+        xra_test,
+        xri_test
     };
 
     for (int i = 0; i < TEST_CASE_SIZE; i++) {

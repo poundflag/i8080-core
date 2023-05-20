@@ -6,6 +6,7 @@ Suite* logical_instruction_suite(void);
 Suite* instruction_suite(void);
 Suite* register_controller_suite(void);
 Suite* arithmetic_instruction_suite(void);
+Suite* flag_register_suite(void);
 
 int main(void) {
     int number_failed;
@@ -17,6 +18,7 @@ int main(void) {
     srunner_add_suite(test_runner, instruction_suite());
     srunner_add_suite(test_runner, register_controller_suite());
     srunner_add_suite(test_runner, arithmetic_instruction_suite());
+    srunner_add_suite(test_runner, flag_register_suite());
 
     // Run tests
     srunner_run_all(test_runner, CK_NORMAL);

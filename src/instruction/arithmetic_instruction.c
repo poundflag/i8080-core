@@ -161,22 +161,59 @@ bool daa() {
     return false;
 }
 
-bool ana(Register source){
+bool ana(Register source) {
+    uint8_t result = get_register(REG_A) & get_register(source);
+    set_register(REG_A, result);
+    return true;
+}
+
+bool ani(int machine_cycle) {
+    switch (machine_cycle) {
+    case 0:
+        increment_program_counter();
+        break;
+    case 1:
+        uint8_t result = get_register(REG_A) & read(get_program_counter());
+        set_register(REG_A, result);
+        return true;
+    }
     return false;
 }
 
-bool ani(int machine_cycle){
+bool ora(Register source) {
+    uint8_t result = get_register(REG_A) | get_register(source);
+    set_register(REG_A, result);
+    return true;
+}
+
+bool ori(int machine_cycle) {
+    switch (machine_cycle) {
+    case 0:
+        increment_program_counter();
+        break;
+    case 1:
+        uint8_t result = get_register(REG_A) | read(get_program_counter());
+        set_register(REG_A, result);
+        return true;
+    }
     return false;
 }
 
-bool ora(Register source){
-    return false;
+bool xra(Register source) {
+    uint8_t result = get_register(REG_A) ^ get_register(source);
+    set_register(REG_A, result);
+    return true;
 }
 
-bool ori(int machine_cycle){
-    return false;
-}
-
-bool xra(Register source){
+bool xri(int machine_cycle) {
+    switch (machine_cycle) {
+    case 0:
+        increment_program_counter();
+        break;
+    case 1:
+        uint8_t result = get_register(REG_A) ^ read(get_program_counter());
+        set_register(REG_A, result);
+        return true;
+    }
     return false;
 }

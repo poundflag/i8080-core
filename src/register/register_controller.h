@@ -1,4 +1,5 @@
 #include <stdint.h>
+#include <stdbool.h>
 
 #ifndef _REGISTER_CONTROLLER_H_
 #define _REGISTER_CONTROLLER_H_
