@@ -7,16 +7,16 @@
 #define _FLAG_REGISTER_H_
 
 typedef enum {
-    CARRY,
-    PARITY,
-    AUXILIARY,
-    ZERO,
-    SIGNED
+    CARRY = 0,
+    PARITY = 2,
+    AUXILIARY = 4,
+    ZERO = 6,
+    SIGNED = 7
 } Flag_Type;
 
-void process_flag_register(uint8_t value_one, uint8_t value_two, bool carry);
-bool check_flag_statement(Flag_Type flag, uint8_t value_one, uint8_t value_two, bool carry);
+uint8_t process_flag_register(uint8_t value_one, uint8_t value_two, bool carry, char operator);
+bool check_flag_statement(Flag_Type flag, uint8_t value_one, uint8_t value_two, bool carry, char operator);
 bool get_flag_status(Flag_Type flag);
-bool set_flag_status(Flag_Type flag, bool value);
+void set_flag_status(Flag_Type flag, bool state);
 
 #endif //_FLAG_REGISTER_H_

@@ -158,7 +158,34 @@ bool dad(Register_Pair source) {
 }
 
 bool daa() {
-    return false;
+    // Stolen from
+    // https://github.com/GunshipPenguin/lib8080/blob/master/src/i8080.c
+    // Line: 405 | I don't really know, what this mess does
+    uint8_t a_value = get_register(REG_A);
+    uint8_t temp_value = 0;
+
+    // If the least significant four bits of the accumulator represents a number
+    // greater than 9, or if the Auxiliary Carry bit is equal to one, the
+    // accumulator is incremented by six. Otherwise, no incrementing occurs.
+    if (((a_value & 0xF) > 9) || (get_register(REG_F) >> 4) == 1) {
+        temp_value += 0x06;
+    }
+
+    bool carry = get_register(REG_F) & 1;
+
+    // If the most significant four bits of the accumulator now represent a number
+    // greater than 9, or if the normal carry bit is equal to one, the most
+    // significant four bits of the accumulator are incremented by six.
+    if (((a_value & 0xF0) > 0x90) ||
+        (((a_value & 0xF0) >= 0x90) && ((a_value & 0xF) > 9)) ||
+        (carry == 1)) {
+        temp_value |= 0x60;
+        carry = true;
+    }
+    alu_add(a_value, temp_value, false);
+    // TODO Add Carry
+    set_register(REG_A, a_value + temp_value);
+    return true;
 }
 
 bool ana(Register source) {

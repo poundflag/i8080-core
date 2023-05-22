@@ -53,6 +53,11 @@ START_TEST(set_flag_register_test) {
 }
 END_TEST
 
+START_TEST(have_the_default_flag_value) {
+    ck_assert_int_eq(1, 0);
+}
+END_TEST
+
 #define TEST_CASE_SIZE 100
 
 Suite* register_controller_suite(void) {
@@ -69,7 +74,8 @@ Suite* register_controller_suite(void) {
         "get_a_program_counter_and_have_the_default_value",
         "set_the_program_counter",
         "increment_the_program_counter",
-        "set_flag_register_test"
+        "set_flag_register_test",
+        "have_the_default_flag_value"
     };
 
     const TTest* test_functions[TEST_CASE_SIZE] = {
@@ -81,7 +87,8 @@ Suite* register_controller_suite(void) {
         get_a_program_counter_and_have_the_default_value,
         set_the_program_counter,
         increment_the_program_counter,
-        set_flag_register_test
+        set_flag_register_test,
+        have_the_default_flag_value
     };
 
     for (int i = 0; i < TEST_CASE_SIZE; i++) {
