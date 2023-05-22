@@ -14,8 +14,17 @@ typedef enum {
     SIGNED = 7
 } Flag_Type;
 
-uint8_t process_flag_register(uint8_t value_one, uint8_t value_two, bool carry, char operator);
-bool check_flag_statement(Flag_Type flag, uint8_t value_one, uint8_t value_two, bool carry, char operator);
+typedef enum {
+    PLUS_OPERATION,
+    SUBTRACTION_OPERATION
+} Arithmetic_Operation;
+
+bool is_result_zero(uint8_t result);
+bool is_result_signed(uint8_t result);
+bool is_result_parity(uint8_t result);
+bool is_result_carry(uint16_t result);
+bool is_result_auxiliary_carry(uint8_t value_one, uint8_t value_two, Arithmetic_Operation operator);
+uint8_t process_flag_register(uint8_t value_one, uint8_t value_two, Arithmetic_Operation operator);
 bool get_flag_status(Flag_Type flag);
 void set_flag_status(Flag_Type flag, bool state);
 

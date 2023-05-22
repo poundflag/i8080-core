@@ -2,68 +2,57 @@
 #include "../../src/register/flag_register.h"
 
 START_TEST(set_the_carry_to_true) {
-    bool result = check_flag_statement(CARRY, 0xFF, 1, false, '+');
-    ck_assert_int_eq(result, 1);
+    ck_assert_int_eq(is_result_carry(0xFF + 1), 1);
 }
 END_TEST
 
 START_TEST(set_the_carry_to_false) {
-    bool result = check_flag_statement(CARRY, 1, 1, false, '+');
-    ck_assert_int_eq(result, 0);
+    ck_assert_int_eq(is_result_carry(1 + 1), 0);
 }
 END_TEST
 
 START_TEST(set_the_parity_to_true) {
-    bool result = check_flag_statement(PARITY, 0b11110000, 0, false, '+');
-    ck_assert_int_eq(result, 1);
+    ck_assert_int_eq(is_result_parity(0b11110000), 1);
 }
 END_TEST
 
 START_TEST(set_the_parity_to_true_1) {
-    bool result = check_flag_statement(PARITY, 0x99, 0, false, '+');
-    ck_assert_int_eq(result, 1);
+    ck_assert_int_eq(is_result_parity(0x99), 1);
 }
 END_TEST
 
 START_TEST(set_the_parity_to_false) {
-    bool result = check_flag_statement(PARITY, 0, 0b11110010, false, '+');
-    ck_assert_int_eq(result, 0);
+    ck_assert_int_eq(is_result_parity(0b11110010), 0);
 }
 END_TEST
 
 START_TEST(set_the_auxiliary_to_true) {
-    bool result = check_flag_statement(AUXILIARY, 0xF, 0xF, false, '+');
-    ck_assert_int_eq(result, 1);
+    ck_assert_int_eq(is_result_auxiliary_carry(0xF, 0xF, PLUS_OPERATION), 1);
 }
 END_TEST
 
 START_TEST(set_the_auxiliary_to_false) {
-    bool result = check_flag_statement(AUXILIARY, 1, 1, false, '+');
-    ck_assert_int_eq(result, 0);
+    ck_assert_int_eq(is_result_auxiliary_carry(1, 1, PLUS_OPERATION), 0);
 }
 END_TEST
 
 START_TEST(set_the_zero_to_true) {
-    bool result = check_flag_statement(ZERO, 0, 0, false, '+');
-    ck_assert_int_eq(result, 1);
+    ck_assert_int_eq(is_result_zero(0), 1);
 }
 END_TEST
 
 START_TEST(set_the_zero_to_false) {
-    bool result = check_flag_statement(ZERO, 1, 1, false, '+');
-    ck_assert_int_eq(result, 0);
+    ck_assert_int_eq(is_result_zero(2), 0);
 }
 END_TEST
 
 START_TEST(set_the_signed_to_true) {
-    bool result = check_flag_statement(SIGNED, 0b10000000, 0, false, '+');
-    ck_assert_int_eq(result, 1);
+    ck_assert_int_eq(is_result_signed(0b10000000), 1);
 }
 END_TEST
 
 START_TEST(set_the_signed_to_false) {
-    bool result = check_flag_statement(SIGNED, 0b01000000, 0, false, '+');
-    ck_assert_int_eq(result, 0);
+    ck_assert_int_eq(is_result_signed(0b01000000), 0);
 }
 END_TEST
 
@@ -77,26 +66,25 @@ START_TEST(set_the_bit_for_the_flag) {
 END_TEST
 
 START_TEST(addition_test) {
-    ck_assert_int_eq(process_flag_register(0xC9, 0x10, false, '+'), 0b10000010);
-    ck_assert_int_eq(process_flag_register(0xA1, 0xC9, false, '+'), 0b00000111);
-    ck_assert_int_eq(process_flag_register(0xDE, 0xFE, false, '+'), 0b10010011);
-    ck_assert_int_eq(process_flag_register(0xC9, 0x10, false, '+'), 0b10000010);
-    ck_assert_int_eq(process_flag_register(0x20, 0x30, false, '+'), 0b00000110);
-    ck_assert_int_eq(process_flag_register(0x20, 0x30, false, '+'), 0b00000110);
-    ck_assert_int_eq(process_flag_register(0x80, 0x41, false, '+'), 0b10000010);
-    ck_assert_int_eq(process_flag_register(0x01, 0xD2, false, '+'), 0b10000010);
+    ck_assert_int_eq(process_flag_register(0xC9, 0x10, PLUS_OPERATION), 0b10000010);
+    ck_assert_int_eq(process_flag_register(0xA1, 0xC9, PLUS_OPERATION), 0b00000111);
+    ck_assert_int_eq(process_flag_register(0xDE, 0xFE, PLUS_OPERATION), 0b10010011);
+    ck_assert_int_eq(process_flag_register(0xC9, 0x10, PLUS_OPERATION), 0b10000010);
+    ck_assert_int_eq(process_flag_register(0x20, 0x30, PLUS_OPERATION), 0b00000110);
+    ck_assert_int_eq(process_flag_register(0x20, 0x30, PLUS_OPERATION), 0b00000110);
+    ck_assert_int_eq(process_flag_register(0x80, 0x41, PLUS_OPERATION), 0b10000010);
+    ck_assert_int_eq(process_flag_register(0x01, 0xD2, PLUS_OPERATION), 0b10000010);
 }
 END_TEST
 
 START_TEST(subtraction_test) {
-    printf("AAAAAAA");
-    ck_assert_int_eq(process_flag_register(0x23, 0x45, false, '-'), 0b10000111);
-    ck_assert_int_eq(process_flag_register(0x00, 0xAA, false, '-'), 0b00000111);
-    ck_assert_int_eq(process_flag_register(0x21, 0xDE, false, '-'), 0b00000011);
-    ck_assert_int_eq(process_flag_register(0x1, 0x20, false, '-'), 0b10010111);
-    ck_assert_int_eq(process_flag_register(0x23, 0xFE, false, '-'), 0b00000011);
-    ck_assert_int_eq(process_flag_register(0x11, 0x11, false, '-'), 0b01010110);
-    ck_assert_int_eq(process_flag_register(0xDE, 0xFE, false, '-'), 0b10000011);
+    ck_assert_int_eq(process_flag_register(0x23, 0x45, SUBTRACTION_OPERATION), 0b10000111);
+    ck_assert_int_eq(process_flag_register(0x00, 0xAA, SUBTRACTION_OPERATION), 0b00000111);
+    ck_assert_int_eq(process_flag_register(0x21, 0xDE, SUBTRACTION_OPERATION), 0b00000011);
+    ck_assert_int_eq(process_flag_register(0x1, 0x20, SUBTRACTION_OPERATION), 0b10010111);
+    ck_assert_int_eq(process_flag_register(0x23, 0xFE, SUBTRACTION_OPERATION), 0b00000011);
+    ck_assert_int_eq(process_flag_register(0x11, 0x11, SUBTRACTION_OPERATION), 0b01010110);
+    ck_assert_int_eq(process_flag_register(0xDE, 0xFE, SUBTRACTION_OPERATION), 0b10000011);
 }
 END_TEST
 

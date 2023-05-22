@@ -13,64 +13,51 @@ static const int parity_table[256] = {
           1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0,
           1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1 };
 
-uint8_t process_flag_register(uint8_t value_one, uint8_t value_two, bool carry, char operator) {
-
-    bool zero_bit = check_flag_statement(ZERO, value_one, value_two, carry, operator);
-    bool signed_bit = check_flag_statement(SIGNED, value_one, value_two, carry, operator);
-    bool parity_bit = check_flag_statement(PARITY, value_one, value_two, carry, operator);
-    bool carry_bit = check_flag_statement(CARRY, value_one, value_two, carry, operator);
-    set_flag_status(CARRY, carry_bit);
-    bool auxiliary_bit = check_flag_statement(AUXILIARY, value_one, value_two, carry_bit, operator);
-
-    printf("Carry %d\n", carry_bit);
-    printf("Parity %d\n", parity_bit);
-    printf("Auxiliary %d\n", auxiliary_bit);
-    printf("Zero Bit %d\n", zero_bit);
-    printf("Signed %d\n", signed_bit);
-
-    return carry_bit | 2 | (parity_bit << 2) | (auxiliary_bit << 4) | (zero_bit << 6) | (signed_bit << 7);
+bool is_result_zero(uint8_t result) {
+    return result == 0;
 }
 
-bool check_flag_statement(Flag_Type flag, uint8_t value_one, uint8_t value_two, bool carry, char operator) {
+bool is_result_signed(uint8_t result) {
+    return (result & 0x80) == 0x80;
+}
+
+bool is_result_parity(uint8_t result) {
+    return parity_table[result & 0xFF];
+}
+
+bool is_result_carry(uint16_t result) {
+    return (result & 0x100) == 0x100;
+}
+
+bool is_result_auxiliary_carry(uint8_t value_one, uint8_t value_two, Arithmetic_Operation operator) {
+    if (operator == PLUS_OPERATION) {
+        return ((value_one & 0xF) + (value_two & 0xF)) > 0xF;
+    }
+    else {
+        bool carry_result = is_result_carry(value_one - value_two);
+        value_two = (~value_two) & 0xFF;
+        uint16_t result = (value_one & 0xFF) + value_two + (1 - carry_result);
+        uint16_t new_carry = result ^ (value_one & 0xFF) ^ value_two;
+        return (new_carry & 0x10) != 0;
+    }
+}
+
+uint8_t process_flag_register(uint8_t value_one, uint8_t value_two, Arithmetic_Operation operator) { // TODO ADD ENUM OF OPERATOR
     uint16_t result = 0;
-    if (operator == '+') {
-        result = value_one + value_two + carry;
+    if (operator == PLUS_OPERATION) {
+        result = value_one + value_two;
     }
     else {
         result = value_one - value_two;
     }
 
-    switch (flag) {
-    case CARRY:
-        return (result & 0x100) == 0x100;
-    case PARITY:
-        return parity_table[result & 0xFF];
-    case AUXILIARY:
-        if (operator == '+') {
-            return ((value_one & 0xF) + (value_two & 0xF)) > 0xF;
-        }
-        else {
-            /*
-            value2 = ~value2;
-            uint16_t result = value1 + value2 + (1 - getFlag(FlagRegister::Carry));
-            uint16_t newCarry = result ^ value1 ^ value2;
-            setFlag(Flag::AuxiliaryCarry, (newCarry & (1 << 4)) != 0);
-            */
-            value_two = (~value_two) & 0xFF;
-            result = (value_one & 0xFF) + value_two + (1-carry);
-            uint16_t new_carry = result ^ (value_one & 0xFF) ^ value_two;
-            printf("Value 1 %d\n", value_one);
-            printf("Value 2 %d\n", value_two);
-            return (new_carry & (1 << 4)) != 0;
-        }
-    case ZERO:
-        return (result & 0xFF) == 0;
-    case SIGNED:
-        return (result & 0x80) == 0x80;
-    default:
-        fprintf(stderr, "Wrong flag enum in check_flag_statement");
-    }
-    return false;
+    bool carry_bit = is_result_carry(result);
+    bool parity_bit = is_result_parity(result & 0xFF);
+    bool auxiliary_bit = is_result_auxiliary_carry(value_one, value_two, operator);
+    bool zero_bit = is_result_zero(result & 0xFF);
+    bool signed_bit = is_result_signed(result & 0xFF);
+
+    return carry_bit | 2 | (parity_bit << 2) | (auxiliary_bit << 4) | (zero_bit << 6) | (signed_bit << 7);
 }
 
 bool get_flag_status(Flag_Type flag) {
