@@ -56,15 +56,6 @@ START_TEST(set_the_signed_to_false) {
 }
 END_TEST
 
-START_TEST(set_the_bit_for_the_flag) {
-    set_flag_status(CARRY, true);
-    ck_assert_int_eq(get_flag_status(CARRY), 1);
-
-    set_flag_status(AUXILIARY, false);
-    ck_assert_int_eq(get_flag_status(AUXILIARY), 0);
-}
-END_TEST
-
 START_TEST(addition_test) {
     ck_assert_int_eq(process_flag_register(0xC9, 0x10, PLUS_OPERATION), 0b10000010);
     ck_assert_int_eq(process_flag_register(0xA1, 0xC9, PLUS_OPERATION), 0b00000111);
@@ -109,7 +100,6 @@ Suite* flag_register_suite(void) {
         "set the signed to false",
         "test the addition",
         "test the subtraction",
-        "set_the_bit_for_the_flag"
     };
 
     const TTest* test_functions[TEST_CASE_SIZE] = {
@@ -126,7 +116,6 @@ Suite* flag_register_suite(void) {
         set_the_signed_to_false,
         addition_test,
         subtraction_test,
-        set_the_bit_for_the_flag
     };
 
     for (int i = 0; i < TEST_CASE_SIZE; i++) {

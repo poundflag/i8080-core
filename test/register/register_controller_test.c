@@ -48,13 +48,19 @@ START_TEST(increment_the_program_counter) {
 }
 END_TEST
 
-START_TEST(set_flag_register_test) {
-    ck_assert_int_eq(0, 1);
+START_TEST(have_the_default_flag_value) {
+    ck_assert_int_eq(get_register(REG_F), 0b00000010);
 }
 END_TEST
 
-START_TEST(have_the_default_flag_value) {
-    ck_assert_int_eq(1, 0);
+START_TEST(set_the_bit_for_the_register) {
+    set_register_bit(REG_A, 2, true);
+    ck_assert_int_eq(get_register_bit(REG_A, 2), true);
+    ck_assert_int_eq(get_register(REG_A), 0b00000100);
+
+    set_register_bit(REG_B, 2, false);
+    ck_assert_int_eq(get_register_bit(REG_B, 2), false);
+    ck_assert_int_eq(get_register(REG_B), 0b00000000);
 }
 END_TEST
 
@@ -74,8 +80,8 @@ Suite* register_controller_suite(void) {
         "get_a_program_counter_and_have_the_default_value",
         "set_the_program_counter",
         "increment_the_program_counter",
-        "set_flag_register_test",
-        "have_the_default_flag_value"
+        "have_the_default_flag_value",
+        "set_the_bit_for_the_register"
     };
 
     const TTest* test_functions[TEST_CASE_SIZE] = {
@@ -87,8 +93,8 @@ Suite* register_controller_suite(void) {
         get_a_program_counter_and_have_the_default_value,
         set_the_program_counter,
         increment_the_program_counter,
-        set_flag_register_test,
-        have_the_default_flag_value
+        have_the_default_flag_value,
+        set_the_bit_for_the_register
     };
 
     for (int i = 0; i < TEST_CASE_SIZE; i++) {

@@ -59,18 +59,3 @@ uint8_t process_flag_register(uint8_t value_one, uint8_t value_two, Arithmetic_O
 
     return carry_bit | 2 | (parity_bit << 2) | (auxiliary_bit << 4) | (zero_bit << 6) | (signed_bit << 7);
 }
-
-bool get_flag_status(Flag_Type flag) {
-    return (get_register(REG_F) >> flag) & 1;
-}
-
-void set_flag_status(Flag_Type flag, bool state) {
-    uint8_t flag_register_value = get_register(REG_F);
-    if (state) {
-        flag_register_value |= (1 << flag);
-    }
-    else {
-        flag_register_value &= ~(1 << flag);
-    }
-    set_register(REG_F, flag_register_value);
-}

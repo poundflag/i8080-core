@@ -31,5 +31,7 @@ void set_register_pair(Register_Pair destination, uint16_t value);
 uint16_t get_program_counter();
 void set_program_counter(uint16_t value);
 void increment_program_counter();
+bool get_register_bit(Register register_source, int bit_index);
+void set_register_bit(Register register_source, int bit_index, bool state);
 
 #endif //_REGISTER_CONTROLLER_H_

@@ -1,6 +1,8 @@
 #include "register_controller.h"
 
-uint8_t register_array[REG_ENUM_SIZE] = { 0 };
+uint8_t register_array[REG_ENUM_SIZE] = { 
+    [REG_F] = 0b00000010
+ };
 
 struct Register_Pair_Struct {
     Register low;
@@ -43,4 +45,20 @@ void set_program_counter(uint16_t value) {
 
 void increment_program_counter() {
     program_counter++;
+}
+
+
+bool get_register_bit(Register register_source, int bit_index) {
+    return (get_register(register_source) >> bit_index) & 1;
+}
+
+void set_register_bit(Register register_source, int bit_index, bool state) {
+    uint8_t temporary_register_value = get_register(register_source);
+    if (state) {
+        temporary_register_value |= (1 << bit_index);
+    }
+    else {
+        temporary_register_value &= ~(1 << bit_index);
+    }
+    set_register(register_source, temporary_register_value);
 }
