@@ -1,17 +1,9 @@
 #include <stdint.h>
 #include <stdio.h>
-#include <stdbool.h>0
+#include <stdbool.h>
 
 #ifndef _FLAG_REGISTER_H_
 #define _FLAG_REGISTER_H_
-
-typedef enum {
-    CARRY = 0,
-    PARITY = 2,
-    AUXILIARY = 4,
-    ZERO = 6,
-    SIGNED = 7
-} Flag_Type;
 
 typedef enum {
     PLUS_OPERATION,

@@ -378,6 +378,50 @@ START_TEST(xri_test) {
 }
 END_TEST
 
+START_TEST(cmp_test) {
+    set_register(REG_A, 1);
+    set_register(REG_B, 1);
+
+    bool result = cmp(REG_B);
+    ck_assert_int_eq(result, true);
+    ck_assert_int_eq(get_register(REG_A), 1);
+}
+END_TEST
+
+START_TEST(cpi_test) {
+    set_register(REG_A, 1);
+    write(1, 1);
+
+    bool result = cpi(0);
+    ck_assert_int_eq(get_program_counter(), 1);
+
+    result = cpi(1);
+    ck_assert_int_eq(get_register(REG_A), 1);
+    ck_assert_int_eq(result, true);
+}
+END_TEST
+
+START_TEST(rlc_test) {
+    set_register(REG_A, 0b0001);
+    
+    bool result = rlc();
+    ck_assert_int_eq(get_register(REG_A), 0b0010);
+    ck_assert_int_eq(result, true);
+}
+END_TEST
+
+START_TEST(rlc_carry) {
+    set_register(REG_A, 0b10000001);
+    
+    ck_assert_int_eq(get_register_bit(REG_F, CARRY), 0);
+
+    bool result = rlc();
+    ck_assert_int_eq(get_register(REG_A), 0b00000010);
+    ck_assert_int_eq(get_register_bit(REG_F, CARRY), 1);
+    ck_assert_int_eq(result, true);
+}
+END_TEST
+
 #define TEST_CASE_SIZE 100
 
 Suite* arithmetic_instruction_suite(void) {
@@ -417,7 +461,11 @@ Suite* arithmetic_instruction_suite(void) {
         "ORA",
         "ORI",
         "XRA",
-        "XRI"
+        "XRI",
+        "CMP",
+        "CPI",
+        "RLC",
+        "RLC Carry"
     };
 
     const TTest* test_functions[TEST_CASE_SIZE] = {
@@ -452,7 +500,11 @@ Suite* arithmetic_instruction_suite(void) {
         ora_test,
         ori_test,
         xra_test,
-        xri_test
+        xri_test,
+        cmp_test,
+        cpi_test,
+        rlc_test,
+        rlc_carry
     };
 
     for (int i = 0; i < TEST_CASE_SIZE; i++) {

@@ -24,6 +24,14 @@ typedef enum {
     PAIR_ENUM_SIZE
 } Register_Pair;
 
+typedef enum {
+    CARRY = 0,
+    PARITY = 2,
+    AUXILIARY = 4,
+    ZERO = 6,
+    SIGNED = 7
+} Flag_Type;
+
 uint8_t get_register(Register destination);
 void set_register(Register destination, uint8_t value);
 uint16_t get_register_pair(Register_Pair destination);

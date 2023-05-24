@@ -28,19 +28,19 @@ bool sbb(Register source, bool carry_bit);
 // SBI #     11011110 db       ZSCPA   Subtract immediate from A with borrow
 bool sbi(bool carry_bit, int machine_cycle);
 
-// INR D     00DDD100          ZSPA    Increment register
+// INR D     00DDD100          ZSPA    Increment register TODO TEST THE FLAGS
 bool inr(Register source);
 
-// DCR D     00DDD101          ZSPA    Decrement register
+// DCR D     00DDD101          ZSPA    Decrement register TODO TEST THE FLAGS
 bool dcr(Register source);
 
-// INX RP    00RP0011          -       Increment register pair
+// INX RP    00RP0011          -       Increment register pair TODO TEST THE FLAGS
 bool inx(Register_Pair source);
 
-// DCX RP    00RP1011          -       Decrement register pair
+// DCX RP    00RP1011          -       Decrement register pair TODO TEST THE FLAGS
 bool dcx(Register_Pair source);
 
-// DAD RP    00RP1001          C       Add register pair to HL (16 bit add)
+// DAD RP    00RP1001          C       Add register pair to HL (16 bit add) TODO TEST THE FLAGS
 bool dad(Register_Pair source);
 
 // DAA       00100111          ZSPCA   Decimal Adjust accumulator
@@ -63,5 +63,14 @@ bool xra(Register source);
 
 // XRI #     11101110 db       ZSPCA   ExclusiveOR immediate with A
 bool xri(int machine_cycle);
+
+// CMP S     10111SSS          ZSPCA   Compare register with A
+bool cmp(Register source);
+
+// CPI #     11111110          ZSPCA   Compare immediate with A
+bool cpi(int machine_cycle);
+
+// RLC       00000111          C       Rotate A left
+bool rlc();
 
 #endif //_ARITHMETIC_INSTRUCTION_H_

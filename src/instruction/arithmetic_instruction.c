@@ -1,49 +1,16 @@
 #include <stdio.h>
 #include "arithmetic_instruction.h"
 #include "../memory/memory_controller.h"
-
-void set_flag_register(uint8_t value_one, uint8_t value_two, bool carry) {
-    int parity_table[256] = {
-          1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1, 0, 1, 1, 0, 1, 0, 0, 1,
-          1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0,
-          1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1, 0, 1, 1, 0, 1, 0, 0, 1,
-          1, 0, 0, 1, 0, 1, 1, 0, 1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1,
-          1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1, 0, 1, 1, 0, 1, 0, 0, 1,
-          1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0,
-          1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0,
-          0, 1, 1, 0, 1, 0, 0, 1, 0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0,
-          1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1, 0, 1, 1, 0, 1, 0, 0, 1,
-          1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0,
-          1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1 };
-
-    uint16_t result = value_one + value_two + carry;
-
-    bool zero_bit = (result & 0xFF) == 0;
-    bool signed_bit = (result & 0x80) == 0x80;
-    bool parity_bit = parity_table[result & 0xFF];
-    bool carry_bit = (result & 0x100) == 0x100;
-    bool auxiliary_bit = ((value_one & 0x0F) + (value_two & 0x0F) + carry) > 0x0F;
-
-    /*printf("Carry %d\n", carry_bit);
-    printf("Parity %d\n", parity_bit);
-    printf("Auxiliary %d\n", auxiliary_bit);
-    printf("Zero Bit %d\n", zero_bit);
-    printf("Signed %d\n", signed_bit);
-    printf("Result %d\n\n", result);*/
-
-    set_register(REG_F, carry_bit | 2 | (parity_bit << 2) | (auxiliary_bit << 4) | (zero_bit << 6) | (signed_bit << 7));
-}
+#include "../register/flag_register.h"
 
 uint8_t alu_add(uint8_t value_one, uint8_t value_two, bool carry_bit) {
-    set_flag_register(value_one, value_two, carry_bit);
+    set_register(REG_F, process_flag_register(value_one, value_two + carry_bit, PLUS_OPERATION));
     return value_one + value_two + carry_bit;
 }
 
 uint8_t alu_sub(uint8_t value_one, uint8_t value_two, bool carry_bit) {
-    uint8_t result = alu_add(value_one, (~value_two + !carry_bit) - carry_bit, carry_bit);
-    bool carry = get_register(REG_F) & 1;
-    set_register(REG_F, ((get_register(REG_F) >> 1) << 1) | !carry);
-    return result;
+    set_register(REG_F, process_flag_register(value_one, value_two - carry_bit, SUBTRACTION_OPERATION));
+    return value_one - value_two - carry_bit;
 }
 
 bool add(Register source) {
@@ -123,18 +90,18 @@ bool sbi(bool carry_bit, int machine_cycle) {
 }
 
 bool inr(Register source) {
-    bool carry = get_register(REG_F) & 1;
+    bool carry = get_register_bit(REG_F, CARRY);
     uint8_t result = alu_add(get_register(source), 1, false);
     set_register(source, result);
-    set_register(REG_F, ((get_register(REG_F) >> 1) << 1) | carry);
+    set_register_bit(REG_F, CARRY, carry);
     return true;
 }
 
 bool dcr(Register source) {
-    bool carry = get_register(REG_F) & 1;
+    bool carry = get_register_bit(REG_F, CARRY);
     uint8_t result = alu_sub(get_register(source), 1, false);
     set_register(source, result);
-    set_register(REG_F, ((get_register(REG_F) >> 1) << 1) | carry);
+    set_register_bit(REG_F, CARRY, carry);
     return true;
 }
 
@@ -153,7 +120,7 @@ bool dad(Register_Pair source) {
     uint16_t source_value = get_register_pair(source);
     set_register_pair(PAIR_H, (h_value + source_value) & 0xFFFF);
     bool carry = (h_value + source_value) > 0xFFFF;
-    set_register(REG_F, ((get_register(REG_F) >> 1) << 1) | carry);
+    set_register_bit(REG_F, CARRY, carry);
     return true;
 }
 
@@ -243,4 +210,28 @@ bool xri(int machine_cycle) {
         return true;
     }
     return false;
+}
+
+bool cmp(Register source) {
+    alu_sub(get_register(REG_A), get_register(source), false);
+    return true;
+}
+
+bool cpi(int machine_cycle) {
+    switch (machine_cycle) {
+    case 0:
+        increment_program_counter();
+        break;
+    case 1:
+        alu_sub(get_register(REG_A), read(get_program_counter()), false);
+        return true;
+    }
+    return false;
+}
+
+bool rlc() {
+    uint8_t a_value = get_register(REG_A);
+    set_register(REG_A, (a_value << 1) & 0xFF);
+    set_register_bit(REG_F, CARRY, (a_value & 0x80) == 0x80);
+    return true;
 }
