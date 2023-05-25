@@ -73,4 +73,22 @@ bool cpi(int machine_cycle);
 // RLC       00000111          C       Rotate A left
 bool rlc();
 
+// RRC       00001111          C       Rotate A right
+bool rrc();
+
+// RAL       00010111          C       Rotate A left through carry
+bool ral();
+
+// RAR       00011111          C       Rotate A right through carry
+bool rar();
+
+// CMA       00101111          -       Compliment A
+bool cma();
+
+// CMC       00111111          C       Compliment Carry flag
+bool cmc();
+
+// STC       00110111          C       Set Carry flag
+bool stc();
+
 #endif //_ARITHMETIC_INSTRUCTION_H_

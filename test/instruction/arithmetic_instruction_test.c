@@ -403,7 +403,7 @@ END_TEST
 
 START_TEST(rlc_test) {
     set_register(REG_A, 0b0001);
-    
+
     bool result = rlc();
     ck_assert_int_eq(get_register(REG_A), 0b0010);
     ck_assert_int_eq(result, true);
@@ -412,12 +412,109 @@ END_TEST
 
 START_TEST(rlc_carry) {
     set_register(REG_A, 0b10000001);
-    
+
     ck_assert_int_eq(get_register_bit(REG_F, CARRY), 0);
 
     bool result = rlc();
+    ck_assert_int_eq(get_register(REG_A), 0b00000011);
+    ck_assert_int_eq(get_register_bit(REG_F, CARRY), 1);
+    ck_assert_int_eq(result, true);
+}
+END_TEST
+
+START_TEST(rrc_test) {
+    set_register(REG_A, 0b0010);
+
+    bool result = rrc();
+    ck_assert_int_eq(get_register(REG_A), 0b0001);
+    ck_assert_int_eq(result, true);
+}
+END_TEST
+
+START_TEST(rrc_carry) {
+    set_register(REG_A, 0b10000001);
+
+    ck_assert_int_eq(get_register_bit(REG_F, CARRY), 0);
+
+    bool result = rrc();
+    ck_assert_int_eq(get_register(REG_A), 0b11000000);
+    ck_assert_int_eq(get_register_bit(REG_F, CARRY), 1);
+    ck_assert_int_eq(result, true);
+}
+END_TEST
+
+START_TEST(ral_test) {
+    set_register(REG_A, 0b0001);
+
+    bool result = ral();
+    ck_assert_int_eq(get_register(REG_A), 0b0010);
+    ck_assert_int_eq(result, true);
+
+    set_register_bit(REG_F, CARRY, true);
+    result = ral();
+    ck_assert_int_eq(get_register(REG_A), 0b0101);
+    ck_assert_int_eq(result, true);
+}
+END_TEST
+
+START_TEST(ral_carry) {
+    set_register(REG_A, 0b10000001);
+
+    ck_assert_int_eq(get_register_bit(REG_F, CARRY), 0);
+
+    bool result = ral();
     ck_assert_int_eq(get_register(REG_A), 0b00000010);
     ck_assert_int_eq(get_register_bit(REG_F, CARRY), 1);
+    ck_assert_int_eq(result, true);
+}
+END_TEST
+
+START_TEST(rar_test) {
+    set_register(REG_A, 0b0100);
+
+    bool result = rar();
+    ck_assert_int_eq(get_register(REG_A), 0b0010);
+    ck_assert_int_eq(result, true);
+
+    set_register_bit(REG_F, CARRY, true);
+    result = rar();
+    ck_assert_int_eq(get_register(REG_A), 0b10000001);
+    ck_assert_int_eq(result, true);
+}
+END_TEST
+
+START_TEST(rar_carry) {
+    set_register(REG_A, 0b10000001);
+
+    ck_assert_int_eq(get_register_bit(REG_F, CARRY), 0);
+
+    bool result = rar();
+    ck_assert_int_eq(get_register(REG_A), 0b01000000);
+    ck_assert_int_eq(get_register_bit(REG_F, CARRY), 1);
+    ck_assert_int_eq(result, true);
+}
+END_TEST
+
+START_TEST(cma_test) {
+    set_register(REG_A, 0x0F);
+    bool result = cma();
+    ck_assert_int_eq(get_register(REG_A), 0xF0);
+    ck_assert_int_eq(result, true);
+}
+END_TEST
+
+START_TEST(cmc_test) {
+    set_register_bit(REG_F, CARRY, true);
+    bool result = cmc();
+    ck_assert_int_eq(get_register_bit(REG_F, CARRY), false);
+    ck_assert_int_eq(result, true);
+}
+END_TEST
+
+START_TEST(stc_test) {
+    set_register_bit(REG_F, CARRY, false);
+    bool result = stc();
+    ck_assert_int_eq(get_register_bit(REG_F, CARRY), true);
     ck_assert_int_eq(result, true);
 }
 END_TEST
@@ -465,7 +562,16 @@ Suite* arithmetic_instruction_suite(void) {
         "CMP",
         "CPI",
         "RLC",
-        "RLC Carry"
+        "RLC Carry",
+        "RRC",
+        "RRC Carry",
+        "RAL",
+        "RAL Carry",
+        "RAR",
+        "RAR Carry",
+        "CMA",
+        "CMC",
+        "STC"
     };
 
     const TTest* test_functions[TEST_CASE_SIZE] = {
@@ -504,7 +610,16 @@ Suite* arithmetic_instruction_suite(void) {
         cmp_test,
         cpi_test,
         rlc_test,
-        rlc_carry
+        rlc_carry,
+        rrc_test,
+        rrc_carry,
+        ral_test,
+        ral_carry,
+        rar_test,
+        rar_carry,
+        cma_test,
+        cmc_test,
+        stc_test
     };
 
     for (int i = 0; i < TEST_CASE_SIZE; i++) {

@@ -231,7 +231,47 @@ bool cpi(int machine_cycle) {
 
 bool rlc() {
     uint8_t a_value = get_register(REG_A);
-    set_register(REG_A, (a_value << 1) & 0xFF);
+    bool last_bit_of_value = (a_value >> 7) & 1;
+    set_register(REG_A, (a_value << 1 | last_bit_of_value) & 0xFF);
     set_register_bit(REG_F, CARRY, (a_value & 0x80) == 0x80);
+    return true;
+}
+
+bool rrc() {
+    uint8_t a_value = get_register(REG_A);
+    uint8_t first_bit_of_value = (a_value << 7) & 0x80;
+    set_register(REG_A, (a_value >> 1 | first_bit_of_value) & 0xFF);
+    set_register_bit(REG_F, CARRY, (a_value & 1) == 1);
+    return true;
+}
+
+bool ral() {
+    uint8_t a_value = get_register(REG_A);
+    bool carry_value = get_register_bit(REG_F, CARRY);
+    set_register(REG_A, (a_value << 1 | carry_value) & 0xFF);
+    set_register_bit(REG_F, CARRY, (a_value & 0x80) == 0x80);
+    return true;
+}
+
+bool rar() {
+    uint8_t a_value = get_register(REG_A);
+    uint8_t carry_value = (get_register_bit(REG_F, CARRY) << 7) & 0x80;
+    set_register(REG_A, (a_value >> 1 | carry_value) & 0xFF);
+    set_register_bit(REG_F, CARRY, (a_value & 1) == 1);
+    return true;
+}
+
+bool cma() {
+    set_register(REG_A, ~get_register(REG_A));
+    return true;
+}
+
+bool cmc() {
+    set_register_bit(REG_F, CARRY, !get_register_bit(REG_F, CARRY));
+    return true;
+}
+
+bool stc() {
+    set_register_bit(REG_F, CARRY, true);
     return true;
 }
