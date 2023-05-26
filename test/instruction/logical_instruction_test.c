@@ -6,28 +6,26 @@
 #include "../../src/memory/memory_controller.h"
 
 START_TEST(mov_test) {
-    uint8_t source = 10;
-    uint8_t destination = 0;
-    mov(&destination, source);
+    set_register(REG_A, 10);
+    mov(REG_B, REG_A);
 
-    ck_assert_int_eq(destination, source);
-    ck_assert_int_eq(destination, 10);
+    ck_assert_int_eq(get_register(REG_B), 10);
+    ck_assert_int_eq(get_register(REG_A), 10);
 }
 END_TEST
 
 START_TEST(mvi_test) {
-    uint8_t destination = 0;
     set_program_counter(0);
     bool result = false;
     write(1, 50);
 
-    result = mvi(&destination, 0);
+    result = mvi(REG_B, 0);
     ck_assert_int_eq(get_program_counter(), 1);
     ck_assert_int_eq(result, false);
 
-    result = mvi(&destination, 1);
-    ck_assert_int_eq(destination, 50);
-    ck_assert_int_eq(destination, read(1));
+    result = mvi(REG_B, 1);
+    ck_assert_int_eq(get_register(REG_B), 50);
+    ck_assert_int_eq(get_register(REG_B), read(1));
     ck_assert_int_eq(result, true);
 }
 END_TEST

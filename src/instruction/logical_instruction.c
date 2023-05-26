@@ -33,18 +33,18 @@ void read_memory_address(int machine_cycle, uint16_t* temporary_address) {
     }
 }
 
-bool mov(uint8_t* destination, uint8_t source_value) {
-    *destination = source_value;
+bool mov(Register destination, Register source) {
+    set_register(destination, get_register(source));
     return true;
 }
 
-bool mvi(uint8_t* destination, int machine_cycle) {
+bool mvi(Register destination, int machine_cycle) {
     switch (machine_cycle) {
     case 0:
         increment_program_counter();
         break;
     case 1:
-        *destination = read(get_program_counter());
+        set_register(destination, read(get_program_counter()));
         return true;
     default:
         print_error_invalid_cycle("MVI");

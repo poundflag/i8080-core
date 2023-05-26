@@ -6,10 +6,10 @@
 #define _LOGICAL_INSTRUCTION_H_
 
 // MOV D,S   01DDDSSS - Move register to register
-bool mov(uint8_t* destination, uint8_t source_value);
+bool mov(Register destination, Register source);
 
 // MVI D,#   00DDD110 db - Move immediate to register
-bool mvi(uint8_t* destination, int machine_cycle);
+bool mvi(Register destination, int machine_cycle);
 
 // LXI RP,#  00RP0001 lb hb - Load register pair immediate
 bool lxi(Register_Pair destination, int machine_cycle);
