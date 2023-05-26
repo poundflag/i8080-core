@@ -13,8 +13,8 @@ uint8_t alu_sub(uint8_t value_one, uint8_t value_two, bool carry_bit) {
     return value_one - value_two - carry_bit;
 }
 
-bool add(uint8_t source_value) {
-    uint8_t result = alu_add(get_register(REG_A), source_value, false);
+bool add(Register source) {
+    uint8_t result = alu_add(get_register(REG_A), get_register(source), false);
     set_register(REG_A, result);
     return true;
 }
@@ -32,27 +32,27 @@ bool adi(int machine_cycle) {
     return false;
 }
 
-bool adc(uint8_t source_value, bool carry_bit) {
-    uint8_t result = alu_add(get_register(REG_A), source_value, carry_bit);
+bool adc(Register source) {
+    uint8_t result = alu_add(get_register(REG_A), get_register(source), get_register_bit(REG_F, CARRY));
     set_register(REG_A, result);
     return true;
 }
 
-bool aci(bool carry_bit, int machine_cycle) {
+bool aci(int machine_cycle) {
     switch (machine_cycle) {
     case 0:
         increment_program_counter();
         break;
     case 1:
-        uint8_t result = alu_add(get_register(REG_A), read(get_program_counter()), carry_bit);
+        uint8_t result = alu_add(get_register(REG_A), read(get_program_counter()), get_register_bit(REG_F, CARRY));
         set_register(REG_A, result);
         return true;
     }
     return false;
 }
 
-bool sub(uint8_t source_value) {
-    uint8_t result = alu_sub(get_register(REG_A), source_value, false);
+bool sub(Register source) {
+    uint8_t result = alu_sub(get_register(REG_A), get_register(source), false);
     set_register(REG_A, result);
     return true;
 }
@@ -70,55 +70,55 @@ bool sui(int machine_cycle) {
     return false;
 }
 
-bool sbb(uint8_t source_value, bool carry_bit) {
-    uint8_t result = alu_sub(get_register(REG_A), source_value, carry_bit);
+bool sbb(Register source) {
+    uint8_t result = alu_sub(get_register(REG_A), get_register(source), get_register_bit(REG_F, CARRY));
     set_register(REG_A, result);
     return true;
 }
 
-bool sbi(bool carry_bit, int machine_cycle) {
+bool sbi(int machine_cycle) {
     switch (machine_cycle) {
     case 0:
         increment_program_counter();
         break;
     case 1:
-        uint8_t result = alu_sub(get_register(REG_A), read(get_program_counter()), carry_bit);
+        uint8_t result = alu_sub(get_register(REG_A), read(get_program_counter()), get_register_bit(REG_F, CARRY));
         set_register(REG_A, result);
         return true;
     }
     return false;
 }
 
-bool inr(uint8_t* destination_value) {
+bool inr(Register destination) {
     bool carry = get_register_bit(REG_F, CARRY);
-    uint8_t result = alu_add(*destination_value, 1, false);
-    *destination_value = result;
+    uint8_t result = alu_add(get_register(destination), 1, false);
+    set_register(destination, result);
     set_register_bit(REG_F, CARRY, carry);
     return true;
 }
 
-bool dcr(uint8_t* destination_value) {
+bool dcr(Register destination) {
     bool carry = get_register_bit(REG_F, CARRY);
-    uint8_t result = alu_sub(*destination_value, 1, false);
-    *destination_value = result;
+    uint8_t result = alu_sub(get_register(destination), 1, false);
+    set_register(destination, result);
     set_register_bit(REG_F, CARRY, carry);
     return true;
 }
 
-bool inx(uint16_t* destination_value) {
-    *destination_value = *destination_value + 1;
+bool inx(Register_Pair destination) {
+    set_register_pair(destination, get_register_pair(destination) + 1);
     return true;
 }
 
-bool dcx(uint16_t* destination_value) {
-    *destination_value = *destination_value - 1;
+bool dcx(Register_Pair destination) {
+    set_register_pair(destination, get_register_pair(destination) - 1);
     return true;
 }
 
-bool dad(uint16_t source_value) {
+bool dad(Register_Pair source) {
     uint16_t h_value = get_register_pair(PAIR_H);
-    set_register_pair(PAIR_H, (h_value + source_value) & 0xFFFF);
-    bool carry = (h_value + source_value) > 0xFFFF;
+    set_register_pair(PAIR_H, (h_value + get_register_pair(source)) & 0xFFFF);
+    bool carry = (h_value + get_register_pair(source)) > 0xFFFF;
     set_register_bit(REG_F, CARRY, carry);
     return true;
 }
@@ -154,8 +154,8 @@ bool daa() {
     return true;
 }
 
-bool ana(uint8_t source_value) {
-    uint8_t result = get_register(REG_A) & source_value;
+bool ana(Register source) {
+    uint8_t result = get_register(REG_A) & get_register(source);
     set_register(REG_A, result);
     return true;
 }
@@ -173,8 +173,8 @@ bool ani(int machine_cycle) {
     return false;
 }
 
-bool ora(uint8_t source_value) {
-    uint8_t result = get_register(REG_A) | source_value;
+bool ora(Register source) {
+    uint8_t result = get_register(REG_A) | get_register(source);
     set_register(REG_A, result);
     return true;
 }
@@ -192,8 +192,8 @@ bool ori(int machine_cycle) {
     return false;
 }
 
-bool xra(uint8_t source_value) {
-    uint8_t result = get_register(REG_A) ^ source_value;
+bool xra(Register source) {
+    uint8_t result = get_register(REG_A) ^ get_register(source);
     set_register(REG_A, result);
     return true;
 }
@@ -211,8 +211,8 @@ bool xri(int machine_cycle) {
     return false;
 }
 
-bool cmp(uint8_t source_value) {
-    alu_sub(get_register(REG_A), source_value, false);
+bool cmp(Register source) {
+    alu_sub(get_register(REG_A), get_register(source), false);
     return true;
 }
 

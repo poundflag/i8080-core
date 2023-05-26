@@ -5,67 +5,67 @@
 #define _ARITHMETIC_INSTRUCTION_H_
 
 // ADD S     10000SSS          ZSPCA   Add register to A
-bool add(uint8_t source_value);
+bool add(Register source);
 
 // ADI #     11000110 db       ZSCPA   Add immediate to A
 bool adi(int machine_cycle);
 
 // ADC S     10001SSS          ZSCPA   Add register to A with carry
-bool adc(uint8_t source_value, bool carry_bit);
+bool adc(Register source);
 
 // ACI #     11001110 db       ZSCPA   Add immediate to A with carry
-bool aci(bool carry_bit, int machine_cycle);
+bool aci(int machine_cycle);
 
 // SUB S     10010SSS          ZSCPA   Subtract register from A
-bool sub(uint8_t source_value);
+bool sub(Register source);
 
 // SUI #     11010110 db       ZSCPA   Subtract immediate from A
 bool sui(int machine_cycle);
 
 // SBB S     10011SSS          ZSCPA   Subtract register from A with borrow
-bool sbb(uint8_t source_value, bool carry_bit);
+bool sbb(Register source);
 
 // SBI #     11011110 db       ZSCPA   Subtract immediate from A with borrow
-bool sbi(bool carry_bit, int machine_cycle);
+bool sbi(int machine_cycle);
 
 // INR D     00DDD100          ZSPA    Increment register TODO TEST THE FLAGS
-bool inr(uint8_t* destination_value);
+bool inr(Register destination);
 
 // DCR D     00DDD101          ZSPA    Decrement register TODO TEST THE FLAGS
-bool dcr(uint8_t* destination_value);
+bool dcr(Register destination);
 
 // INX RP    00RP0011          -       Increment register pair TODO TEST THE FLAGS
-bool inx(uint16_t* destination_value);
+bool inx(Register_Pair destination);
 
 // DCX RP    00RP1011          -       Decrement register pair TODO TEST THE FLAGS
-bool dcx(uint16_t* destination_value);
+bool dcx(Register_Pair destination);
 
 // DAD RP    00RP1001          C       Add register pair to HL (16 bit add) TODO TEST THE FLAGS
-bool dad(uint16_t source_value);
+bool dad(Register_Pair source);
 
 // DAA       00100111          ZSPCA   Decimal Adjust accumulator
 bool daa();
 
 // ANA S     10100SSS          ZSCPA   AND register with A
-bool ana(uint8_t source_value);
+bool ana(Register source);
 
 // ANI #     11100110 db       ZSPCA   AND immediate with A
 bool ani(int machine_cycle);
 
 // ORA S     10110SSS          ZSPCA   OR  register with A
-bool ora(uint8_t source_value);
+bool ora(Register source);
 
 // ORI #     11110110          ZSPCA   OR  immediate with A
 bool ori(int machine_cycle);
 
 // XRA S     10101SSS          ZSPCA   ExclusiveOR register with A
-bool xra(uint8_t source_value);
+bool xra(Register source);
 
 // XRI #     11101110 db       ZSPCA   ExclusiveOR immediate with A
 bool xri(int machine_cycle);
 
 // CMP S     10111SSS          ZSPCA   Compare register with A
-bool cmp(uint8_t source_value);
+bool cmp(Register source);
 
 // CPI #     11111110          ZSPCA   Compare immediate with A
 bool cpi(int machine_cycle);
