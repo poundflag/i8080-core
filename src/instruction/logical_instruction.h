@@ -5,6 +5,8 @@
 #ifndef _LOGICAL_INSTRUCTION_H_
 #define _LOGICAL_INSTRUCTION_H_
 
+void decode_execute_logical_instructions(uint8_t opcode);
+
 // MOV D,S   01DDDSSS - Move register to register
 bool mov(Register destination, Register source);
 

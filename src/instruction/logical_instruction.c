@@ -34,6 +34,12 @@ void read_memory_address(int machine_cycle, uint16_t* temporary_address) {
     }
 }
 
+void decode_execute_logical_instructions(uint8_t opcode) {
+    if (opcode >= 0x40 && opcode <= 0x7F && opcode != 0x76) {
+        mov(0, 0);
+    }
+}
+
 bool mov(Register destination, Register source) {
     set_register(destination, get_register(source));
     return true;

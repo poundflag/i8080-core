@@ -1,5 +1,6 @@
 {
     "files.associations": {
-        "register_controller.h": "c"
+        "register_controller.h": "c",
+        "logical_instruction.h": "c"
     }
 }

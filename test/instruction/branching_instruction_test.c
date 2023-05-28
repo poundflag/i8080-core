@@ -111,17 +111,17 @@ START_TEST(call_conditional_true) {
     set_stack_pointer(10);
     set_register_bit(REG_F, CARRY, true);
 
-    bool result = call_conditional(0, &temporary_address, CARRY);
+    bool result = call_conditional(0, &temporary_address, COND_CARRY);
     ck_assert_int_eq(temporary_address, 0x34);
     ck_assert_int_eq(get_program_counter(), 1);
     ck_assert_int_eq(result, false);
 
-    result = call_conditional(1, &temporary_address, CARRY);
+    result = call_conditional(1, &temporary_address, COND_CARRY);
     ck_assert_int_eq(temporary_address, 0x1234);
     ck_assert_int_eq(get_program_counter(), 2);
     ck_assert_int_eq(result, false);
 
-    result = call_conditional(2, &temporary_address, CARRY);
+    result = call_conditional(2, &temporary_address, COND_CARRY);
     ck_assert_int_eq(temporary_address, 0x1234);
     ck_assert_int_eq(get_program_counter(), 0x1233);
     ck_assert_int_eq(pull_word(), 3);
@@ -137,17 +137,17 @@ START_TEST(call_conditional_false) {
     set_stack_pointer(10);
     set_register_bit(REG_F, CARRY, false);
 
-    bool result = call_conditional(0, &temporary_address, CARRY);
+    bool result = call_conditional(0, &temporary_address, COND_CARRY);
     ck_assert_int_eq(temporary_address, 0x34);
     ck_assert_int_eq(get_program_counter(), 1);
     ck_assert_int_eq(result, false);
 
-    result = call_conditional(1, &temporary_address, CARRY);
+    result = call_conditional(1, &temporary_address, COND_CARRY);
     ck_assert_int_eq(temporary_address, 0x1234);
     ck_assert_int_eq(get_program_counter(), 2);
     ck_assert_int_eq(result, false);
 
-    result = call_conditional(2, &temporary_address, CARRY);
+    result = call_conditional(2, &temporary_address, COND_CARRY);
     ck_assert_int_eq(temporary_address, 0x1234);
     ck_assert_int_eq(get_program_counter(), 2);
     ck_assert_int_eq(pull_word(), 0);
