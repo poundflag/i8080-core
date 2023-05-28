@@ -3,6 +3,7 @@
 #include "../../src/instruction/logical_instruction.h"
 #include "../../src/instruction/instruction.h"
 #include "../../src/register/register_controller.h"
+#include "../../src/register/stack.h"
 #include "../../src/memory/memory_controller.h"
 
 START_TEST(mov_test) {
@@ -236,6 +237,91 @@ START_TEST(xchg_test) {
 }
 END_TEST
 
+START_TEST(rst_test) {
+    bool result = rst(1);
+    ck_assert_int_eq(result, true);
+    ck_assert_int_eq(get_program_counter(), 7);
+    ck_assert_int_eq(pull_word(), 1);
+
+    result = rst(2);
+    ck_assert_int_eq(result, true);
+    ck_assert_int_eq(get_program_counter(), 15);
+    ck_assert_int_eq(pull_word(), 8);
+}
+END_TEST
+
+START_TEST(push_test) {
+    set_register_pair(PAIR_B, 0x1234);
+    set_stack_pointer(10);
+    uint16_t temporary_address = 0;
+
+    bool result = push(0, &temporary_address, PAIR_B);
+    ck_assert_int_eq(result, false);
+    ck_assert_int_eq(get_program_counter(), 9);
+
+    result = push(1, &temporary_address, PAIR_B);
+    ck_assert_int_eq(result, false);
+    ck_assert_int_eq(get_program_counter(), 8);
+
+    result = push(2, &temporary_address, PAIR_B);
+    ck_assert_int_eq(result, true);
+    ck_assert_int_eq(get_program_counter(), 0);
+    ck_assert_int_eq(pull_word(), 0x1234);
+}
+END_TEST
+
+START_TEST(pop_test) {
+    set_stack_pointer(10);
+    push_word(0x1234);
+    uint16_t temporary_address = 0;
+
+    bool result = pop(0, &temporary_address, PAIR_B);
+    ck_assert_int_eq(result, false);
+    ck_assert_int_eq(get_program_counter(), 7);
+
+    result = pop(1, &temporary_address, PAIR_B);
+    ck_assert_int_eq(result, false);
+    ck_assert_int_eq(get_program_counter(), 6);
+
+    result = pop(2, &temporary_address, PAIR_B);
+    ck_assert_int_eq(result, true);
+    ck_assert_int_eq(get_program_counter(), 0);
+    ck_assert_int_eq(get_register_pair(PAIR_B), 0x1234);
+}
+END_TEST
+
+START_TEST(xthl_test) {
+    push_word(0x5678);
+    set_register_pair(PAIR_H, 0x1234);
+
+    bool result = xthl();
+    ck_assert_int_eq(result, true);
+    ck_assert_int_eq(get_register_pair(PAIR_H), 0x5678);
+    ck_assert_int_eq(pull_word(), 0x1234);
+}
+END_TEST
+
+START_TEST(sphl_test) {
+    set_register_pair(PAIR_H, 0x1234);
+
+    bool result = sphl();
+    ck_assert_int_eq(result, true);
+    ck_assert_int_eq(get_stack_pointer(), 0x1234);
+}
+END_TEST
+
+START_TEST(in_test) {
+    bool result = in(1);
+    ck_assert_int_eq(result, true);
+}
+END_TEST
+
+START_TEST(out_test) {
+    bool result = out(1);
+    ck_assert_int_eq(result, true);
+}
+END_TEST
+
 #define TEST_CASE_SIZE 100
 
 Suite* logical_instruction_suite(void) {
@@ -253,7 +339,14 @@ Suite* logical_instruction_suite(void) {
         "SHLD",
         "LDAX",
         "STAX",
-        "XCHG"
+        "XCHG",
+        "RST",
+        "PUSH",
+        "POP",
+        "XTHL",
+        "SPHL",
+        "IN",
+        "OUT"
     };
 
     const TTest* test_functions[TEST_CASE_SIZE] = {
@@ -266,7 +359,14 @@ Suite* logical_instruction_suite(void) {
         shld_test,
         ldax_test,
         stax_test,
-        xchg_test
+        xchg_test,
+        rst_test,
+        push_test,
+        pop_test,
+        xthl_test,
+        sphl_test,
+        in_test,
+        out_test
     };
 
     for (int i = 0; i < TEST_CASE_SIZE; i++) {

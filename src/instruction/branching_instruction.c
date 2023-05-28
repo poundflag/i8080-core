@@ -119,3 +119,8 @@ bool ret_conditional(Condition condition) {
     }
     return true;
 }
+
+bool pchl() {
+    set_program_counter(get_register_pair(PAIR_H) - 1);
+    return true;
+}

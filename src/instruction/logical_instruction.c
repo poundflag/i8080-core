@@ -2,6 +2,7 @@
 #include "logical_instruction.h"
 #include "../instruction/instruction.h"
 #include "../memory/memory_controller.h"
+#include "../register/stack.h"
 
 void print_error_invalid_cycle(char* instruction_name) {
     fprintf(stderr, "Invalid machine cycle in logical instruction: %s\n", instruction_name);
@@ -192,5 +193,73 @@ bool xchg() {
     uint16_t temp_value = get_register_pair(PAIR_D);
     set_register_pair(PAIR_D, get_register_pair(PAIR_H));
     set_register_pair(PAIR_H, temp_value);
+    return true;
+}
+
+bool rst(int number) {
+    push_word(get_program_counter() + 1);
+    set_program_counter((number * 8) - 1);
+    return true;
+}
+
+bool push(int machine_cycle, uint16_t* temporary_address, Register_Pair register_pair) {
+    switch (machine_cycle) {
+    case 0:
+        *temporary_address = get_program_counter();
+        set_program_counter(get_stack_pointer() - 1);
+        break;
+    case 1:
+        set_program_counter(get_program_counter() - 1);
+        break;
+    case 2:
+        set_program_counter(*temporary_address);
+        push_word(get_register_pair(register_pair));
+        return true;
+    default:
+        break;
+    }
+    return false;
+}
+
+bool pop(int machine_cycle, uint16_t* temporary_address, Register_Pair register_pair) {
+    switch (machine_cycle) {
+    case 0:
+        *temporary_address = get_program_counter();
+        set_program_counter(get_stack_pointer() - 1);
+        break;
+    case 1:
+        set_program_counter(get_program_counter() - 1);
+        break;
+    case 2:
+        set_program_counter(*temporary_address);
+        set_register_pair(register_pair, pull_word());
+        return true;
+    default:
+        break;
+    }
+    return false;
+}
+
+bool xthl() {
+    uint16_t temporary_value = get_register_pair(PAIR_H);
+    set_register_pair(PAIR_H, pull_word());
+    push_word(temporary_value);
+    return true;
+}
+
+bool sphl() {
+    set_stack_pointer(get_register_pair(PAIR_H));
+    return true;
+}
+
+bool in(int port_number) {
+    return false;
+}
+
+bool out(int port_number) {
+    return false;
+}
+
+bool hlt() {
     return true;
 }

@@ -187,6 +187,15 @@ START_TEST(ret_conditional_false) {
 }
 END_TEST
 
+START_TEST(pchl_test) {
+    set_register_pair(PAIR_H, 0x1234);
+    bool result = pchl();
+    ck_assert_int_eq(get_register_pair(PAIR_H), 0x1234);
+    ck_assert_int_eq(get_program_counter(), 0x1233);
+    ck_assert_int_eq(result, true);
+}
+END_TEST
+
 #define TEST_CASE_SIZE 100
 
 Suite* branching_instruction_suite(void) {
@@ -203,7 +212,8 @@ Suite* branching_instruction_suite(void) {
         "CALL Conditional False",
         "RET",
         "RET Conditional True",
-        "RET Conditional False"
+        "RET Conditional False",
+        "PCHL"
     };
 
     const TTest* test_functions[TEST_CASE_SIZE] = {
@@ -215,7 +225,8 @@ Suite* branching_instruction_suite(void) {
         call_conditional_false,
         ret_test,
         ret_conditional_true,
-        ret_conditional_false
+        ret_conditional_false,
+        pchl_test
     };
 
     for (int i = 0; i < TEST_CASE_SIZE; i++) {

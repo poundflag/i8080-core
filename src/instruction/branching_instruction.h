@@ -35,4 +35,7 @@ bool ret();
 // Rccc      11CCC000          -       Conditional return from subroutine
 bool ret_conditional(Condition condition);
 
+// PCHL      11101001          -       Jump to address in H:L
+bool pchl();
+
 #endif //_BRANCHING_INSTRUCTION_H_
