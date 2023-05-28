@@ -1,4 +1,5 @@
 #include "branching_instruction.h"
+#include "../register/stack.h"
 
 bool jmp(int machine_cycle, uint16_t* temporary_address) {
     switch (machine_cycle) {
@@ -66,5 +67,55 @@ bool jmp_conditional(int machine_cycle, uint16_t* temporary_address, Condition c
 }
 
 bool call(int machine_cycle, uint16_t* temporary_address) {
+    switch (machine_cycle) {
+    case 0:
+        increment_program_counter();
+        *temporary_address = read(get_program_counter());
+        break;
+    case 1:
+        increment_program_counter();
+        *temporary_address |= read(get_program_counter()) << 8;
+        break;
+    case 2:
+        push_word(get_program_counter() + 1);
+        set_program_counter(*temporary_address - 1);
+        return true;
+    default:
+        break;
+    }
     return false;
+}
+
+bool call_conditional(int machine_cycle, uint16_t* temporary_address, Condition condition) {
+    switch (machine_cycle) {
+    case 0:
+        increment_program_counter();
+        *temporary_address = read(get_program_counter());
+        break;
+    case 1:
+        increment_program_counter();
+        *temporary_address |= read(get_program_counter()) << 8;
+        break;
+    case 2:
+        if (condition_success(condition)) {
+            push_word(get_program_counter() + 1);
+            set_program_counter(*temporary_address - 1);
+        }
+        return true;
+    default:
+        break;
+    }
+    return false;
+}
+
+bool ret() {
+    set_program_counter(pull_word() - 1);
+    return true;
+}
+
+bool ret_conditional(Condition condition) {
+    if (condition_success(condition)) {
+        set_program_counter(pull_word() - 1);
+    }
+    return true;
 }

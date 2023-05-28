@@ -26,5 +26,13 @@ bool jmp_conditional(int machine_cycle, uint16_t* temporary_address, Condition c
 // CALL a    11001101 lb hb    -       Unconditional subroutine call
 bool call(int machine_cycle, uint16_t* temporary_address);
 
+// Cccc a    11CCC100 lb hb    -       Conditional subroutine call
+bool call_conditional(int machine_cycle, uint16_t* temporary_address, Condition condition);
+
+// RET       11001001          -       Unconditional return from subroutine
+bool ret();
+
+// Rccc      11CCC000          -       Conditional return from subroutine
+bool ret_conditional(Condition condition);
 
 #endif //_BRANCHING_INSTRUCTION_H_
