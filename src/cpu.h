@@ -1,8 +1,13 @@
 #include <stdint.h>
+#include <stdlib.h>
+#include <stdio.h>
 
 #ifndef _CPU_H_
 #define _CPU_H_
 
-void run(int step);
+void run_indefinite();
+void run(int steps);
+void step();
+void load_file(char* file_path);
 
 #endif //_CPU_H_
