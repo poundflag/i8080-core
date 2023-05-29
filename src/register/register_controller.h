@@ -21,7 +21,8 @@ typedef enum {
     PAIR_B,
     PAIR_D,
     PAIR_H,
-    PAIR_ENUM_SIZE
+    PAIR_ENUM_SIZE,
+    PAIR_SP
 } Register_Pair;
 
 typedef enum {

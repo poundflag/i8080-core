@@ -9,6 +9,6 @@ void run(int step) {
         uint8_t opcode = read(get_program_counter());
 
         // Decode & Execute
-        decode_execute_instruction(opcode);
+        decode_execute_instruction(opcode, 0, 0);
     }
 }

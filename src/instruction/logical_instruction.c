@@ -34,9 +34,13 @@ void read_memory_address(int machine_cycle, uint16_t* temporary_address) {
     }
 }
 
-void decode_execute_logical_instructions(uint8_t opcode) {
+void decode_execute_logical_instructions(uint8_t opcode, Register source_register, Register destination_register, int machine_cycle) {
     if (opcode >= 0x40 && opcode <= 0x7F && opcode != 0x76) {
-        mov(0, 0);
+        mov(get_destination_register(opcode), get_source_register(opcode));
+    }
+    else if (opcode == 0x06 || opcode == 0x16 || opcode == 0x26 || opcode == 0x36
+        || opcode == 0x0E || opcode == 0x1E || opcode == 0x2E || opcode == 0x3E) {
+        mvi(source_register, machine_cycle);
     }
 }
 
@@ -208,7 +212,7 @@ bool rst(int number) {
     return true;
 }
 
-bool push(int machine_cycle, uint16_t* temporary_address, Register_Pair register_pair) {
+bool push(Register_Pair register_pair, int machine_cycle, uint16_t* temporary_address) {
     switch (machine_cycle) {
     case 0:
         *temporary_address = get_program_counter();
@@ -227,7 +231,7 @@ bool push(int machine_cycle, uint16_t* temporary_address, Register_Pair register
     return false;
 }
 
-bool pop(int machine_cycle, uint16_t* temporary_address, Register_Pair register_pair) {
+bool pop(Register_Pair register_pair, int machine_cycle, uint16_t* temporary_address) {
     switch (machine_cycle) {
     case 0:
         *temporary_address = get_program_counter();

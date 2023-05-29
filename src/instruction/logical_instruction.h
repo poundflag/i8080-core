@@ -5,7 +5,7 @@
 #ifndef _LOGICAL_INSTRUCTION_H_
 #define _LOGICAL_INSTRUCTION_H_
 
-void decode_execute_logical_instructions(uint8_t opcode);
+void decode_execute_logical_instructions(uint8_t opcode, Register source_register, Register destination_register, int machine_cycle);
 
 // MOV D,S   01DDDSSS - Move register to register
 bool mov(Register destination, Register source);
@@ -41,10 +41,10 @@ bool xchg();
 bool rst(int number);
 
 // PUSH RP   11RP0101 *2       -       Push register pair on the stack
-bool push(int machine_cycle, uint16_t* temporary_address, Register_Pair register_pair);
+bool push(Register_Pair register_pair, int machine_cycle, uint16_t* temporary_address);
 
 // POP RP    11RP0001 *2       *2      Pop  register pair from the stack
-bool pop(int machine_cycle, uint16_t* temporary_address, Register_Pair register_pair);
+bool pop(Register_Pair register_pair, int machine_cycle, uint16_t* temporary_address);
 
 // XTHL      11100011          -       Swap H:L with top word on stack
 bool xthl();

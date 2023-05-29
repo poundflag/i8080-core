@@ -255,15 +255,15 @@ START_TEST(push_test) {
     set_stack_pointer(10);
     uint16_t temporary_address = 0;
 
-    bool result = push(0, &temporary_address, PAIR_B);
+    bool result = push(PAIR_B, 0, &temporary_address);
     ck_assert_int_eq(result, false);
     ck_assert_int_eq(get_program_counter(), 9);
 
-    result = push(1, &temporary_address, PAIR_B);
+    result = push(PAIR_B, 1, &temporary_address);
     ck_assert_int_eq(result, false);
     ck_assert_int_eq(get_program_counter(), 8);
 
-    result = push(2, &temporary_address, PAIR_B);
+    result = push(PAIR_B, 2, &temporary_address);
     ck_assert_int_eq(result, true);
     ck_assert_int_eq(get_program_counter(), 0);
     ck_assert_int_eq(pull_word(), 0x1234);
@@ -275,15 +275,15 @@ START_TEST(pop_test) {
     push_word(0x1234);
     uint16_t temporary_address = 0;
 
-    bool result = pop(0, &temporary_address, PAIR_B);
+    bool result = pop(PAIR_B, 0, &temporary_address);
     ck_assert_int_eq(result, false);
     ck_assert_int_eq(get_program_counter(), 7);
 
-    result = pop(1, &temporary_address, PAIR_B);
+    result = pop(PAIR_B, 1, &temporary_address);
     ck_assert_int_eq(result, false);
     ck_assert_int_eq(get_program_counter(), 6);
 
-    result = pop(2, &temporary_address, PAIR_B);
+    result = pop(PAIR_B, 2, &temporary_address);
     ck_assert_int_eq(result, true);
     ck_assert_int_eq(get_program_counter(), 0);
     ck_assert_int_eq(get_register_pair(PAIR_B), 0x1234);
