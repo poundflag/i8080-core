@@ -3,13 +3,6 @@
 #include "arithmetic_instruction.h"
 #include "branching_instruction.h"
 
-int machine_cycle = 0;
-
-void reset_machine_cycle() {
-    machine_cycle = 0;
-    increment_program_counter();
-}
-
 bool decode_execute_instruction(uint8_t opcode, int machine_cycle, uint16_t* temporary_address) {
     switch (opcode) {
     case 0x00:

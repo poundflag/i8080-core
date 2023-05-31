@@ -3,24 +3,36 @@
 #include "register/register_controller.h"
 #include "instruction/instruction.h"
 
+int machine_cycle = 0;
+uint16_t temporary_address = 0;
+
 void run_indefinite() {
     while (true) {
-        step();
+        step(&machine_cycle, &temporary_address);
     }
 }
 
 void run(int steps) {
     for (int i = 0; i < steps; i++) {
-        step();
+        step(&machine_cycle, &temporary_address);
     }
 }
 
-void step() {
+void step(int* machine_cycle, uint16_t* temporary_address) {
     // Read the current address
     uint8_t opcode = read(get_program_counter());
 
     // Decode & Execute
-    decode_execute_instruction(opcode, 0, 0);
+    bool result = decode_execute_instruction(opcode, *machine_cycle, temporary_address);
+
+    if (result == true) {
+        *machine_cycle = 0;
+        *temporary_address = 0;
+        increment_program_counter();
+    }
+    else {
+        *machine_cycle++;
+    }
 }
 
 void load_file(char* file_path) {
