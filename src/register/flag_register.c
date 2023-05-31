@@ -42,7 +42,7 @@ bool is_result_auxiliary_carry(uint8_t value_one, uint8_t value_two, Arithmetic_
     }
 }
 
-uint8_t process_flag_register(uint8_t value_one, uint8_t value_two, Arithmetic_Operation operator) { // TODO ADD ENUM OF OPERATOR
+uint8_t process_flag_register(uint8_t value_one, uint8_t value_two, Arithmetic_Operation operator) {
     uint16_t result = 0;
     if (operator == PLUS_OPERATION) {
         result = value_one + value_two;

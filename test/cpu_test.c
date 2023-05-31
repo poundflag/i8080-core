@@ -3,6 +3,26 @@
 #include "../src/memory/memory_controller.h"
 #include "../src/register/register_controller.h"
 
+interceptBDOSCall() {
+    // Stolen from
+    // https://github.com/GunshipPenguin/lib8080/blob/master/test/integration/cpmloader.c
+    printf("HELLO");
+    if (get_register(REG_C) == 2) {
+        if (get_register(REG_E) != 0) {
+            printf((char)get_register(REG_E));
+            //*output += (char)get_register(REG_E);
+        }
+    }
+    else if (get_register(REG_C) == 9) {
+        for (int addr = get_register(REG_D); read(addr) != '$'; addr++) {
+            if (read(addr) != 0) {
+                printf((char)read(addr));
+                //*output += read(addr);
+            }
+        }
+    }
+}
+
 START_TEST(read_file_and_load) {
     load_file("/home/robin/Dokumente/Projects/i8080-core/rom/test_file");
     ck_assert_int_eq(read(0), 1);
@@ -15,11 +35,39 @@ START_TEST(read_file_and_load) {
 END_TEST
 
 START_TEST(diagnostic_test_1) {
-    load_file("/home/robin/Dokumente/Projects/i8080-core/rom/test_file");
+    load_file("/home/robin/Dokumente/Projects/i8080-core/rom/TST8080.COM");
     write(5, 0xC9);
-    set_program_counter(0x100);
+    set_program_counter(0xFF);
 
-    ck_assert_int_eq(read(0), 0);
+    for (int i = 0; i < 1000; i++) {
+        run(1);
+
+        /*if (get_program_counter() == 0) {
+            break;
+        }*/
+        if (get_program_counter() == 5) {
+            printf("HELLO");
+            if (get_register(REG_C) == 2) {
+                if (get_register(REG_E) != 0) {
+                    printf((char)get_register(REG_E));
+                    //*output += (char)get_register(REG_E);
+                }
+            }
+            else if (get_register(REG_C) == 9) {
+                for (int addr = get_register(REG_D); read(addr) != '$'; addr++) {
+                    if (read(addr) != 0) {
+                        printf((char)read(addr));
+                        //*output += read(addr);
+                    }
+                }
+            }
+        }
+
+    }
+
+    //free(output);
+    ck_assert_int_eq(0, "MICROCOSM ASSOCIATES 8080/8085 CPU DIAGNOSTIC\r\n VERSION 1.0  (C) "
+        "1980\r\n\r\n CPU IS OPERATIONAL");
 }
 END_TEST
 

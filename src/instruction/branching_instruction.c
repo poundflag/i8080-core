@@ -79,6 +79,7 @@ bool call(int machine_cycle, uint16_t* temporary_address) {
     case 2:
         push_word(get_program_counter() + 1);
         set_program_counter(*temporary_address - 1);
+        printf("CALL %i\n", get_program_counter());
         return true;
     default:
         break;

@@ -149,7 +149,7 @@ bool daa() {
         carry = true;
     }
     alu_add(a_value, temp_value, false);
-    // TODO Add Carry
+    set_register_bit(REG_F, CARRY, carry);
     set_register(REG_A, a_value + temp_value);
     return true;
 }

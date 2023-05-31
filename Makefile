@@ -14,6 +14,12 @@ TEST_FILES = $(wildcard $(TEST_DIR)/**/*.c) $(wildcard $(TEST_DIR)/*c)
 EXECUTABLE = $(BIN_DIR)/i8080-core
 TEST_EXECUTABLE = $(BIN_DIR)/test-i8080-core
 
+# Setting the debug flag at compilation time for gcc if DEBUG=1
+DEBUG ?= 0
+ifeq ($(DEBUG), 1)
+	ARGS += -g
+endif
+
 .PHONY: all test
 
 all: $(EXECUTABLE)

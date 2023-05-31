@@ -5,6 +5,7 @@
 
 int machine_cycle = 0;
 uint16_t temporary_address = 0;
+uint8_t current_opcode = 0;
 
 void run_indefinite() {
     while (true) {
@@ -19,19 +20,21 @@ void run(int steps) {
 }
 
 void step(int* machine_cycle, uint16_t* temporary_address) {
-    // Read the current address
-    uint8_t opcode = read(get_program_counter());
+    printf("Address %X Opcode %X\n", get_program_counter(), read(get_program_counter()));
 
     // Decode & Execute
-    bool result = decode_execute_instruction(opcode, *machine_cycle, temporary_address);
+    bool result = decode_execute_instruction(current_opcode, *machine_cycle, temporary_address);
 
     if (result == true) {
-        *machine_cycle = 0;
-        *temporary_address = 0;
+        printf("AAA");
+        (*machine_cycle) = 0;
+        (*temporary_address) = 0;
         increment_program_counter();
+        current_opcode = read(get_program_counter());
     }
     else {
-        *machine_cycle++;
+        (*machine_cycle)++;
+        // printf("%i\n", *machine_cycle);
     }
 }
 
@@ -65,7 +68,7 @@ void load_file(char* file_path) {
         return;
     }
 
-    load_memory(file_data, file_size, 0);
+    load_memory(file_data, file_size, 0x100); // TODO REPLACE OFFSET L8R
 
     // Cleanup: close the file and free the memory
     fclose(file);
