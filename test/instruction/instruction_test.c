@@ -23,8 +23,8 @@ START_TEST(getDestinationRegister_returns_the_valid_index) {
     ck_assert_int_eq(get_destination_register(0x68), REG_L);
     ck_assert_int_eq(get_destination_register(0x6F), REG_L);
 
-    ck_assert_int_eq(get_destination_register(0x70), REG_H);
-    ck_assert_int_eq(get_destination_register(0x77), REG_H);
+    ck_assert_int_eq(get_destination_register(0x70), REG_M);
+    ck_assert_int_eq(get_destination_register(0x77), REG_M);
     ck_assert_int_eq(get_destination_register(0x78), REG_A);
     ck_assert_int_eq(get_destination_register(0x7F), REG_A);
 }
@@ -37,7 +37,7 @@ START_TEST(getSourceRegister_returns_the_valid_index) {
     ck_assert_int_eq(get_source_register(0x43), REG_E);
     ck_assert_int_eq(get_source_register(0x44), REG_H);
     ck_assert_int_eq(get_source_register(0x45), REG_L);
-    ck_assert_int_eq(get_source_register(0x46), REG_H);
+    ck_assert_int_eq(get_source_register(0x46), REG_M);
     ck_assert_int_eq(get_source_register(0x47), REG_A);
 
     ck_assert_int_eq(get_source_register(0x48), REG_B);
@@ -46,7 +46,7 @@ START_TEST(getSourceRegister_returns_the_valid_index) {
     ck_assert_int_eq(get_source_register(0x4B), REG_E);
     ck_assert_int_eq(get_source_register(0x4C), REG_H);
     ck_assert_int_eq(get_source_register(0x4D), REG_L);
-    ck_assert_int_eq(get_source_register(0x4E), REG_H);
+    ck_assert_int_eq(get_source_register(0x4E), REG_M);
     ck_assert_int_eq(get_source_register(0x4F), REG_A);
 }
 END_TEST

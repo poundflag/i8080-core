@@ -39,14 +39,14 @@ START_TEST(diagnostic_test_1) {
     write(5, 0xC9);
     set_program_counter(0xFF);
 
-    for (int i = 0; i < 1000; i++) {
+    for (int i = 0; i < 990; i++) {
         run(1);
 
-        /*if (get_program_counter() == 0) {
+        if (get_program_counter() == 0) {
             break;
-        }*/
+        }
         if (get_program_counter() == 5) {
-            printf("HELLO");
+            //printf("\nHELLO\n");
             if (get_register(REG_C) == 2) {
                 if (get_register(REG_E) != 0) {
                     printf((char)get_register(REG_E));
@@ -54,20 +54,21 @@ START_TEST(diagnostic_test_1) {
                 }
             }
             else if (get_register(REG_C) == 9) {
-                for (int addr = get_register(REG_D); read(addr) != '$'; addr++) {
+                uint16_t addr = get_register(REG_D);
+
+                while (read(addr) != '$') {
                     if (read(addr) != 0) {
-                        printf((char)read(addr));
-                        //*output += read(addr);
+                        printf("%c", (char)read(addr));
                     }
+                    addr++;
                 }
             }
         }
-
     }
 
-    //free(output);
     ck_assert_int_eq(0, "MICROCOSM ASSOCIATES 8080/8085 CPU DIAGNOSTIC\r\n VERSION 1.0  (C) "
         "1980\r\n\r\n CPU IS OPERATIONAL");
+    // free(output);
 }
 END_TEST
 

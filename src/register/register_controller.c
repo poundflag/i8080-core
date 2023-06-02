@@ -1,5 +1,6 @@
 #include "register_controller.h"
 #include "stack.h"
+#include "../memory/memory_controller.h"
 
 uint8_t register_array[REG_ENUM_SIZE] = {
     [REG_F] = 0b00000010
@@ -20,16 +21,26 @@ struct Register_Pair_Struct register_pair_array[PAIR_ENUM_SIZE] = {
 uint16_t program_counter = 0;
 
 uint8_t get_register(Register source) {
+    if (source == REG_M) {
+        return read(get_register_pair(PAIR_H));
+    }
+    //printf("REGISTER VALUE %i\n", register_array[source]);
     return register_array[source];
 }
 
 void set_register(Register source, uint8_t value) {
-    register_array[source] = value;
+    if (source == REG_M) {
+        write(get_register_pair(PAIR_H), value);
+    }
+    else {
+        register_array[source] = value;
+    }
 }
 
 uint16_t get_register_pair(Register_Pair source) {
     if (source < PAIR_ENUM_SIZE) {
-        return register_array[register_pair_array[source].low] | (register_array[register_pair_array[source].high] << 8);
+        //printf("GET VALUE %X\n", register_array[register_pair_array[source].low] | (register_array[register_pair_array[source].high] << 8));
+        return register_array[register_pair_array[source].high] | (register_array[register_pair_array[source].low] << 8);
     }
     else if (source == PAIR_SP) {
         return get_stack_pointer();
@@ -39,8 +50,9 @@ uint16_t get_register_pair(Register_Pair source) {
 
 void set_register_pair(Register_Pair source, uint16_t value) {
     if (source < PAIR_ENUM_SIZE) {
-        register_array[register_pair_array[source].low] = value & 0xFF;
-        register_array[register_pair_array[source].high] = (value >> 8) & 0xFF;
+        register_array[register_pair_array[source].high] = value & 0xFF;
+        register_array[register_pair_array[source].low] = (value >> 8) & 0xFF;
+        //printf("SET VALUE %X\n", register_array[register_pair_array[source].low] | (register_array[register_pair_array[source].high] << 8));
     }
     else if (source == PAIR_SP) {
         set_stack_pointer(value);

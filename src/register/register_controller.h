@@ -13,7 +13,8 @@ typedef enum {
     REG_H,
     REG_L,
     REG_F,
-    REG_ENUM_SIZE
+    REG_ENUM_SIZE,
+    REG_M
 } Register;
 
 typedef enum {

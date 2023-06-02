@@ -56,6 +56,14 @@ bool decode_execute_instruction(uint8_t opcode, int machine_cycle, uint16_t* tem
     case 0x35:
     case 0x3D:
         return dcr(get_destination_register(opcode));
+    case 0x0B:
+        return dcx(PAIR_B);
+    case 0x1B:
+        return dcx(PAIR_D);
+    case 0x2B:
+        return dcx(PAIR_H);
+    case 0x3B:
+        return dcx(PAIR_SP);
     case 0x06:
     case 0x0E:
     case 0x16:
@@ -249,6 +257,8 @@ bool decode_execute_instruction(uint8_t opcode, int machine_cycle, uint16_t* tem
     case 0xE8:
         return ret_conditional(COND_PARITY_EVEN);
     case 0xF0:
+        return ret_conditional(COND_POSITIVE);
+    case 0xF8:
         return ret_conditional(COND_MINUS);
     case 0xC1:
         return pop(PAIR_B, machine_cycle, temporary_address);
@@ -385,7 +395,7 @@ Register get_destination_register(uint8_t opcode) {
         return REG_L;
     }
     else if (higher_nibble == 3 && lower_nibble <= 0x7) {
-        return REG_H;
+        return REG_M;
     }
     else if (higher_nibble == 3 && lower_nibble > 0x7) {
         return REG_A;
@@ -408,7 +418,7 @@ Register get_source_register(uint8_t opcode) {
     case 5:
         return REG_L;
     case 6:
-        return REG_H;
+        return REG_M;
     case 7:
         return REG_A;
     }

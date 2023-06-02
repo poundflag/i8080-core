@@ -70,12 +70,12 @@ bool lxi(Register_Pair destination, int machine_cycle) {
         increment_program_counter();
         break;
     case 1:
-        set_register_pair(destination, read(get_program_counter()) << 8);
+        set_register_pair(destination, read(get_program_counter()));
         increment_program_counter();
         break;
     case 2:
         set_register_pair(destination,
-            read(get_program_counter()) | get_register_pair(destination)
+            (read(get_program_counter()) << 8) | get_register_pair(destination)
         );
         return true;
     default:
