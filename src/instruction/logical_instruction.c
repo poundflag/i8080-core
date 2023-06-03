@@ -77,6 +77,7 @@ bool lxi(Register_Pair destination, int machine_cycle) {
         set_register_pair(destination,
             (read(get_program_counter()) << 8) | get_register_pair(destination)
         );
+        printf("REG PAIR %X\n", get_register_pair(destination));
         return true;
     default:
         print_error_invalid_cycle("LXI");

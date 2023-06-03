@@ -39,7 +39,7 @@ START_TEST(diagnostic_test_1) {
     write(5, 0xC9);
     set_program_counter(0xFF);
 
-    for (int i = 0; i < 990; i++) {
+    for (int i = 0; i < 1310; i++) { // 67d
         run(1);
 
         if (get_program_counter() == 0) {
@@ -47,18 +47,18 @@ START_TEST(diagnostic_test_1) {
         }
         if (get_program_counter() == 5) {
             //printf("\nHELLO\n");
-            if (get_register(REG_C) == 2) {
+            /*if (get_register(REG_C) == 2) {
                 if (get_register(REG_E) != 0) {
-                    printf((char)get_register(REG_E));
+                    // printf("%c", (char)get_register(REG_E));
                     //*output += (char)get_register(REG_E);
                 }
             }
-            else if (get_register(REG_C) == 9) {
-                uint16_t addr = get_register(REG_D);
+            else */if (get_register(REG_C) == 9) {
+                uint16_t addr = get_register(REG_H);
 
                 while (read(addr) != '$') {
                     if (read(addr) != 0) {
-                        printf("%c", (char)read(addr));
+                        printf(" %c ", read(addr));
                     }
                     addr++;
                 }
