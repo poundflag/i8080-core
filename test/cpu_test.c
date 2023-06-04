@@ -31,7 +31,7 @@ interceptBDOSCall(char* output) {
 }
 
 START_TEST(read_file_and_load) {
-    load_file("/home/robin/Dokumente/Projects/i8080-core/rom/test_file");
+    load_file("/home/robin/Dokumente/Projects/i8080-core/rom/test_file", 0);
     ck_assert_int_eq(read(0), 1);
     ck_assert_int_eq(read(1), 2);
     ck_assert_int_eq(read(2), 3);
@@ -42,9 +42,9 @@ START_TEST(read_file_and_load) {
 END_TEST
 
 START_TEST(diagnostic_test_1) {
-    char* output = malloc(1000);
+    char* output = malloc(100);
     output[0] = '\0';
-    load_file("/home/robin/Dokumente/Projects/i8080-core/rom/TST8080.COM");
+    load_file("/home/robin/Dokumente/Projects/i8080-core/rom/TST8080.COM", 0x100);
     write(5, 0xC9);
     set_program_counter(0xFF);
 
@@ -64,6 +64,29 @@ START_TEST(diagnostic_test_1) {
 }
 END_TEST
 
+START_TEST(diagnostic_test_2) {
+    char* output = malloc(100);
+    output[0] = '\0';
+    load_file("/home/robin/Dokumente/Projects/i8080-core/rom/8080PRE.COM", 0x100);
+    write(5, 0xC9);
+    set_program_counter(0xFF);
+
+    for (int i = 0; i < 1310; i++) {
+        run(1);
+
+        if (get_program_counter() == 0) {
+            break;
+        }
+        if (get_program_counter() == 5) {
+            interceptBDOSCall(output);
+        }
+    }
+
+    ck_assert_str_eq(output, "8080 Preliminary tests complete");
+    free(output);
+}
+END_TEST
+
 #define TEST_CASE_SIZE 100
 
 Suite* cpu_suite(void) {
@@ -73,12 +96,14 @@ Suite* cpu_suite(void) {
 
     char* test_names[TEST_CASE_SIZE] = {
         "Read file and load",
-        "Diagnostic Test Microcosm Associates"
+        "Diagnostic Test Microcosm Associates",
+        "Diagnostic Test Preliminary Z80 tests"
     };
 
     const TTest* test_functions[TEST_CASE_SIZE] = {
         read_file_and_load,
-        diagnostic_test_1
+        diagnostic_test_1,
+        diagnostic_test_2
     };
 
     for (int i = 0; i < TEST_CASE_SIZE; i++) {

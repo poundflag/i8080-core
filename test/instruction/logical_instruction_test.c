@@ -44,11 +44,11 @@ START_TEST(lxi_test) {
 
     result = lxi(PAIR_B, 1);
     ck_assert_int_eq(get_program_counter(), 2);
-    ck_assert_int_eq(get_register_pair(PAIR_B), 0x1200);
+    ck_assert_int_eq(get_register_pair(PAIR_B), 0x0012);
     ck_assert_int_eq(result, 0);
 
     result = lxi(PAIR_B, 2);
-    ck_assert_int_eq(get_register_pair(PAIR_B), 0x1234);
+    ck_assert_int_eq(get_register_pair(PAIR_B), 0x3412);
     ck_assert_int_eq(result, 1);
 }
 END_TEST
@@ -144,12 +144,12 @@ START_TEST(lhld_test) {
     ck_assert_int_eq(result, false);
     ck_assert_int_eq(get_program_counter(), 0x0011);
     ck_assert_int_eq(temporary_address, 2);
-    ck_assert_int_eq(get_register_pair(PAIR_H), 0x1200);
+    ck_assert_int_eq(get_register_pair(PAIR_H), 0x0012);
 
     result = lhld(4, &temporary_address);
     ck_assert_int_eq(result, true);
     ck_assert_int_eq(get_program_counter(), 2);
-    ck_assert_int_eq(get_register_pair(PAIR_H), 0x1234);
+    ck_assert_int_eq(get_register_pair(PAIR_H), 0x3412);
 }
 END_TEST
 
@@ -177,14 +177,14 @@ START_TEST(shld_test) {
     ck_assert_int_eq(result, false);
     ck_assert_int_eq(get_program_counter(), 0x0011);
     ck_assert_int_eq(temporary_address, 2);
-    ck_assert_int_eq(read(0x0010), 0x12);
+    ck_assert_int_eq(read(0x0010), 0x34);
     ck_assert_int_eq(read(0x0011), 0x00);
 
     result = shld(4, &temporary_address);
     ck_assert_int_eq(result, true);
     ck_assert_int_eq(get_program_counter(), 2);
-    ck_assert_int_eq(read(0x0010), 0x12);
-    ck_assert_int_eq(read(0x0011), 0x34);
+    ck_assert_int_eq(read(0x0010), 0x34);
+    ck_assert_int_eq(read(0x0011), 0x12);
 }
 END_TEST
 

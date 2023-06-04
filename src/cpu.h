@@ -8,6 +8,6 @@
 void run_indefinite();
 void run(int steps);
 void step();
-void load_file(char* file_path);
+void load_file(char* file_path, uint16_t address_offset);
 
 #endif //_CPU_H_
