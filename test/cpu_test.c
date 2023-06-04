@@ -71,7 +71,7 @@ START_TEST(diagnostic_test_2) {
     write(5, 0xC9);
     set_program_counter(0xFF);
 
-    for (int i = 0; i < 1310; i++) {
+    for (int i = 0; i < 2000; i++) {
         run(1);
 
         if (get_program_counter() == 0) {
