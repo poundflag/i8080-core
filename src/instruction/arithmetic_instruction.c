@@ -42,8 +42,6 @@ bool adi(int machine_cycle) {
     case 1:
         uint8_t result = alu_add(get_register(REG_A), read(get_program_counter()), false);
         set_register(REG_A, result);
-
-        printf("Acc: %X\n", get_register(REG_A));
         return true;
     }
     return false;
@@ -128,9 +126,7 @@ bool inx(Register_Pair destination) {
 }
 
 bool dcx(Register_Pair destination) {
-    //printf("VALUE BEFORE DCX %X\n", get_register_pair(destination));
     set_register_pair(destination, get_register_pair(destination) - 1);
-    //printf("VALUE AFTER DCX %X\n", get_register_pair(destination));
     return true;
 }
 
@@ -170,9 +166,6 @@ bool daa() {
     // The carry bit is unaffected if there is no carry out of the upper nibble
     set_register_bit(REG_F, CARRY, carry);
 
-
-    printf("Acc: %X\n", get_register(REG_A));
-
     return true;
 }
 
@@ -195,8 +188,6 @@ bool ani(int machine_cycle) {
 
 bool ora(Register source) {
     set_register(REG_A, alu_or(get_register(REG_A), get_register(source)));
-    printf("Acc: %X\n", get_register(REG_A));
-    printf("AUX %X\n", get_register_bit(REG_F, AUXILIARY));
     return true;
 }
 
@@ -241,9 +232,7 @@ bool cpi(int machine_cycle) {
         break;
     case 1:
         alu_sub(get_register(REG_A), read(get_program_counter()), false);
-        printf("Acc: %X\n", get_register(REG_A));
-        printf("Zero Flag: %X\n", get_register_bit(REG_F, ZERO));
-
+        // printf("Instruction done\n");
         return true;
     }
     return false;

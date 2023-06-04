@@ -21,14 +21,14 @@ void run(int steps) {
 
 void step(int* machine_cycle, uint16_t* temporary_address) {
     // if (get_program_counter() >= 0x294) {
-        printf("Address %X Opcode %X\n", get_program_counter(), read(get_program_counter()));
+        //printf("Address %X Opcode %X\n", get_program_counter(), read(get_program_counter()));
     // }
 
     // Decode & Execute
     bool result = decode_execute_instruction(current_opcode, *machine_cycle, temporary_address);
 
     if (result == true) {
-        printf("Instruction done\n");
+        // printf("Instruction done\n");
         (*machine_cycle) = 0;
         (*temporary_address) = 0;
         increment_program_counter();
@@ -36,7 +36,6 @@ void step(int* machine_cycle, uint16_t* temporary_address) {
     }
     else {
         (*machine_cycle)++;
-        // printf("%i\n", *machine_cycle);
     }
 }
 

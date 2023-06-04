@@ -24,7 +24,6 @@ uint8_t get_register(Register source) {
     if (source == REG_M) {
         return read(get_register_pair(PAIR_H));
     }
-    //printf("REGISTER VALUE %i\n", register_array[source]);
     return register_array[source];
 }
 
@@ -39,7 +38,6 @@ void set_register(Register source, uint8_t value) {
 
 uint16_t get_register_pair(Register_Pair source) {
     if (source < PAIR_ENUM_SIZE) {
-        //printf("GET VALUE %X\n", register_array[register_pair_array[source].low] | (register_array[register_pair_array[source].high] << 8));
         return register_array[register_pair_array[source].high] | (register_array[register_pair_array[source].low] << 8);
     }
     else if (source == PAIR_SP) {
@@ -52,7 +50,6 @@ void set_register_pair(Register_Pair source, uint16_t value) {
     if (source < PAIR_ENUM_SIZE) {
         register_array[register_pair_array[source].high] = value & 0xFF;
         register_array[register_pair_array[source].low] = (value >> 8) & 0xFF;
-        //printf("SET VALUE %X\n", register_array[register_pair_array[source].low] | (register_array[register_pair_array[source].high] << 8));
     }
     else if (source == PAIR_SP) {
         set_stack_pointer(value);
