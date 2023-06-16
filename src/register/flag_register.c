@@ -1,4 +1,5 @@
 #include "flag_register.h"
+#include "register_controller.h"
 
 static const int parity_table[256] = {
           1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1, 0, 1, 1, 0, 1, 0, 0, 1,
@@ -36,8 +37,8 @@ bool is_result_auxiliary_carry(uint8_t value_one, uint8_t value_two, Arithmetic_
     else {
         bool carry_result = is_result_carry(value_one - value_two);
         value_two = (~value_two) & 0xFF;
-        uint16_t result = (value_one & 0xFF) + value_two + (1 - carry_result);
-        uint16_t new_carry = result ^ (value_one & 0xFF) ^ value_two;
+        uint16_t result = value_one + value_two + (1 - carry_result);
+        uint16_t new_carry = result ^ value_one ^ value_two;
         return (new_carry & 0x10) != 0;
     }
 }

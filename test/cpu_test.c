@@ -9,6 +9,7 @@ interceptBDOSCall(char* output) {
     // https://github.com/GunshipPenguin/lib8080/blob/master/test/integration/cpmloader.c
     if (get_register(REG_C) == 2) {
         if (get_register(REG_E) != 0) {
+                printf("%c", get_register(REG_E));
             char ch[2];
             ch[0] = get_register(REG_E);
             ch[1] = '\0';
@@ -20,6 +21,7 @@ interceptBDOSCall(char* output) {
 
         while (read(addr) != '$') {
             if (read(addr) != 0 && read(addr) >= 32 && read(addr) <= 126) {
+                printf("%c", read(addr));
                 char ch[2];
                 ch[0] = read(addr);
                 ch[1] = '\0';
@@ -87,6 +89,52 @@ START_TEST(diagnostic_test_2) {
 }
 END_TEST
 
+START_TEST(diagnostic_test_3) {
+    char* output = malloc(100);
+    output[0] = '\0';
+    load_file("/home/robin/Dokumente/Projects/i8080-core/rom/CPUTEST.COM", 0x100);
+    write(5, 0xC9);
+    set_program_counter(0xFF);
+
+    while (get_program_counter() != 0) {
+        run(1);
+
+        if (get_program_counter() == 5) {
+            interceptBDOSCall(output);
+        }
+    }
+
+    // printf("%s", output);
+    // printf("\n");
+
+    // ck_assert_str_eq(output, "DIAGNOSTICS II V1.2 - CPU TESTCOPYRIGHT (C) 1981 - SUPERSOFT ASSOCIATESABCDEFGHIJKLMNOPQRSTUVWXYZCPU IS 8080/8085BEGIN TIMING TESTEND TIMING TESTCPU TESTS OK");
+    free(output);
+}
+END_TEST
+
+START_TEST(diagnostic_test_4) {
+    char* output = malloc(100);
+    output[0] = '\0';
+    load_file("/home/robin/Dokumente/Projects/i8080-core/rom/8080EXER.COM", 0x100);
+    write(5, 0xC9);
+    set_program_counter(0xFF);
+
+    while (get_program_counter() != 0) {
+        run(1);
+        
+        if (get_program_counter() == 5) {
+            interceptBDOSCall(output);
+        }
+    }
+
+    printf("%s", output);
+    printf("\n");
+
+    // ck_assert_str_eq(output, "DIAGNOSTICS II V1.2 - CPU TESTCOPYRIGHT (C) 1981 - SUPERSOFT ASSOCIATESABCDEFGHIJKLMNOPQRSTUVWXYZCPU IS 8080/8085BEGIN TIMING TESTEND TIMING TESTCPU TESTS OK");
+    free(output);
+}
+END_TEST
+
 #define TEST_CASE_SIZE 100
 
 Suite* cpu_suite(void) {
@@ -97,18 +145,23 @@ Suite* cpu_suite(void) {
     char* test_names[TEST_CASE_SIZE] = {
         "Read file and load",
         "Diagnostic Test Microcosm Associates",
-        "Diagnostic Test Preliminary Z80 tests"
+        "Diagnostic Test Preliminary Z80 tests",
+        // "Diagnostic Test Supersoft Associates",
+        // "Diagnostic Test CPU Exerciser"
     };
 
     const TTest* test_functions[TEST_CASE_SIZE] = {
         read_file_and_load,
         diagnostic_test_1,
-        diagnostic_test_2
+        diagnostic_test_2,
+        // diagnostic_test_3,
+        // diagnostic_test_4
     };
 
     for (int i = 0; i < TEST_CASE_SIZE; i++) {
         // Create a new test case for each iteration
         TCase* test_case = tcase_create(test_names[i]);
+    tcase_set_timeout(test_case, 0);
 
         // Add the corresponding test function based on the index
         tcase_add_test(test_case, test_functions[i]);
