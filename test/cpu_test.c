@@ -9,7 +9,7 @@ interceptBDOSCall(char* output) {
     // https://github.com/GunshipPenguin/lib8080/blob/master/test/integration/cpmloader.c
     if (get_register(REG_C) == 2) {
         if (get_register(REG_E) != 0) {
-                printf("%c", get_register(REG_E));
+            // printf("%c", get_register(REG_E));
             char ch[2];
             ch[0] = get_register(REG_E);
             ch[1] = '\0';
@@ -21,7 +21,7 @@ interceptBDOSCall(char* output) {
 
         while (read(addr) != '$') {
             if (read(addr) != 0 && read(addr) >= 32 && read(addr) <= 126) {
-                printf("%c", read(addr));
+                // printf("%c", read(addr));
                 char ch[2];
                 ch[0] = read(addr);
                 ch[1] = '\0';
@@ -121,7 +121,7 @@ START_TEST(diagnostic_test_4) {
 
     while (get_program_counter() != 0) {
         run(1);
-        
+
         if (get_program_counter() == 5) {
             interceptBDOSCall(output);
         }
@@ -161,7 +161,7 @@ Suite* cpu_suite(void) {
     for (int i = 0; i < TEST_CASE_SIZE; i++) {
         // Create a new test case for each iteration
         TCase* test_case = tcase_create(test_names[i]);
-    tcase_set_timeout(test_case, 0);
+        tcase_set_timeout(test_case, 0);
 
         // Add the corresponding test function based on the index
         tcase_add_test(test_case, test_functions[i]);
