@@ -3,6 +3,9 @@
 #include "register/register_controller.h"
 #include "instruction/instruction.h"
 
+bool output_file = false;
+char* file_path = "";
+
 int machine_cycle = 0;
 uint16_t temporary_address = 0;
 uint8_t current_opcode = 0;
@@ -24,7 +27,10 @@ void step(int* machine_cycle, uint16_t* temporary_address) {
     bool result = decode_execute_instruction(current_opcode, *machine_cycle, temporary_address);
 
     if (result == true) {
-        // printf("Instruction done\n");
+        if (output_file == true) {
+            char* output = "THIS IS A TEST\n";
+            writeStringToFile(output, file_path);
+        }
         (*machine_cycle) = 0;
         (*temporary_address) = 0;
         increment_program_counter();
@@ -33,6 +39,22 @@ void step(int* machine_cycle, uint16_t* temporary_address) {
     else {
         (*machine_cycle)++;
     }
+}
+
+void writeStringToFile(char* input, char* filename) {
+    // creating file pointer to work with files
+    FILE* fptr;
+    // opening file in appending mode
+    fptr = fopen(filename, "a");
+    // exiting program if file cannot be opened
+    if (fptr == NULL) {
+        printf("Error opening file!");
+        exit(1);
+    }
+    // writing the string to the file
+    fprintf(fptr, "%s", input);
+    // closing the file
+    fclose(fptr);
 }
 
 void load_file(char* file_path, uint16_t address_offset) {

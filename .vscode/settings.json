@@ -2,6 +2,8 @@
     "files.associations": {
         "register_controller.h": "c",
         "logical_instruction.h": "c",
-        "memory_controller.h": "c"
+        "memory_controller.h": "c",
+        "string.h": "c",
+        "cpu.h": "c"
     }
 }

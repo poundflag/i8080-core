@@ -69,6 +69,9 @@ START_TEST(process_file_output) {
     fclose(temp_stdout);
     stdout = original_stdout;
 
+    // Removing the test file
+    remove("Hello.txt");
+
     // Compare the output with the expected value
     ck_assert_str_eq(output, "Set Output file: Hello.txt\n");
 }

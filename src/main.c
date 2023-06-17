@@ -1,12 +1,17 @@
 #include <stdio.h>
 #include <string.h>
 #include "cpu.h"
-#include "register/register_controller.h"
-#include "memory/memory_controller.h"
+#include "utils.h"
 
 int main(int argc, char** argv) {
+    process_arguments(argc, argv);
 
-  
+    if (current_running_mode == INDEFINITE) {
+        run_indefinite();
+    }
+    else if (current_running_mode == STEPPING) {
+        run(steps_to_run);
+    }
 
     return 0;
 }
