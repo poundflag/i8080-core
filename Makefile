@@ -1,35 +1,32 @@
 CC = gcc
-ARGS = -Wall -Wextra
+ARGS = -Wall -Wextra -fPIC
 TEST_ARGS = $(ARGS) -lcheck
 
+# Folder Variables
 SRC_DIR = src
-TEST_DIR = test
 BIN_DIR = bin
+BIN_OBJ_DIR = $(BIN_DIR)/obj
 
-SRC_FILES = $(wildcard $(SRC_DIR)/**/*.c) $(filter-out src/main.c, $(wildcard $(SRC_DIR)/*.c))
-MAIN_FILE = $(SRC_DIR)/main.c
-HEADER_FILES = $(wildcard $(SRC_DIR)/**/*.h) $(wildcard $(SRC_DIR)/*h)
-TEST_FILES = $(wildcard $(TEST_DIR)/**/*.c) $(wildcard $(TEST_DIR)/*c)
+# Project files that will be used in the build process
+HEADERS = $(wildcard $(SRC_DIR)/*.h $(SRC_DIR)/**/*.h)
+HEADERS_NO_EXT = $(basename $(HEADERS))
+OBJECT_FILES = $(addprefix $(BIN_OBJ_DIR)/, $(addsuffix .o, $(HEADERS_NO_EXT)))
 
-EXECUTABLE = $(BIN_DIR)/i8080-core
-TEST_EXECUTABLE = $(BIN_DIR)/test-i8080-core
+.PHONY: all bin lib clean
 
-# Setting the debug flag at compilation time for gcc if DEBUG=1
-DEBUG ?= 0
-ifeq ($(DEBUG), 1)
-	ARGS += -g
-endif
+all: bin lib
 
-.PHONY: all test
+bin: $(OBJECT_FILES)
+	@$(CC) $(ARGS) $(OBJECT_FILES) src/main.c -o $(BIN_DIR)/i8080-core
+	@echo Created binary executable
 
-all: $(EXECUTABLE)
-	$(EXECUTABLE)
+lib: $(OBJECT_FILES)
+	@$(CC) $(ARGS) $(OBJECT_FILES) -shared -o $(BIN_DIR)/i8080-core.so 
+	@echo Created shared library
 
-$(EXECUTABLE): $(SRC_FILES) $(HEADER_FILES)
-	$(CC) $(ARGS) $(MAIN_FILE) $(SRC_FILES) $(HEADER_FILES) -o $(EXECUTABLE)
+$(BIN_OBJ_DIR)/%.o: %.c %.h
+	@mkdir -p $(dir $@)
+	$(CC) $(ARGS) -c $< -o $@
 
-test: $(TEST_EXECUTABLE)
-	$(TEST_EXECUTABLE)
-
-$(TEST_EXECUTABLE): $(SRC_FILES) $(HEADER_FILES) $(TEST_FILES)
-	$(CC) $(TEST_FILES) $(SRC_FILES) $(HEADER_FILES) $(TEST_ARGS) -o $(TEST_EXECUTABLE)
+clean:
+	@rm -rf $(BIN_OBJ_DIR)
