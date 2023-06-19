@@ -37,6 +37,7 @@ $(BIN_OBJ_DIR)/%.o: %.c %.h
 test: $(TEST_OBJECT_FILES) $(OBJECT_FILES)
 	@$(CC) $(TEST_ARGS) $(TEST_OBJECT_FILES) $(OBJECT_FILES) -o $(BIN_DIR)/i8080-core-test
 	@echo Created test executable
+	bin/i8080-core-test
 
 $(BIN_OBJ_DIR)/test/%.o: test/%.c
 	@mkdir -p $(dir $@)
