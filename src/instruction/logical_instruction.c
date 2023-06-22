@@ -3,6 +3,7 @@
 #include "../instruction/instruction.h"
 #include "../memory/memory_controller.h"
 #include "../register/stack.h"
+#include "../status_service.h"
 
 void print_error_invalid_cycle(char* instruction_name) {
     fprintf(stderr, "Invalid machine cycle in logical instruction: %s\n", instruction_name);
@@ -31,16 +32,6 @@ void read_memory_address(int machine_cycle, uint16_t* temporary_address) {
     default:
         fprintf(stderr, "Wrong machine cycle when reading memory address in logical instruction\n");
         break;
-    }
-}
-
-void decode_execute_logical_instructions(uint8_t opcode, Register source_register, Register destination_register, int machine_cycle) {
-    if (opcode >= 0x40 && opcode <= 0x7F && opcode != 0x76) {
-        mov(get_destination_register(opcode), get_source_register(opcode));
-    }
-    else if (opcode == 0x06 || opcode == 0x16 || opcode == 0x26 || opcode == 0x36
-        || opcode == 0x0E || opcode == 0x1E || opcode == 0x2E || opcode == 0x3E) {
-        mvi(source_register, machine_cycle);
     }
 }
 
@@ -217,6 +208,7 @@ bool push(Register_Pair register_pair, int machine_cycle, uint16_t* temporary_ad
     case 0:
         *temporary_address = get_program_counter();
         set_program_counter(get_stack_pointer() - 1);
+        set_stack_access(true);
         break;
     case 1:
         set_program_counter(get_program_counter() - 1);
@@ -224,6 +216,7 @@ bool push(Register_Pair register_pair, int machine_cycle, uint16_t* temporary_ad
     case 2:
         set_program_counter(*temporary_address);
         push_word(get_register_pair(register_pair));
+        set_stack_access(false);
         return true;
     default:
         break;
@@ -236,6 +229,7 @@ bool pop(Register_Pair register_pair, int machine_cycle, uint16_t* temporary_add
     case 0:
         *temporary_address = get_program_counter();
         set_program_counter(get_stack_pointer() - 1);
+        set_stack_access(true);
         break;
     case 1:
         set_program_counter(get_program_counter() - 1);
@@ -243,6 +237,7 @@ bool pop(Register_Pair register_pair, int machine_cycle, uint16_t* temporary_add
     case 2:
         set_program_counter(*temporary_address);
         set_register_pair(register_pair, pull_word());
+        set_stack_access(false);
         return true;
     default:
         break;

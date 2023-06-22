@@ -93,3 +93,7 @@ void load_file(char* file_path, uint16_t address_offset) {
     fclose(file);
     free(file_data);
 }
+
+bool is_first_machine_cycle() {
+    return machine_cycle == true;
+}

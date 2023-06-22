@@ -11,6 +11,7 @@ Suite* branching_instruction_suite(void);
 Suite* stack_suite(void);
 Suite* cpu_suite(void);
 Suite* utils_suite(void);
+Suite* status_service_suite(void);
 
 int main(void) {
     int number_failed;
@@ -27,6 +28,7 @@ int main(void) {
     srunner_add_suite(test_runner, stack_suite());
     srunner_add_suite(test_runner, cpu_suite());
     srunner_add_suite(test_runner, utils_suite());
+    srunner_add_suite(test_runner, status_service_suite());
 
     // Run tests
     srunner_run_all(test_runner, CK_NORMAL);
