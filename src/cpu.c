@@ -9,6 +9,7 @@ char* file_path = "";
 int machine_cycle = 0;
 uint16_t temporary_address = 0;
 uint8_t current_opcode = 0;
+bool first_start_up = true;
 
 void run_indefinite() {
     while (true) {
@@ -23,6 +24,12 @@ void run(int steps) {
 }
 
 void step(int* machine_cycle, uint16_t* temporary_address) {
+    // Get the current opcode if this is called for the first time
+    if (first_start_up == true) {
+        current_opcode = read(get_program_counter());
+        first_start_up = false;
+    }
+
     // Decode & Execute
     bool result = decode_execute_instruction(current_opcode, *machine_cycle, temporary_address);
 

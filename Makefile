@@ -27,7 +27,7 @@ bin: $(OBJECT_FILES)
 	@echo Created binary executable
 
 lib: $(OBJECT_FILES)
-	@$(CC) $(ARGS) $(OBJECT_FILES) -shared -o $(BIN_DIR)/i8080-core.so 
+	@$(CC) $(ARGS) $(OBJECT_FILES) -shared -o $(BIN_DIR)/libi8080core.so 
 	@echo Created shared library
 
 $(BIN_OBJ_DIR)/%.o: %.c %.h
