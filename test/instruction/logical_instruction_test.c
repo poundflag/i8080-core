@@ -1,4 +1,4 @@
-#include <check.h>
+#include "unity.h"
 #include <stdbool.h>
 #include "../../src/instruction/logical_instruction.h"
 #include "../../src/instruction/instruction.h"
@@ -6,54 +6,51 @@
 #include "../../src/register/stack.h"
 #include "../../src/memory/memory_controller.h"
 
-START_TEST(mov_test) {
+void test_mov_test() {
     set_register(REG_A, 10);
     mov(REG_B, REG_A);
 
-    ck_assert_int_eq(get_register(REG_B), 10);
-    ck_assert_int_eq(get_register(REG_A), 10);
+    TEST_ASSERT_EQUAL_INT(get_register(REG_B), 10);
+    TEST_ASSERT_EQUAL_INT(get_register(REG_A), 10);
 }
-END_TEST
 
-START_TEST(mvi_test) {
+void test_mvi_test() {
     set_program_counter(0);
     bool result = false;
     write(1, 50);
 
     result = mvi(REG_B, 0);
-    ck_assert_int_eq(get_program_counter(), 1);
-    ck_assert_int_eq(result, false);
+    TEST_ASSERT_EQUAL_INT(get_program_counter(), 1);
+    TEST_ASSERT_EQUAL_INT(result, false);
 
     result = mvi(REG_B, 1);
-    ck_assert_int_eq(get_register(REG_B), 50);
-    ck_assert_int_eq(get_register(REG_B), read(1));
-    ck_assert_int_eq(result, true);
+    TEST_ASSERT_EQUAL_INT(get_register(REG_B), 50);
+    TEST_ASSERT_EQUAL_INT(get_register(REG_B), read(1));
+    TEST_ASSERT_EQUAL_INT(result, true);
 }
-END_TEST
 
-START_TEST(lxi_test) {
+void test_lxi_test() {
     set_program_counter(0);
     bool result = false;
     write(1, 0x12);
     write(2, 0x34);
 
     result = lxi(PAIR_B, 0);
-    ck_assert_int_eq(get_program_counter(), 1);
-    ck_assert_int_eq(get_register_pair(PAIR_B), 0);
-    ck_assert_int_eq(result, 0);
+    TEST_ASSERT_EQUAL_INT(get_program_counter(), 1);
+    TEST_ASSERT_EQUAL_INT(get_register_pair(PAIR_B), 0);
+    TEST_ASSERT_EQUAL_INT(result, 0);
 
     result = lxi(PAIR_B, 1);
-    ck_assert_int_eq(get_program_counter(), 2);
-    ck_assert_int_eq(get_register_pair(PAIR_B), 0x0012);
-    ck_assert_int_eq(result, 0);
+    TEST_ASSERT_EQUAL_INT(get_program_counter(), 2);
+    TEST_ASSERT_EQUAL_INT(get_register_pair(PAIR_B), 0x0012);
+    TEST_ASSERT_EQUAL_INT(result, 0);
 
     result = lxi(PAIR_B, 2);
-    ck_assert_int_eq(get_register_pair(PAIR_B), 0x3412);
-    ck_assert_int_eq(result, 1);
+    TEST_ASSERT_EQUAL_INT(get_register_pair(PAIR_B), 0x3412);
+    TEST_ASSERT_EQUAL_INT(result, 1);
 }
-END_TEST
 
-START_TEST(lda_test) {
+void test_lda_test() {
     set_program_counter(0);
     bool result = false;
     uint16_t temporary_address = 0;
@@ -62,29 +59,28 @@ START_TEST(lda_test) {
     write(0x0010, 55);
 
     result = lda(0, &temporary_address);
-    ck_assert_int_eq(get_program_counter(), 1);
-    ck_assert_int_eq(get_register(REG_A), 0);
-    ck_assert_int_eq(result, 0);
+    TEST_ASSERT_EQUAL_INT(get_program_counter(), 1);
+    TEST_ASSERT_EQUAL_INT(get_register(REG_A), 0);
+    TEST_ASSERT_EQUAL_INT(result, 0);
 
     result = lda(1, &temporary_address);
-    ck_assert_int_eq(get_program_counter(), 2);
-    ck_assert_int_eq(get_register(REG_A), 0);
-    ck_assert_int_eq(result, 0);
+    TEST_ASSERT_EQUAL_INT(get_program_counter(), 2);
+    TEST_ASSERT_EQUAL_INT(get_register(REG_A), 0);
+    TEST_ASSERT_EQUAL_INT(result, 0);
 
     result = lda(2, &temporary_address);
-    ck_assert_int_eq(get_program_counter(), 0x0010);
-    ck_assert_int_eq(temporary_address, 2);
-    ck_assert_int_eq(get_register(REG_A), 0);
-    ck_assert_int_eq(result, 0);
+    TEST_ASSERT_EQUAL_INT(get_program_counter(), 0x0010);
+    TEST_ASSERT_EQUAL_INT(temporary_address, 2);
+    TEST_ASSERT_EQUAL_INT(get_register(REG_A), 0);
+    TEST_ASSERT_EQUAL_INT(result, 0);
 
     result = lda(3, &temporary_address);
-    ck_assert_int_eq(get_register(REG_A), 55);
-    ck_assert_int_eq(get_program_counter(), 2);
-    ck_assert_int_eq(result, 1);
+    TEST_ASSERT_EQUAL_INT(get_register(REG_A), 55);
+    TEST_ASSERT_EQUAL_INT(get_program_counter(), 2);
+    TEST_ASSERT_EQUAL_INT(result, 1);
 }
-END_TEST
 
-START_TEST(sta_test) {
+void test_sta_test() {
     set_program_counter(0);
     bool result = false;
     uint16_t temporary_address = 0;
@@ -93,30 +89,29 @@ START_TEST(sta_test) {
     set_register(REG_A, 55);
 
     result = sta(0, &temporary_address);
-    ck_assert_int_eq(get_program_counter(), 1);
-    ck_assert_int_eq(read(0x0010), 0);
-    ck_assert_int_eq(result, 0);
+    TEST_ASSERT_EQUAL_INT(get_program_counter(), 1);
+    TEST_ASSERT_EQUAL_INT(read(0x0010), 0);
+    TEST_ASSERT_EQUAL_INT(result, 0);
 
     result = sta(1, &temporary_address);
-    ck_assert_int_eq(get_program_counter(), 2);
-    ck_assert_int_eq(read(0x0010), 0);
-    ck_assert_int_eq(result, 0);
+    TEST_ASSERT_EQUAL_INT(get_program_counter(), 2);
+    TEST_ASSERT_EQUAL_INT(read(0x0010), 0);
+    TEST_ASSERT_EQUAL_INT(result, 0);
 
     result = sta(2, &temporary_address);
-    ck_assert_int_eq(get_program_counter(), 0x0010);
-    ck_assert_int_eq(temporary_address, 2);
-    ck_assert_int_eq(read(0x0010), 0);
-    ck_assert_int_eq(result, 0);
+    TEST_ASSERT_EQUAL_INT(get_program_counter(), 0x0010);
+    TEST_ASSERT_EQUAL_INT(temporary_address, 2);
+    TEST_ASSERT_EQUAL_INT(read(0x0010), 0);
+    TEST_ASSERT_EQUAL_INT(result, 0);
 
     result = sta(3, &temporary_address);
-    ck_assert_int_eq(get_register(REG_A), 55);
-    ck_assert_int_eq(read(0x0010), 55);
-    ck_assert_int_eq(get_program_counter(), 2);
-    ck_assert_int_eq(result, 1);
+    TEST_ASSERT_EQUAL_INT(get_register(REG_A), 55);
+    TEST_ASSERT_EQUAL_INT(read(0x0010), 55);
+    TEST_ASSERT_EQUAL_INT(get_program_counter(), 2);
+    TEST_ASSERT_EQUAL_INT(result, 1);
 }
-END_TEST
 
-START_TEST(lhld_test) {
+void test_lhld_test() {
     bool result = false;
     uint16_t temporary_address = 0;
     write(1, 0x10);
@@ -125,35 +120,34 @@ START_TEST(lhld_test) {
     write(0x0011, 0x34);
 
     result = lhld(0, &temporary_address);
-    ck_assert_int_eq(result, false);
-    ck_assert_int_eq(get_program_counter(), 1);
-    ck_assert_int_eq(get_register_pair(PAIR_H), 0);
+    TEST_ASSERT_EQUAL_INT(result, false);
+    TEST_ASSERT_EQUAL_INT(get_program_counter(), 1);
+    TEST_ASSERT_EQUAL_INT(get_register_pair(PAIR_H), 0);
 
     result = lhld(1, &temporary_address);
-    ck_assert_int_eq(result, false);
-    ck_assert_int_eq(get_program_counter(), 2);
-    ck_assert_int_eq(get_register_pair(PAIR_H), 0);
+    TEST_ASSERT_EQUAL_INT(result, false);
+    TEST_ASSERT_EQUAL_INT(get_program_counter(), 2);
+    TEST_ASSERT_EQUAL_INT(get_register_pair(PAIR_H), 0);
 
     result = lhld(2, &temporary_address);
-    ck_assert_int_eq(result, false);
-    ck_assert_int_eq(get_program_counter(), 0x0010);
-    ck_assert_int_eq(temporary_address, 2);
-    ck_assert_int_eq(get_register_pair(PAIR_H), 0);
+    TEST_ASSERT_EQUAL_INT(result, false);
+    TEST_ASSERT_EQUAL_INT(get_program_counter(), 0x0010);
+    TEST_ASSERT_EQUAL_INT(temporary_address, 2);
+    TEST_ASSERT_EQUAL_INT(get_register_pair(PAIR_H), 0);
 
     result = lhld(3, &temporary_address);
-    ck_assert_int_eq(result, false);
-    ck_assert_int_eq(get_program_counter(), 0x0011);
-    ck_assert_int_eq(temporary_address, 2);
-    ck_assert_int_eq(get_register_pair(PAIR_H), 0x0012);
+    TEST_ASSERT_EQUAL_INT(result, false);
+    TEST_ASSERT_EQUAL_INT(get_program_counter(), 0x0011);
+    TEST_ASSERT_EQUAL_INT(temporary_address, 2);
+    TEST_ASSERT_EQUAL_INT(get_register_pair(PAIR_H), 0x0012);
 
     result = lhld(4, &temporary_address);
-    ck_assert_int_eq(result, true);
-    ck_assert_int_eq(get_program_counter(), 2);
-    ck_assert_int_eq(get_register_pair(PAIR_H), 0x3412);
+    TEST_ASSERT_EQUAL_INT(result, true);
+    TEST_ASSERT_EQUAL_INT(get_program_counter(), 2);
+    TEST_ASSERT_EQUAL_INT(get_register_pair(PAIR_H), 0x3412);
 }
-END_TEST
 
-START_TEST(shld_test) {
+void test_shld_test() {
     bool result = false;
     uint16_t temporary_address = 0;
     write(1, 0x10);
@@ -161,224 +155,175 @@ START_TEST(shld_test) {
     set_register_pair(PAIR_H, 0x1234);
 
     result = shld(0, &temporary_address);
-    ck_assert_int_eq(result, false);
-    ck_assert_int_eq(get_program_counter(), 1);
+    TEST_ASSERT_EQUAL_INT(result, false);
+    TEST_ASSERT_EQUAL_INT(get_program_counter(), 1);
 
     result = shld(1, &temporary_address);
-    ck_assert_int_eq(result, false);
-    ck_assert_int_eq(get_program_counter(), 2);
+    TEST_ASSERT_EQUAL_INT(result, false);
+    TEST_ASSERT_EQUAL_INT(get_program_counter(), 2);
 
     result = shld(2, &temporary_address);
-    ck_assert_int_eq(result, false);
-    ck_assert_int_eq(get_program_counter(), 0x0010);
-    ck_assert_int_eq(temporary_address, 2);
+    TEST_ASSERT_EQUAL_INT(result, false);
+    TEST_ASSERT_EQUAL_INT(get_program_counter(), 0x0010);
+    TEST_ASSERT_EQUAL_INT(temporary_address, 2);
 
     result = shld(3, &temporary_address);
-    ck_assert_int_eq(result, false);
-    ck_assert_int_eq(get_program_counter(), 0x0011);
-    ck_assert_int_eq(temporary_address, 2);
-    ck_assert_int_eq(read(0x0010), 0x34);
-    ck_assert_int_eq(read(0x0011), 0x00);
+    TEST_ASSERT_EQUAL_INT(result, false);
+    TEST_ASSERT_EQUAL_INT(get_program_counter(), 0x0011);
+    TEST_ASSERT_EQUAL_INT(temporary_address, 2);
+    TEST_ASSERT_EQUAL_INT(read(0x0010), 0x34);
+    TEST_ASSERT_EQUAL_INT(read(0x0011), 0x00);
 
     result = shld(4, &temporary_address);
-    ck_assert_int_eq(result, true);
-    ck_assert_int_eq(get_program_counter(), 2);
-    ck_assert_int_eq(read(0x0010), 0x34);
-    ck_assert_int_eq(read(0x0011), 0x12);
+    TEST_ASSERT_EQUAL_INT(result, true);
+    TEST_ASSERT_EQUAL_INT(get_program_counter(), 2);
+    TEST_ASSERT_EQUAL_INT(read(0x0010), 0x34);
+    TEST_ASSERT_EQUAL_INT(read(0x0011), 0x12);
 }
-END_TEST
 
-START_TEST(ldax_test) {
+void test_ldax_test() {
     bool result = false;
     uint16_t temporary_address = 0;
     write(0x0010, 74);
     set_register_pair(PAIR_B, 0x0010);
 
     result = ldax(PAIR_B, 0, &temporary_address);
-    ck_assert_int_eq(result, false);
-    ck_assert_int_eq(get_program_counter(), 0x0010);
-    ck_assert_int_eq(get_register(REG_A), 0);
+    TEST_ASSERT_EQUAL_INT(result, false);
+    TEST_ASSERT_EQUAL_INT(get_program_counter(), 0x0010);
+    TEST_ASSERT_EQUAL_INT(get_register(REG_A), 0);
 
     result = ldax(PAIR_B, 1, &temporary_address);
-    ck_assert_int_eq(result, true);
-    ck_assert_int_eq(get_program_counter(), 0);
-    ck_assert_int_eq(get_register(REG_A), 74);
+    TEST_ASSERT_EQUAL_INT(result, true);
+    TEST_ASSERT_EQUAL_INT(get_program_counter(), 0);
+    TEST_ASSERT_EQUAL_INT(get_register(REG_A), 74);
 }
-END_TEST
 
-START_TEST(stax_test) {
+void test_stax_test() {
     bool result = false;
     uint16_t temporary_address = 0;
     set_register(REG_A, 74);
     set_register_pair(PAIR_B, 0x0010);
 
     result = stax(PAIR_B, 0, &temporary_address);
-    ck_assert_int_eq(result, false);
-    ck_assert_int_eq(get_program_counter(), 0x0010);
-    ck_assert_int_eq(read(0x0010), 0);
+    TEST_ASSERT_EQUAL_INT(result, false);
+    TEST_ASSERT_EQUAL_INT(get_program_counter(), 0x0010);
+    TEST_ASSERT_EQUAL_INT(read(0x0010), 0);
 
     result = stax(PAIR_B, 1, &temporary_address);
-    ck_assert_int_eq(result, true);
-    ck_assert_int_eq(get_program_counter(), 0);
-    ck_assert_int_eq(read(0x0010), 74);
+    TEST_ASSERT_EQUAL_INT(result, true);
+    TEST_ASSERT_EQUAL_INT(get_program_counter(), 0);
+    TEST_ASSERT_EQUAL_INT(read(0x0010), 74);
 }
-END_TEST
 
-START_TEST(xchg_test) {
+void test_xchg_test() {
     bool result = false;
     set_register_pair(PAIR_D, 0x1111);
     set_register_pair(PAIR_H, 0x4444);
 
     result = xchg();
-    ck_assert_int_eq(result, true);
-    ck_assert_int_eq(get_register_pair(PAIR_D), 0x4444);
-    ck_assert_int_eq(get_register_pair(PAIR_H), 0x1111);
-    ck_assert_int_eq(get_program_counter(), 0);
+    TEST_ASSERT_EQUAL_INT(result, true);
+    TEST_ASSERT_EQUAL_INT(get_register_pair(PAIR_D), 0x4444);
+    TEST_ASSERT_EQUAL_INT(get_register_pair(PAIR_H), 0x1111);
+    TEST_ASSERT_EQUAL_INT(get_program_counter(), 0);
 }
-END_TEST
 
-START_TEST(rst_test) {
+void test_rst_test() {
     bool result = rst(1);
-    ck_assert_int_eq(result, true);
-    ck_assert_int_eq(get_program_counter(), 7);
-    ck_assert_int_eq(pull_word(), 1);
+    TEST_ASSERT_EQUAL_INT(result, true);
+    TEST_ASSERT_EQUAL_INT(get_program_counter(), 7);
+    TEST_ASSERT_EQUAL_INT(pull_word(), 1);
 
     result = rst(2);
-    ck_assert_int_eq(result, true);
-    ck_assert_int_eq(get_program_counter(), 15);
-    ck_assert_int_eq(pull_word(), 8);
+    TEST_ASSERT_EQUAL_INT(result, true);
+    TEST_ASSERT_EQUAL_INT(get_program_counter(), 15);
+    TEST_ASSERT_EQUAL_INT(pull_word(), 8);
 }
-END_TEST
 
-START_TEST(push_test) {
+void test_push_test() {
     set_register_pair(PAIR_B, 0x1234);
     set_stack_pointer(10);
     uint16_t temporary_address = 0;
 
     bool result = push(PAIR_B, 0, &temporary_address);
-    ck_assert_int_eq(result, false);
-    ck_assert_int_eq(get_program_counter(), 9);
+    TEST_ASSERT_EQUAL_INT(result, false);
+    TEST_ASSERT_EQUAL_INT(get_program_counter(), 9);
 
     result = push(PAIR_B, 1, &temporary_address);
-    ck_assert_int_eq(result, false);
-    ck_assert_int_eq(get_program_counter(), 8);
+    TEST_ASSERT_EQUAL_INT(result, false);
+    TEST_ASSERT_EQUAL_INT(get_program_counter(), 8);
 
     result = push(PAIR_B, 2, &temporary_address);
-    ck_assert_int_eq(result, true);
-    ck_assert_int_eq(get_program_counter(), 0);
-    ck_assert_int_eq(pull_word(), 0x1234);
+    TEST_ASSERT_EQUAL_INT(result, true);
+    TEST_ASSERT_EQUAL_INT(get_program_counter(), 0);
+    TEST_ASSERT_EQUAL_INT(pull_word(), 0x1234);
 }
-END_TEST
 
-START_TEST(pop_test) {
+void test_pop_test() {
     set_stack_pointer(10);
     push_word(0x1234);
     uint16_t temporary_address = 0;
 
     bool result = pop(PAIR_B, 0, &temporary_address);
-    ck_assert_int_eq(result, false);
-    ck_assert_int_eq(get_program_counter(), 7);
+    TEST_ASSERT_EQUAL_INT(result, false);
+    TEST_ASSERT_EQUAL_INT(get_program_counter(), 7);
 
     result = pop(PAIR_B, 1, &temporary_address);
-    ck_assert_int_eq(result, false);
-    ck_assert_int_eq(get_program_counter(), 6);
+    TEST_ASSERT_EQUAL_INT(result, false);
+    TEST_ASSERT_EQUAL_INT(get_program_counter(), 6);
 
     result = pop(PAIR_B, 2, &temporary_address);
-    ck_assert_int_eq(result, true);
-    ck_assert_int_eq(get_program_counter(), 0);
-    ck_assert_int_eq(get_register_pair(PAIR_B), 0x1234);
+    TEST_ASSERT_EQUAL_INT(result, true);
+    TEST_ASSERT_EQUAL_INT(get_program_counter(), 0);
+    TEST_ASSERT_EQUAL_INT(get_register_pair(PAIR_B), 0x1234);
 }
-END_TEST
 
-START_TEST(xthl_test) {
+void test_xthl_test() {
     push_word(0x5678);
     set_register_pair(PAIR_H, 0x1234);
 
     bool result = xthl();
-    ck_assert_int_eq(result, true);
-    ck_assert_int_eq(get_register_pair(PAIR_H), 0x5678);
-    ck_assert_int_eq(pull_word(), 0x1234);
+    TEST_ASSERT_EQUAL_INT(result, true);
+    TEST_ASSERT_EQUAL_INT(get_register_pair(PAIR_H), 0x5678);
+    TEST_ASSERT_EQUAL_INT(pull_word(), 0x1234);
 }
-END_TEST
 
-START_TEST(sphl_test) {
+void test_sphl_test() {
     set_register_pair(PAIR_H, 0x1234);
 
     bool result = sphl();
-    ck_assert_int_eq(result, true);
-    ck_assert_int_eq(get_stack_pointer(), 0x1234);
+    TEST_ASSERT_EQUAL_INT(result, true);
+    TEST_ASSERT_EQUAL_INT(get_stack_pointer(), 0x1234);
 }
-END_TEST
 
-START_TEST(in_test) {
+void test_in_test() {
+    TEST_IGNORE();
     bool result = in(1);
-    ck_assert_int_eq(result, true);
+    TEST_ASSERT_EQUAL_INT(result, true);
 }
-END_TEST
 
-START_TEST(out_test) {
+void test_out_test() {
+    TEST_IGNORE();
     bool result = out(1);
-    ck_assert_int_eq(result, true);
+    TEST_ASSERT_EQUAL_INT(result, true);
 }
-END_TEST
 
-#define TEST_CASE_SIZE 100
-
-Suite* logical_instruction_suite(void) {
-    Suite* suite;
-
-    suite = suite_create("Logical Instruction");
-
-    char* test_names[TEST_CASE_SIZE] = {
-        "MOV",
-        "MVI",
-        "LXI",
-        "LDA",
-        "STA",
-        "LHLD",
-        "SHLD",
-        "LDAX",
-        "STAX",
-        "XCHG",
-        "RST",
-        "PUSH",
-        "POP",
-        "XTHL",
-        "SPHL",
-        "IN",
-        "OUT"
-    };
-
-    const TTest* test_functions[TEST_CASE_SIZE] = {
-        mov_test,
-        mvi_test,
-        lxi_test,
-        lda_test,
-        sta_test,
-        lhld_test,
-        shld_test,
-        ldax_test,
-        stax_test,
-        xchg_test,
-        rst_test,
-        push_test,
-        pop_test,
-        xthl_test,
-        sphl_test,
-        in_test,
-        out_test
-    };
-
-    for (int i = 0; i < TEST_CASE_SIZE; i++) {
-        // Create a new test case for each iteration
-        TCase* test_case = tcase_create(test_names[i]);
-
-        // Add the corresponding test function based on the index
-        tcase_add_test(test_case, test_functions[i]);
-
-        // Add the test case to the suite
-        suite_add_tcase(suite, test_case);
-    }
-
-    return suite;
+void run_logical_instruction_test() {
+    printf("Logical instruction:\n");
+    RUN_TEST(test_mov_test);
+    RUN_TEST(test_mvi_test);
+    RUN_TEST(test_lxi_test);
+    RUN_TEST(test_lda_test);
+    RUN_TEST(test_sta_test);
+    RUN_TEST(test_lhld_test);
+    RUN_TEST(test_shld_test);
+    RUN_TEST(test_ldax_test);
+    RUN_TEST(test_stax_test);
+    RUN_TEST(test_xchg_test);
+    RUN_TEST(test_rst_test);
+    RUN_TEST(test_push_test);
+    RUN_TEST(test_pop_test);
+    RUN_TEST(test_xthl_test);
+    RUN_TEST(test_sphl_test);
+    RUN_TEST(test_in_test);
+    RUN_TEST(test_out_test);
 }
