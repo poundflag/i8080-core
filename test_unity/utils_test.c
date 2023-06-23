@@ -1,8 +1,8 @@
-#include <check.h>
+#include "unity.h"
 #include <stdio.h>
 #include "../src/utils.h"
 
-START_TEST(return_error_on_invalid_args) {
+void test_return_error_on_invalid_args() {
     // Redirect stdout to a string
     char output[100];
     FILE* temp_stdout = fmemopen(output, sizeof(output), "w");
@@ -22,11 +22,10 @@ START_TEST(return_error_on_invalid_args) {
     stdout = original_stdout;
 
     // Compare the output with the expected value
-    ck_assert_str_eq(output, "arg1 is an invalid command\narg2 is an invalid command\n");
+    TEST_ASSERT_EQUAL_STRING("arg1 is an invalid command\narg2 is an invalid command\n", output);
 }
-END_TEST
 
-START_TEST(process_file_input) {
+void test_process_file_input() {
     // Redirect stdout to a string
     char output[100];
     FILE* temp_stdout = fmemopen(output, sizeof(output), "w");
@@ -46,11 +45,10 @@ START_TEST(process_file_input) {
     stdout = original_stdout;
 
     // Compare the output with the expected value
-    ck_assert_str_eq(output, "Loading file: /home/robin/Dokumente/Projects/i8080-core/rom/8080EXER.COM\n");
+    TEST_ASSERT_EQUAL_STRING(output, "Loading file: /home/robin/Dokumente/Projects/i8080-core/rom/8080EXER.COM\n");
 }
-END_TEST
 
-START_TEST(process_file_output) {
+void test_process_file_output() {
     // Redirect stdout to a string
     char output[100];
     FILE* temp_stdout = fmemopen(output, sizeof(output), "w");
@@ -73,11 +71,10 @@ START_TEST(process_file_output) {
     remove("Hello.txt");
 
     // Compare the output with the expected value
-    ck_assert_str_eq(output, "Set Output file: Hello.txt\n");
+    TEST_ASSERT_EQUAL_STRING(output, "Set Output file: Hello.txt\n");
 }
-END_TEST
 
-START_TEST(step_the_cpu_finite) {
+void test_step_the_cpu_finite() {
     // Redirect stdout to a string
     char output[100];
     FILE* temp_stdout = fmemopen(output, sizeof(output), "w");
@@ -97,13 +94,12 @@ START_TEST(step_the_cpu_finite) {
     stdout = original_stdout;
 
     // Compare the output with the expected value
-    ck_assert_str_eq(output, "Running cpu for 10 steps\n");
-    ck_assert_int_eq(current_running_mode, STEPPING);
-    ck_assert_int_eq(steps_to_run, 10);
+    TEST_ASSERT_EQUAL_STRING(output, "Running cpu for 10 steps\n");
+    TEST_ASSERT_EQUAL_INT(current_running_mode, STEPPING);
+    TEST_ASSERT_EQUAL_INT(steps_to_run, 10);
 }
-END_TEST
 
-START_TEST(step_the_cpu_infinite) {
+void test_step_the_cpu_infinite() {
     // Redirect stdout to a string
     char output[100];
     FILE* temp_stdout = fmemopen(output, sizeof(output), "w");
@@ -123,46 +119,16 @@ START_TEST(step_the_cpu_infinite) {
     stdout = original_stdout;
 
     // Compare the output with the expected value
-    ck_assert_str_eq(output, "Running cpu infinite\n");
-    ck_assert_int_eq(current_running_mode, INDEFINITE);
-    ck_assert_int_eq(steps_to_run, -1);
+    TEST_ASSERT_EQUAL_STRING(output, "Running cpu infinite\n");
+    TEST_ASSERT_EQUAL_INT(current_running_mode, INDEFINITE);
+    TEST_ASSERT_EQUAL_INT(steps_to_run, -1);
 }
-END_TEST
 
-#define TEST_CASE_SIZE 100
-
-Suite* utils_suite(void) {
-    Suite* suite;
-
-    suite = suite_create("UTILS");
-
-    char* test_names[TEST_CASE_SIZE] = {
-        "Return error on invalid args",
-        "Process file input",
-        "Process file output",
-        "Step the cpu finite",
-        "Step the cpu infinite"
-    };
-
-    const TTest* test_functions[TEST_CASE_SIZE] = {
-        return_error_on_invalid_args,
-        process_file_input,
-        process_file_output,
-        step_the_cpu_finite,
-        step_the_cpu_infinite
-    };
-
-    for (int i = 0; i < TEST_CASE_SIZE; i++) {
-        // Create a new test case for each iteration
-        TCase* test_case = tcase_create(test_names[i]);
-        tcase_set_timeout(test_case, 0);
-
-        // Add the corresponding test function based on the index
-        tcase_add_test(test_case, test_functions[i]);
-
-        // Add the test case to the suite
-        suite_add_tcase(suite, test_case);
-    }
-
-    return suite;
+void run_utils_test() {
+    printf("Utils:\n");
+    RUN_TEST(test_return_error_on_invalid_args);
+    RUN_TEST(test_process_file_input);
+    RUN_TEST(test_process_file_output);
+    RUN_TEST(test_step_the_cpu_finite);
+    RUN_TEST(test_step_the_cpu_infinite);
 }
