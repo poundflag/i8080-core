@@ -2,6 +2,7 @@
 #include "memory/memory_controller.h"
 #include "register/register_controller.h"
 #include "instruction/instruction.h"
+#include "status_service.h"
 
 bool output_file = false;
 char* file_path = "";
@@ -38,12 +39,14 @@ void step(int* machine_cycle, uint16_t* temporary_address) {
             char* output = "THIS IS A TEST\n";
             writeStringToFile(output, file_path);
         }
+        set_first_machine_cycle(true);
         (*machine_cycle) = 0;
         (*temporary_address) = 0;
         increment_program_counter();
         current_opcode = read(get_program_counter());
     }
     else {
+        set_first_machine_cycle(false);
         (*machine_cycle)++;
     }
 }
@@ -99,8 +102,4 @@ void load_file(char* file_path, uint16_t address_offset) {
     // Cleanup: close the file and free the memory
     fclose(file);
     free(file_data);
-}
-
-bool is_first_machine_cycle() {
-    return machine_cycle == true;
 }

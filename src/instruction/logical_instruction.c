@@ -98,10 +98,16 @@ bool sta(int machine_cycle, uint16_t* temporary_address) {
     switch (machine_cycle) {
     case 0:
     case 1:
+        read_memory_address(machine_cycle, temporary_address);
+        break;
     case 2:
+        set_memory_read(false);
+        set_write_output(true);
         read_memory_address(machine_cycle, temporary_address);
         break;
     case 3:
+        set_memory_read(true);
+        set_write_output(false);
         write(get_program_counter(), get_register(REG_A));
         swap_program_counter_and_value(temporary_address);
         return true;
@@ -138,7 +144,11 @@ bool shld(int machine_cycle, uint16_t* temporary_address) {
     switch (machine_cycle) {
     case 0:
     case 1:
+        read_memory_address(machine_cycle, temporary_address);
+        break;
     case 2:
+        set_memory_read(false);
+        set_write_output(true);
         read_memory_address(machine_cycle, temporary_address);
         break;
     case 3:
@@ -146,6 +156,8 @@ bool shld(int machine_cycle, uint16_t* temporary_address) {
         increment_program_counter();
         break;
     case 4:
+        set_memory_read(true);
+        set_write_output(false);
         write(get_program_counter(), get_register(REG_H));
         swap_program_counter_and_value(temporary_address);
         return true;
@@ -176,10 +188,14 @@ bool ldax(Register_Pair indirect_pair, int machine_cycle, uint16_t* temporary_ad
 bool stax(Register_Pair indirect_pair, int machine_cycle, uint16_t* temporary_address) {
     switch (machine_cycle) {
     case 0:
+        set_memory_read(false);
+        set_write_output(true);
         *temporary_address = get_register_pair(indirect_pair);
         swap_program_counter_and_value(temporary_address);
         break;
     case 1:
+        set_memory_read(true);
+        set_write_output(false);
         write(get_program_counter(), get_register(REG_A));
         swap_program_counter_and_value(temporary_address);
         return true;
@@ -206,17 +222,21 @@ bool rst(int number) {
 bool push(Register_Pair register_pair, int machine_cycle, uint16_t* temporary_address) {
     switch (machine_cycle) {
     case 0:
+        set_stack_access(true);
+        set_memory_read(false);
+        set_write_output(true);
         *temporary_address = get_program_counter();
         set_program_counter(get_stack_pointer() - 1);
-        set_stack_access(true);
         break;
     case 1:
         set_program_counter(get_program_counter() - 1);
         break;
     case 2:
+        set_stack_access(false);
+        set_memory_read(true);
+        set_write_output(false);
         set_program_counter(*temporary_address);
         push_word(get_register_pair(register_pair));
-        set_stack_access(false);
         return true;
     default:
         break;
@@ -227,17 +247,17 @@ bool push(Register_Pair register_pair, int machine_cycle, uint16_t* temporary_ad
 bool pop(Register_Pair register_pair, int machine_cycle, uint16_t* temporary_address) {
     switch (machine_cycle) {
     case 0:
+        set_stack_access(true);
         *temporary_address = get_program_counter();
         set_program_counter(get_stack_pointer() - 1);
-        set_stack_access(true);
         break;
     case 1:
         set_program_counter(get_program_counter() - 1);
         break;
     case 2:
+        set_stack_access(false);
         set_program_counter(*temporary_address);
         set_register_pair(register_pair, pull_word());
-        set_stack_access(false);
         return true;
     default:
         break;
