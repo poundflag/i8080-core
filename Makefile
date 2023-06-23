@@ -4,7 +4,7 @@ TEST_ARGS = $(ARGS) -Iunity/src
 
 # Folder Variables
 SRC_DIR = src
-TEST_DIR = test_unity
+TEST_DIR = test
 BIN_DIR = bin
 BIN_OBJ_DIR = $(BIN_DIR)/obj
 
@@ -18,7 +18,7 @@ TEST_SOURCES = $(wildcard $(TEST_DIR)/*.c $(TEST_DIR)/**/*.c)
 TEST_SOURCES_NO_EXT = $(basename $(TEST_SOURCES))
 TEST_OBJECT_FILES =$(addprefix $(BIN_OBJ_DIR)/, $(addsuffix .o, $(TEST_SOURCES_NO_EXT)))
 
-.PHONY: all bin lib test clean test_unity
+.PHONY: all bin lib test clean
 
 all: bin lib
 

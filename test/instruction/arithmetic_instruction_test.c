@@ -1,645 +1,532 @@
-#include <check.h>
+#include "unity.h"
 #include <stdbool.h>
 #include "../../src/instruction/arithmetic_instruction.h"
 #include "../../src/register/register_controller.h"
 #include "../../src/memory/memory_controller.h"
 
-START_TEST(add_test) {
+void test_add_test() {
     set_register(REG_A, 0x12);
     set_register(REG_B, 0x12);
 
     bool result = add(REG_B);
-    ck_assert_int_eq(get_register(REG_A), 0x24);
-    ck_assert_int_eq(get_register(REG_F), 0b00000110);
-    ck_assert_int_eq(result, true);
+    TEST_ASSERT_EQUAL_INT(get_register(REG_A), 0x24);
+    TEST_ASSERT_EQUAL_INT(get_register(REG_F), 0b00000110);
+    TEST_ASSERT_EQUAL_INT(result, true);
 }
-END_TEST
 
-START_TEST(add_overflow) {
+void test_add_overflow() {
     set_register(REG_A, 0xFF);
     set_register(REG_B, 0x10);
 
     bool result = add(REG_B);
-    ck_assert_int_eq(get_register(REG_A), 0xF);
-    ck_assert_int_eq(get_register(REG_F), 0b00000111);
-    ck_assert_int_eq(result, true);
+    TEST_ASSERT_EQUAL_INT(get_register(REG_A), 0xF);
+    TEST_ASSERT_EQUAL_INT(get_register(REG_F), 0b00000111);
+    TEST_ASSERT_EQUAL_INT(result, true);
 }
-END_TEST
 
-START_TEST(adi_test) {
+void test_adi_test() {
     set_program_counter(0);
     write(1, 0x12);
     set_register(REG_A, 0x12);
 
     bool result = adi(0);
-    ck_assert_int_eq(get_program_counter(), 1);
+    TEST_ASSERT_EQUAL_INT(get_program_counter(), 1);
 
     result = adi(1);
-    ck_assert_int_eq(get_program_counter(), 1);
-    ck_assert_int_eq(get_register(REG_A), 0x24);
-    ck_assert_int_eq(get_register(REG_F), 0b00000110);
-    ck_assert_int_eq(result, true);
+    TEST_ASSERT_EQUAL_INT(get_program_counter(), 1);
+    TEST_ASSERT_EQUAL_INT(get_register(REG_A), 0x24);
+    TEST_ASSERT_EQUAL_INT(get_register(REG_F), 0b00000110);
+    TEST_ASSERT_EQUAL_INT(result, true);
 }
-END_TEST
 
-START_TEST(adi_overflow) {
+void test_adi_overflow() {
     set_program_counter(0);
     write(1, 0xFF);
     set_register(REG_A, 0x10);
 
     bool result = adi(0);
-    ck_assert_int_eq(get_program_counter(), 1);
+    TEST_ASSERT_EQUAL_INT(get_program_counter(), 1);
 
     result = adi(1);
-    ck_assert_int_eq(get_program_counter(), 1);
-    ck_assert_int_eq(get_register(REG_A), 0xF);
-    ck_assert_int_eq(get_register(REG_F), 0b00000111);
-    ck_assert_int_eq(result, true);
+    TEST_ASSERT_EQUAL_INT(get_program_counter(), 1);
+    TEST_ASSERT_EQUAL_INT(get_register(REG_A), 0xF);
+    TEST_ASSERT_EQUAL_INT(get_register(REG_F), 0b00000111);
+    TEST_ASSERT_EQUAL_INT(result, true);
 }
-END_TEST
 
-START_TEST(adc_no_carry) {
+void test_adc_no_carry() {
     set_register(REG_A, 1);
     set_register(REG_B, 1);
     set_register_bit(REG_F, CARRY, false);
 
     bool result = adc(REG_B);
-    ck_assert_int_eq(get_register(REG_A), 0x2);
-    ck_assert_int_eq(get_register(REG_F), 0b00000010);
-    ck_assert_int_eq(result, true);
+    TEST_ASSERT_EQUAL_INT(get_register(REG_A), 0x2);
+    TEST_ASSERT_EQUAL_INT(get_register(REG_F), 0b00000010);
+    TEST_ASSERT_EQUAL_INT(result, true);
 }
-END_TEST
 
-START_TEST(adc_carry) {
+void test_adc_carry() {
     set_register(REG_A, 1);
     set_register(REG_B, 1);
     set_register_bit(REG_F, CARRY, true);
 
     bool result = adc(REG_B);
-    ck_assert_int_eq(get_register(REG_A), 0x3);
-    ck_assert_int_eq(get_register(REG_F), 0b00000110);
-    ck_assert_int_eq(result, true);
+    TEST_ASSERT_EQUAL_INT(get_register(REG_A), 0x3);
+    TEST_ASSERT_EQUAL_INT(get_register(REG_F), 0b00000110);
+    TEST_ASSERT_EQUAL_INT(result, true);
 }
-END_TEST
 
-START_TEST(aci_no_carry) {
+void test_aci_no_carry() {
     set_program_counter(0);
     write(1, 1);
     set_register(REG_A, 1);
     set_register_bit(REG_F, CARRY, false);
 
     bool result = aci(0);
-    ck_assert_int_eq(get_program_counter(), 1);
+    TEST_ASSERT_EQUAL_INT(get_program_counter(), 1);
 
     result = aci(1);
-    ck_assert_int_eq(get_program_counter(), 1);
-    ck_assert_int_eq(get_register(REG_A), 0x2);
-    ck_assert_int_eq(get_register(REG_F), 0b00000010);
-    ck_assert_int_eq(result, true);
+    TEST_ASSERT_EQUAL_INT(get_program_counter(), 1);
+    TEST_ASSERT_EQUAL_INT(get_register(REG_A), 0x2);
+    TEST_ASSERT_EQUAL_INT(get_register(REG_F), 0b00000010);
+    TEST_ASSERT_EQUAL_INT(result, true);
 }
-END_TEST
 
-START_TEST(aci_carry) {
+void test_aci_carry() {
     set_program_counter(0);
     write(1, 1);
     set_register(REG_A, 1);
     set_register_bit(REG_F, CARRY, true);
 
     bool result = aci(0);
-    ck_assert_int_eq(get_program_counter(), 1);
+    TEST_ASSERT_EQUAL_INT(get_program_counter(), 1);
 
     result = aci(1);
-    ck_assert_int_eq(get_program_counter(), 1);
-    ck_assert_int_eq(get_register(REG_A), 0x3);
-    ck_assert_int_eq(get_register(REG_F), 0b00000110);
-    ck_assert_int_eq(result, true);
+    TEST_ASSERT_EQUAL_INT(get_program_counter(), 1);
+    TEST_ASSERT_EQUAL_INT(get_register(REG_A), 0x3);
+    TEST_ASSERT_EQUAL_INT(get_register(REG_F), 0b00000110);
+    TEST_ASSERT_EQUAL_INT(result, true);
 }
-END_TEST
 
-START_TEST(sub_test) {
+void test_sub_test() {
     set_register(REG_A, 5);
     set_register(REG_B, 1);
 
     bool result = sub(REG_B);
-    ck_assert_int_eq(get_register(REG_A), 4);
-    ck_assert_int_eq(get_register(REG_F), 0b00010010);
-    ck_assert_int_eq(result, true);
+    TEST_ASSERT_EQUAL_INT(get_register(REG_A), 4);
+    TEST_ASSERT_EQUAL_INT(get_register(REG_F), 0b00010010);
+    TEST_ASSERT_EQUAL_INT(result, true);
 }
-END_TEST
 
-START_TEST(sub_overflow) {
+void test_sub_overflow() {
     set_register(REG_A, 1);
     set_register(REG_B, 5);
 
     bool result = sub(REG_B);
-    ck_assert_int_eq(get_register(REG_A), 0xFC);
-    ck_assert_int_eq(get_register(REG_F), 0b10000111);
-    ck_assert_int_eq(result, true);
+    TEST_ASSERT_EQUAL_INT(get_register(REG_A), 0xFC);
+    TEST_ASSERT_EQUAL_INT(get_register(REG_F), 0b10000111);
+    TEST_ASSERT_EQUAL_INT(result, true);
 }
-END_TEST
 
-START_TEST(sui_test) {
+void test_sui_test() {
     set_program_counter(0);
     write(1, 1);
     set_register(REG_A, 5);
 
     bool result = sui(0);
-    ck_assert_int_eq(get_program_counter(), 1);
+    TEST_ASSERT_EQUAL_INT(get_program_counter(), 1);
 
     result = sui(1);
-    ck_assert_int_eq(get_program_counter(), 1);
-    ck_assert_int_eq(get_register(REG_A), 4);
-    ck_assert_int_eq(get_register(REG_F), 0b00010010);
-    ck_assert_int_eq(result, true);
+    TEST_ASSERT_EQUAL_INT(get_program_counter(), 1);
+    TEST_ASSERT_EQUAL_INT(get_register(REG_A), 4);
+    TEST_ASSERT_EQUAL_INT(get_register(REG_F), 0b00010010);
+    TEST_ASSERT_EQUAL_INT(result, true);
 }
-END_TEST
 
-START_TEST(sui_overflow) {
+void test_sui_overflow() {
     set_program_counter(0);
     write(1, 5);
     set_register(REG_A, 1);
 
     bool result = sui(0);
-    ck_assert_int_eq(get_program_counter(), 1);
+    TEST_ASSERT_EQUAL_INT(get_program_counter(), 1);
 
     result = sui(1);
-    ck_assert_int_eq(get_program_counter(), 1);
-    ck_assert_int_eq(get_register(REG_A), 0xFC);
-    ck_assert_int_eq(get_register(REG_F), 0b10000111);
-    ck_assert_int_eq(result, true);
+    TEST_ASSERT_EQUAL_INT(get_program_counter(), 1);
+    TEST_ASSERT_EQUAL_INT(get_register(REG_A), 0xFC);
+    TEST_ASSERT_EQUAL_INT(get_register(REG_F), 0b10000111);
+    TEST_ASSERT_EQUAL_INT(result, true);
 }
-END_TEST
 
-START_TEST(sbb_no_carry) {
+void test_sbb_no_carry() {
     set_register(REG_A, 5);
     set_register(REG_B, 1);
     set_register_bit(REG_F, CARRY, false);
 
     bool result = sbb(REG_B);
-    ck_assert_int_eq(get_register(REG_A), 0x4);
-    ck_assert_int_eq(result, true);
+    TEST_ASSERT_EQUAL_INT(get_register(REG_A), 0x4);
+    TEST_ASSERT_EQUAL_INT(result, true);
 }
-END_TEST
 
-START_TEST(sbb_carry) {
+void test_sbb_carry() {
     set_register(REG_A, 5);
     set_register(REG_B, 1);
     set_register_bit(REG_F, CARRY, true);
 
     bool result = sbb(REG_B);
-    ck_assert_int_eq(get_register(REG_A), 0x3);
-    ck_assert_int_eq(result, true);
+    TEST_ASSERT_EQUAL_INT(get_register(REG_A), 0x3);
+    TEST_ASSERT_EQUAL_INT(result, true);
 }
-END_TEST
 
-START_TEST(sbi_no_carry) {
+void test_sbi_no_carry() {
     set_program_counter(0);
     write(1, 1);
     set_register(REG_A, 5);
     set_register_bit(REG_F, CARRY, false);
 
     bool result = sbi(0);
-    ck_assert_int_eq(get_program_counter(), 1);
+    TEST_ASSERT_EQUAL_INT(get_program_counter(), 1);
 
     result = sbi(1);
-    ck_assert_int_eq(get_program_counter(), 1);
-    ck_assert_int_eq(get_register(REG_A), 0x4);
-    ck_assert_int_eq(result, true);
+    TEST_ASSERT_EQUAL_INT(get_program_counter(), 1);
+    TEST_ASSERT_EQUAL_INT(get_register(REG_A), 0x4);
+    TEST_ASSERT_EQUAL_INT(result, true);
 }
-END_TEST
 
-START_TEST(sbi_carry) {
+void test_sbi_carry() {
     set_program_counter(0);
     write(1, 1);
     set_register(REG_A, 5);
     set_register_bit(REG_F, CARRY, true);
 
     bool result = sbi(0);
-    ck_assert_int_eq(get_program_counter(), 1);
+    TEST_ASSERT_EQUAL_INT(get_program_counter(), 1);
 
     result = sbi(1);
-    ck_assert_int_eq(get_program_counter(), 1);
-    ck_assert_int_eq(get_register(REG_A), 0x3);
-    ck_assert_int_eq(result, true);
+    TEST_ASSERT_EQUAL_INT(get_program_counter(), 1);
+    TEST_ASSERT_EQUAL_INT(get_register(REG_A), 0x3);
+    TEST_ASSERT_EQUAL_INT(result, true);
 }
-END_TEST
 
-START_TEST(inr_test) {
+void test_inr_test() {
     set_register(REG_B, 1);
 
     bool result = inr(REG_B);
-    ck_assert_int_eq(get_register(REG_B), 2);
-    ck_assert_int_eq(result, true);
+    TEST_ASSERT_EQUAL_INT(get_register(REG_B), 2);
+    TEST_ASSERT_EQUAL_INT(result, true);
 }
-END_TEST
 
-START_TEST(inr_overflow) {
+void test_inr_overflow() {
     set_register(REG_B, 0xFF);
 
     bool result = inr(REG_B);
-    ck_assert_int_eq(get_register(REG_B), 0);
-    ck_assert_int_eq(get_register(REG_F), 0b01010110);
-    ck_assert_int_eq(result, true);
+    TEST_ASSERT_EQUAL_INT(get_register(REG_B), 0);
+    TEST_ASSERT_EQUAL_INT(get_register(REG_F), 0b01010110);
+    TEST_ASSERT_EQUAL_INT(result, true);
 }
-END_TEST
 
-START_TEST(dcr_test) {
+void test_dcr_test() {
     set_register(REG_B, 1);
 
     bool result = dcr(REG_B);
-    ck_assert_int_eq(get_register(REG_B), 0);
-    ck_assert_int_eq(result, true);
+    TEST_ASSERT_EQUAL_INT(get_register(REG_B), 0);
+    TEST_ASSERT_EQUAL_INT(result, true);
 }
-END_TEST
 
-START_TEST(dcr_test_1) {
+void test_dcr_test_1() {
     set_register(REG_B, 2);
 
     bool result = dcr(REG_B);
-    ck_assert_int_eq(get_register(REG_B), 1);
-    ck_assert_int_eq(((get_register(REG_F) >> 4) & 1), 1);
-    ck_assert_int_eq(result, true);
+    TEST_ASSERT_EQUAL_INT(get_register(REG_B), 1);
+    TEST_ASSERT_EQUAL_INT(((get_register(REG_F) >> 4) & 1), 1);
+    TEST_ASSERT_EQUAL_INT(result, true);
 }
-END_TEST
 
-START_TEST(dcr_overflow) {
+void test_dcr_overflow() {
     set_register(REG_B, 0);
 
     bool result = dcr(REG_B);
-    ck_assert_int_eq(get_register(REG_B), 0xFF);
-    ck_assert_int_eq(get_register(REG_F), 0b10000110);
-    ck_assert_int_eq(result, true);
+    TEST_ASSERT_EQUAL_INT(get_register(REG_B), 0xFF);
+    TEST_ASSERT_EQUAL_INT(get_register(REG_F), 0b10000110);
+    TEST_ASSERT_EQUAL_INT(result, true);
 }
-END_TEST
 
-START_TEST(inx_test) {
+void test_inx_test() {
     set_register_pair(PAIR_B, 0x44);
 
     bool result = inx(PAIR_B);
-    ck_assert_int_eq(get_register_pair(PAIR_B), 0x45);
-    ck_assert_int_eq(result, true);
+    TEST_ASSERT_EQUAL_INT(get_register_pair(PAIR_B), 0x45);
+    TEST_ASSERT_EQUAL_INT(result, true);
 }
-END_TEST
 
-START_TEST(dcx_test) {
+void test_dcx_test() {
     set_register_pair(PAIR_B, 0x44);
 
     bool result = dcx(PAIR_B);
-    ck_assert_int_eq(get_register_pair(PAIR_B), 0x43);
-    ck_assert_int_eq(result, true);
+    TEST_ASSERT_EQUAL_INT(get_register_pair(PAIR_B), 0x43);
+    TEST_ASSERT_EQUAL_INT(result, true);
 }
-END_TEST
 
-START_TEST(dad_test) {
+void test_dad_test() {
     set_register_pair(PAIR_H, 0x1234);
     set_register_pair(PAIR_B, 0x1234);
 
     bool result = dad(PAIR_B);
-    ck_assert_int_eq(get_register_pair(PAIR_H), 0x2468);
-    ck_assert_int_eq(result, true);
+    TEST_ASSERT_EQUAL_INT(get_register_pair(PAIR_H), 0x2468);
+    TEST_ASSERT_EQUAL_INT(result, true);
 }
-END_TEST
 
-START_TEST(dad_overflow) {
+void test_dad_overflow() {
     set_register_pair(PAIR_H, 0xFFFF);
     set_register_pair(PAIR_B, 0x4444);
 
     bool result = dad(PAIR_B);
-    ck_assert_int_eq(get_register_pair(PAIR_H), 0x4443);
-    ck_assert_int_eq((get_register(REG_F) & 1), 1);
-    ck_assert_int_eq(result, true);
+    TEST_ASSERT_EQUAL_INT(get_register_pair(PAIR_H), 0x4443);
+    TEST_ASSERT_EQUAL_INT((get_register(REG_F) & 1), 1);
+    TEST_ASSERT_EQUAL_INT(result, true);
 }
-END_TEST
 
-START_TEST(daa_test) {
+void test_daa_test() {
     bool result = daa();
-    ck_assert_int_eq(result, true);
+    TEST_ASSERT_EQUAL_INT(result, true);
 }
-END_TEST
 
-START_TEST(ana_test) {
+void test_ana_test() {
     set_register(REG_A, 4);
     set_register(REG_B, 6);
 
     bool result = ana(REG_B);
-    ck_assert_int_eq(get_register(REG_A), 4);
-    ck_assert_int_eq(result, true);
+    TEST_ASSERT_EQUAL_INT(get_register(REG_A), 4);
+    TEST_ASSERT_EQUAL_INT(result, true);
 }
-END_TEST
 
-START_TEST(ani_test) {
+void test_ani_test() {
     set_register(REG_A, 4);
     write(1, 6);
 
     bool result = ani(0);
-    ck_assert_int_eq(get_program_counter(), 1);
+    TEST_ASSERT_EQUAL_INT(get_program_counter(), 1);
 
     result = ani(1);
-    ck_assert_int_eq(get_register(REG_A), 4);
-    ck_assert_int_eq(result, true);
+    TEST_ASSERT_EQUAL_INT(get_register(REG_A), 4);
+    TEST_ASSERT_EQUAL_INT(result, true);
 }
-END_TEST
 
-START_TEST(ora_test) {
+void test_ora_test() {
     set_register(REG_A, 1);
     set_register(REG_B, 2);
 
     bool result = ora(REG_B);
-    ck_assert_int_eq(get_register(REG_A), 3);
-    ck_assert_int_eq(result, true);
+    TEST_ASSERT_EQUAL_INT(get_register(REG_A), 3);
+    TEST_ASSERT_EQUAL_INT(result, true);
 }
-END_TEST
 
-START_TEST(ori_test) {
+void test_ori_test() {
     set_register(REG_A, 1);
     write(1, 2);
 
     bool result = ori(0);
-    ck_assert_int_eq(get_program_counter(), 1);
+    TEST_ASSERT_EQUAL_INT(get_program_counter(), 1);
 
     result = ori(1);
-    ck_assert_int_eq(get_register(REG_A), 3);
-    ck_assert_int_eq(result, true);
+    TEST_ASSERT_EQUAL_INT(get_register(REG_A), 3);
+    TEST_ASSERT_EQUAL_INT(result, true);
 }
-END_TEST
 
-START_TEST(xra_test) {
+void test_xra_test() {
     set_register(REG_A, 2);
     set_register(REG_B, 2);
 
     bool result = xra(REG_B);
-    ck_assert_int_eq(get_register(REG_A), 0);
-    ck_assert_int_eq(result, true);
+    TEST_ASSERT_EQUAL_INT(get_register(REG_A), 0);
+    TEST_ASSERT_EQUAL_INT(result, true);
 }
-END_TEST
 
-START_TEST(xri_test) {
+void test_xri_test() {
     set_register(REG_A, 2);
     write(1, 2);
 
     bool result = xri(0);
-    ck_assert_int_eq(get_program_counter(), 1);
+    TEST_ASSERT_EQUAL_INT(get_program_counter(), 1);
 
     result = xri(1);
-    ck_assert_int_eq(get_register(REG_A), 0);
-    ck_assert_int_eq(result, true);
+    TEST_ASSERT_EQUAL_INT(get_register(REG_A), 0);
+    TEST_ASSERT_EQUAL_INT(result, true);
 }
-END_TEST
 
-START_TEST(cmp_test) {
+void test_cmp_test() {
     set_register(REG_A, 1);
     set_register(REG_B, 1);
 
     bool result = cmp(REG_B);
-    ck_assert_int_eq(result, true);
-    ck_assert_int_eq(get_register(REG_A), 1);
+    TEST_ASSERT_EQUAL_INT(result, true);
+    TEST_ASSERT_EQUAL_INT(get_register(REG_A), 1);
 }
-END_TEST
 
-START_TEST(cpi_test) {
+void test_cpi_test() {
     set_register(REG_A, 1);
     write(1, 1);
 
     bool result = cpi(0);
-    ck_assert_int_eq(get_program_counter(), 1);
+    TEST_ASSERT_EQUAL_INT(get_program_counter(), 1);
 
     result = cpi(1);
-    ck_assert_int_eq(get_register(REG_A), 1);
-    ck_assert_int_eq(result, true);
+    TEST_ASSERT_EQUAL_INT(get_register(REG_A), 1);
+    TEST_ASSERT_EQUAL_INT(result, true);
 }
-END_TEST
 
-START_TEST(rlc_test) {
+void test_rlc_test() {
     set_register(REG_A, 0b0001);
 
     bool result = rlc();
-    ck_assert_int_eq(get_register(REG_A), 0b0010);
-    ck_assert_int_eq(result, true);
+    TEST_ASSERT_EQUAL_INT(get_register(REG_A), 0b0010);
+    TEST_ASSERT_EQUAL_INT(result, true);
 }
-END_TEST
 
-START_TEST(rlc_carry) {
+void test_rlc_carry() {
     set_register(REG_A, 0b10000001);
 
-    ck_assert_int_eq(get_register_bit(REG_F, CARRY), 0);
+    TEST_ASSERT_EQUAL_INT(get_register_bit(REG_F, CARRY), 0);
 
     bool result = rlc();
-    ck_assert_int_eq(get_register(REG_A), 0b00000011);
-    ck_assert_int_eq(get_register_bit(REG_F, CARRY), 1);
-    ck_assert_int_eq(result, true);
+    TEST_ASSERT_EQUAL_INT(get_register(REG_A), 0b00000011);
+    TEST_ASSERT_EQUAL_INT(get_register_bit(REG_F, CARRY), 1);
+    TEST_ASSERT_EQUAL_INT(result, true);
 }
-END_TEST
 
-START_TEST(rrc_test) {
+void test_rrc_test() {
     set_register(REG_A, 0b0010);
 
     bool result = rrc();
-    ck_assert_int_eq(get_register(REG_A), 0b0001);
-    ck_assert_int_eq(result, true);
+    TEST_ASSERT_EQUAL_INT(get_register(REG_A), 0b0001);
+    TEST_ASSERT_EQUAL_INT(result, true);
 }
-END_TEST
 
-START_TEST(rrc_carry) {
+void test_rrc_carry() {
     set_register(REG_A, 0b10000001);
 
-    ck_assert_int_eq(get_register_bit(REG_F, CARRY), 0);
+    TEST_ASSERT_EQUAL_INT(get_register_bit(REG_F, CARRY), 0);
 
     bool result = rrc();
-    ck_assert_int_eq(get_register(REG_A), 0b11000000);
-    ck_assert_int_eq(get_register_bit(REG_F, CARRY), 1);
-    ck_assert_int_eq(result, true);
+    TEST_ASSERT_EQUAL_INT(get_register(REG_A), 0b11000000);
+    TEST_ASSERT_EQUAL_INT(get_register_bit(REG_F, CARRY), 1);
+    TEST_ASSERT_EQUAL_INT(result, true);
 }
-END_TEST
 
-START_TEST(ral_test) {
+void test_ral_test() {
     set_register(REG_A, 0b0001);
 
     bool result = ral();
-    ck_assert_int_eq(get_register(REG_A), 0b0010);
-    ck_assert_int_eq(result, true);
+    TEST_ASSERT_EQUAL_INT(get_register(REG_A), 0b0010);
+    TEST_ASSERT_EQUAL_INT(result, true);
 
     set_register_bit(REG_F, CARRY, true);
     result = ral();
-    ck_assert_int_eq(get_register(REG_A), 0b0101);
-    ck_assert_int_eq(result, true);
+    TEST_ASSERT_EQUAL_INT(get_register(REG_A), 0b0101);
+    TEST_ASSERT_EQUAL_INT(result, true);
 }
-END_TEST
 
-START_TEST(ral_carry) {
+void test_ral_carry() {
     set_register(REG_A, 0b10000001);
 
-    ck_assert_int_eq(get_register_bit(REG_F, CARRY), 0);
+    TEST_ASSERT_EQUAL_INT(get_register_bit(REG_F, CARRY), 0);
 
     bool result = ral();
-    ck_assert_int_eq(get_register(REG_A), 0b00000010);
-    ck_assert_int_eq(get_register_bit(REG_F, CARRY), 1);
-    ck_assert_int_eq(result, true);
+    TEST_ASSERT_EQUAL_INT(get_register(REG_A), 0b00000010);
+    TEST_ASSERT_EQUAL_INT(get_register_bit(REG_F, CARRY), 1);
+    TEST_ASSERT_EQUAL_INT(result, true);
 }
-END_TEST
 
-START_TEST(rar_test) {
+void test_rar_test() {
     set_register(REG_A, 0b0100);
 
     bool result = rar();
-    ck_assert_int_eq(get_register(REG_A), 0b0010);
-    ck_assert_int_eq(result, true);
+    TEST_ASSERT_EQUAL_INT(get_register(REG_A), 0b0010);
+    TEST_ASSERT_EQUAL_INT(result, true);
 
     set_register_bit(REG_F, CARRY, true);
     result = rar();
-    ck_assert_int_eq(get_register(REG_A), 0b10000001);
-    ck_assert_int_eq(result, true);
+    TEST_ASSERT_EQUAL_INT(get_register(REG_A), 0b10000001);
+    TEST_ASSERT_EQUAL_INT(result, true);
 }
-END_TEST
 
-START_TEST(rar_carry) {
+void test_rar_carry() {
     set_register(REG_A, 0b10000001);
 
-    ck_assert_int_eq(get_register_bit(REG_F, CARRY), 0);
+    TEST_ASSERT_EQUAL_INT(get_register_bit(REG_F, CARRY), 0);
 
     bool result = rar();
-    ck_assert_int_eq(get_register(REG_A), 0b01000000);
-    ck_assert_int_eq(get_register_bit(REG_F, CARRY), 1);
-    ck_assert_int_eq(result, true);
+    TEST_ASSERT_EQUAL_INT(get_register(REG_A), 0b01000000);
+    TEST_ASSERT_EQUAL_INT(get_register_bit(REG_F, CARRY), 1);
+    TEST_ASSERT_EQUAL_INT(result, true);
 }
-END_TEST
 
-START_TEST(cma_test) {
+void test_cma_test() {
     set_register(REG_A, 0x0F);
     bool result = cma();
-    ck_assert_int_eq(get_register(REG_A), 0xF0);
-    ck_assert_int_eq(result, true);
+    TEST_ASSERT_EQUAL_INT(get_register(REG_A), 0xF0);
+    TEST_ASSERT_EQUAL_INT(result, true);
 }
-END_TEST
 
-START_TEST(cmc_test) {
+void test_cmc_test() {
     set_register_bit(REG_F, CARRY, true);
     bool result = cmc();
-    ck_assert_int_eq(get_register_bit(REG_F, CARRY), false);
-    ck_assert_int_eq(result, true);
+    TEST_ASSERT_EQUAL_INT(get_register_bit(REG_F, CARRY), false);
+    TEST_ASSERT_EQUAL_INT(result, true);
 }
-END_TEST
 
-START_TEST(stc_test) {
+void test_stc_test() {
     set_register_bit(REG_F, CARRY, false);
     bool result = stc();
-    ck_assert_int_eq(get_register_bit(REG_F, CARRY), true);
-    ck_assert_int_eq(result, true);
+    TEST_ASSERT_EQUAL_INT(get_register_bit(REG_F, CARRY), true);
+    TEST_ASSERT_EQUAL_INT(result, true);
 }
-END_TEST
 
-#define TEST_CASE_SIZE 100
-
-Suite* arithmetic_instruction_suite(void) {
-    Suite* suite;
-
-    suite = suite_create("Arithmetic Instruction");
-
-    char* test_names[TEST_CASE_SIZE] = {
-        "ADD",
-        "ADD Overflow",
-        "ADI",
-        "ADI Overflow",
-        "ADC No Carry",
-        "ADC Carry",
-        "ACI No Carry",
-        "ACI Carry",
-        "SUB",
-        "SUB Overflow",
-        "SUI",
-        "SUI Overflow",
-        "SBB No Carry",
-        "SBB Carry",
-        "SBI No Carry",
-        "SBI Carry",
-        "INR",
-        "INR Overflow",
-        "DCR",
-        "DCR Auxiliary",
-        "DCR Overflow",
-        "INX",
-        "DCX",
-        "DAD",
-        "DAD Overflow",
-        "DAA",
-        "ANA",
-        "ANI",
-        "ORA",
-        "ORI",
-        "XRA",
-        "XRI",
-        "CMP",
-        "CPI",
-        "RLC",
-        "RLC Carry",
-        "RRC",
-        "RRC Carry",
-        "RAL",
-        "RAL Carry",
-        "RAR",
-        "RAR Carry",
-        "CMA",
-        "CMC",
-        "STC"
-    };
-
-    const TTest* test_functions[TEST_CASE_SIZE] = {
-        add_test,
-        add_overflow,
-        adi_test,
-        adi_overflow,
-        adc_no_carry,
-        adc_carry,
-        aci_no_carry,
-        aci_carry,
-        sub_test,
-        sub_overflow,
-        sui_test,
-        sui_overflow,
-        sbb_no_carry,
-        sbb_carry,
-        sbi_no_carry,
-        sbi_carry,
-        inr_test,
-        inr_overflow,
-        dcr_test,
-        dcr_test_1,
-        dcr_overflow,
-        inx_test,
-        dcx_test,
-        dad_test,
-        dad_overflow,
-        daa_test,
-        ana_test,
-        ani_test,
-        ora_test,
-        ori_test,
-        xra_test,
-        xri_test,
-        cmp_test,
-        cpi_test,
-        rlc_test,
-        rlc_carry,
-        rrc_test,
-        rrc_carry,
-        ral_test,
-        ral_carry,
-        rar_test,
-        rar_carry,
-        cma_test,
-        cmc_test,
-        stc_test
-    };
-
-    for (int i = 0; i < TEST_CASE_SIZE; i++) {
-        // Create a new test case for each iteration
-        TCase* test_case = tcase_create(test_names[i]);
-
-        // Add the corresponding test function based on the index
-        tcase_add_test(test_case, test_functions[i]);
-
-        // Add the test case to the suite
-        suite_add_tcase(suite, test_case);
-    }
-
-    return suite;
+void run_arithmetic_instruction_test() {
+    printf("Arithmetic instruction:\n");
+    RUN_TEST(test_add_test);
+    RUN_TEST(test_add_overflow);
+    RUN_TEST(test_adi_test);
+    RUN_TEST(test_adi_overflow);
+    RUN_TEST(test_adc_no_carry);
+    RUN_TEST(test_adc_carry);
+    RUN_TEST(test_aci_no_carry);
+    RUN_TEST(test_aci_carry);
+    RUN_TEST(test_sub_test);
+    RUN_TEST(test_sub_overflow);
+    RUN_TEST(test_sui_test);
+    RUN_TEST(test_sui_overflow);
+    RUN_TEST(test_sbb_no_carry);
+    RUN_TEST(test_sbb_carry);
+    RUN_TEST(test_sbi_no_carry);
+    RUN_TEST(test_sbi_carry);
+    RUN_TEST(test_inr_test);
+    RUN_TEST(test_inr_overflow);
+    RUN_TEST(test_dcr_test);
+    RUN_TEST(test_dcr_test_1);
+    RUN_TEST(test_dcr_overflow);
+    RUN_TEST(test_inx_test);
+    RUN_TEST(test_dcx_test);
+    RUN_TEST(test_dad_test);
+    RUN_TEST(test_dad_overflow);
+    RUN_TEST(test_daa_test);
+    RUN_TEST(test_ana_test);
+    RUN_TEST(test_ani_test);
+    RUN_TEST(test_ora_test);
+    RUN_TEST(test_ori_test);
+    RUN_TEST(test_xra_test);
+    RUN_TEST(test_xri_test);
+    RUN_TEST(test_cmp_test);
+    RUN_TEST(test_cpi_test);
+    RUN_TEST(test_rlc_test);
+    RUN_TEST(test_rlc_carry);
+    RUN_TEST(test_rrc_test);
+    RUN_TEST(test_rrc_carry);
+    RUN_TEST(test_ral_test);
+    RUN_TEST(test_ral_carry);
+    RUN_TEST(test_rar_test);
+    RUN_TEST(test_rar_carry);
+    RUN_TEST(test_cma_test);
+    RUN_TEST(test_cmc_test);
+    RUN_TEST(test_stc_test);
 }

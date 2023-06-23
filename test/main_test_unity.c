@@ -33,6 +33,10 @@ void run_flag_register_test();
 void run_stack_test();
 void run_register_controller_test();
 void run_memory_controller_test();
+void run_arithmetic_instruction_test();
+void run_branching_instruction_test();
+void run_instruction_test();
+void run_logical_instruction_test();
 
 int main(void) {
     UNITY_BEGIN();
@@ -43,5 +47,9 @@ int main(void) {
     run_stack_test();
     run_register_controller_test();
     run_memory_controller_test();
+    run_arithmetic_instruction_test();
+    run_branching_instruction_test();
+    run_instruction_test();
+    run_logical_instruction_test();
     return UNITY_END();
 }
