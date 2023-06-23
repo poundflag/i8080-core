@@ -1,10 +1,10 @@
 CC = gcc
 ARGS = -Wall -Wextra -fPIC
-TEST_ARGS = $(ARGS) -lcheck
+TEST_ARGS = $(ARGS) -Iunity/src
 
 # Folder Variables
 SRC_DIR = src
-TEST_DIR = test
+TEST_DIR = test_unity
 BIN_DIR = bin
 BIN_OBJ_DIR = $(BIN_DIR)/obj
 
@@ -18,7 +18,7 @@ TEST_SOURCES = $(wildcard $(TEST_DIR)/*.c $(TEST_DIR)/**/*.c)
 TEST_SOURCES_NO_EXT = $(basename $(TEST_SOURCES))
 TEST_OBJECT_FILES =$(addprefix $(BIN_OBJ_DIR)/, $(addsuffix .o, $(TEST_SOURCES_NO_EXT)))
 
-.PHONY: all bin lib test clean
+.PHONY: all bin lib test clean test_unity
 
 all: bin lib
 
@@ -35,11 +35,11 @@ $(BIN_OBJ_DIR)/%.o: %.c %.h
 	$(CC) $(ARGS) -c $< -o $@
 
 test: $(TEST_OBJECT_FILES) $(OBJECT_FILES)
-	@$(CC) $(TEST_ARGS) $(TEST_OBJECT_FILES) $(OBJECT_FILES) -o $(BIN_DIR)/i8080-core-test
+	@$(CC) $(TEST_ARGS) $(TEST_OBJECT_FILES) $(OBJECT_FILES) unity/src/unity.c -o $(BIN_DIR)/i8080-core-test
 	@echo Created test executable
 	bin/i8080-core-test
 
-$(BIN_OBJ_DIR)/test/%.o: test/%.c
+$(BIN_OBJ_DIR)/$(TEST_DIR)/%.o: $(TEST_DIR)/%.c
 	@mkdir -p $(dir $@)
 	$(CC) $(TEST_ARGS) -c $< -o $@
 
