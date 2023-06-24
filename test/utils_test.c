@@ -4,7 +4,7 @@
 
 void test_return_error_on_invalid_args() {
   // Redirect stdout to a string
-  char output[100];
+  char output[1000];
   FILE *temp_stdout = fmemopen(output, sizeof(output), "w");
   setbuf(temp_stdout, NULL);
   FILE *original_stdout = stdout;
@@ -125,6 +125,35 @@ void test_step_the_cpu_infinite() {
   TEST_ASSERT_EQUAL_INT(steps_to_run, -1);
 }
 
+void test_the_help_list() {
+  // Redirect stdout to a string
+  char output[1000];
+  FILE *temp_stdout = fmemopen(output, sizeof(output), "w");
+  setbuf(temp_stdout, NULL);
+  FILE *original_stdout = stdout;
+  stdout = temp_stdout;
+
+  // Simulate command line arguments
+  char *testArgs[] = {"program", "-help"};
+  int testArgc = sizeof(testArgs) / sizeof(testArgs[0]);
+
+  // Call the process_arguments function
+  process_arguments(testArgc, testArgs);
+
+  // Close the redirected stdout
+  fclose(temp_stdout);
+  stdout = original_stdout;
+
+  // Compare the output with the expected value
+  TEST_ASSERT_EQUAL_STRING(
+      output,
+      "Call: i8080-core [Arguments]\nOptions:\n\t-i <Path>\t\tInput file to be "
+      "loaded in memory\n\t-o <Path>\t\tOutput file for the debug information "
+      "from the cpu\n\t-steps <number>\t\tSteps for the cpu to take in machine "
+      "cycles. An input of -1 is an infinite run.\n\t-help\t\t\tPrint the list "
+      "of available commands\n");
+}
+
 void run_utils_test() {
   printf("Utils:\n");
   RUN_TEST(test_return_error_on_invalid_args);
@@ -132,4 +161,5 @@ void run_utils_test() {
   RUN_TEST(test_process_file_output);
   RUN_TEST(test_step_the_cpu_finite);
   RUN_TEST(test_step_the_cpu_infinite);
+  RUN_TEST(test_the_help_list);
 }
