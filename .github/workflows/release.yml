@@ -11,6 +11,8 @@ on:
 jobs:
   build_release:
     runs-on: ubuntu-latest
+    outputs:
+      new_tag: ${{ steps.bump_version.outputs.new_tag }}
     steps:
     - name: Checkout the repo
       uses: actions/checkout@v3
@@ -21,10 +23,8 @@ jobs:
       run: make test
     - name: Build the bin and library
       run: make all
-
-  publish_release:
-    runs-on: ubuntu-latest
-    steps:
+    - name: Clean temporary files
+      run: make clean
     - name: Get the next version of the release
       id: 'bump_version'
       uses: anothrNick/github-tag-action@1.67.0
@@ -32,13 +32,29 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
         WITH_V: true
         DRY_RUN: true
+    - name: Upload the Project Directory
+      uses: actions/upload-artifact@v3.1.2
+      with:
+        name: Project Directory
+        path: ./
+
+  publish_release:
+    needs: build_release
+    runs-on: ubuntu-latest
+    steps:
+    - name: Download the Project Directory
+      uses: actions/download-artifact@v2.1.1
+      with:
+        name: Project Directory
+        path: ./
+    - run: echo "${{ needs.build_release.outputs.new_tag }}"
     - name: "Publish the release"
       uses: "marvinpinto/action-automatic-releases@latest"
       with:
         repo_token: "${{ secrets.REPO_TOKEN }}"
-        automatic_release_tag: "${{steps.bump_version.outputs.new_tag}}"
-        prerelease: ${{ github.ref != 'refs/heads/main' }}
-        title: "Intel 8080 core ${{steps.bump_version.outputs.new_tag}}"
+        automatic_release_tag: "${{ needs.build_release.outputs.new_tag }}"
+        prerelease: ${{ github.ref_name != 'main' }}
+        title: "Intel 8080 core ${{ needs.build_release.outputs.new_tag }}"
         files: |
           bin/i8080-core
           bin/libi8080core.so
