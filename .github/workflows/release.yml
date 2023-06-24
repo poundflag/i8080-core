@@ -6,7 +6,6 @@ on:
   pull_request:
     branches:
     - main
-    - develop
 
 jobs:
   build_release:
@@ -36,7 +35,7 @@ jobs:
       uses: actions/upload-artifact@v3.1.2
       with:
         name: Project Directory
-        path: ./
+        path: ./bin
 
   publish_release:
     needs: build_release
@@ -46,14 +45,14 @@ jobs:
       uses: actions/download-artifact@v2.1.1
       with:
         name: Project Directory
-        path: ./
+        path: ./bin
     - run: echo "${{ needs.build_release.outputs.new_tag }}"
     - name: "Publish the release"
       uses: "marvinpinto/action-automatic-releases@latest"
       with:
         repo_token: "${{ secrets.REPO_TOKEN }}"
         automatic_release_tag: "${{ needs.build_release.outputs.new_tag }}"
-        prerelease: ${{ github.ref_name != 'main' }}
+        prerelease: false
         title: "Intel 8080 core ${{ needs.build_release.outputs.new_tag }}"
         files: |
           bin/i8080-core
