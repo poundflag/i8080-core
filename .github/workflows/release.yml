@@ -1,0 +1,44 @@
+
+name: Publish a new release
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches:
+    - main
+    - develop
+
+jobs:
+  build_release:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout the repo
+      uses: actions/checkout@v3
+      with:
+        submodules: recursive
+        fetch-depth: 0
+    - name: Test the project
+      run: make test
+    - name: Build the bin and library
+      run: make all
+
+  publish_release:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Get the next version of the release
+      id: 'bump_version'
+      uses: anothrNick/github-tag-action@1.67.0
+      env:
+        GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
+        WITH_V: true
+        DRY_RUN: true
+    - name: "Publish the release"
+      uses: "marvinpinto/action-automatic-releases@latest"
+      with:
+        repo_token: "${{ secrets.REPO_TOKEN }}"
+        automatic_release_tag: "${{steps.bump_version.outputs.new_tag}}"
+        prerelease: ${{ github.ref != 'refs/heads/main' }}
+        title: "Intel 8080 core ${{steps.bump_version.outputs.new_tag}}"
+        files: |
+          bin/i8080-core
+          bin/libi8080core.so
