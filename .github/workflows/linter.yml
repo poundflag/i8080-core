@@ -1,7 +1,11 @@
-name: c-linter
+name: Lint the code
 
 on: 
   workflow_dispatch:
+  push:
+    branches:    
+      - develop
+      - main
 
 jobs:
   cppcheck:
