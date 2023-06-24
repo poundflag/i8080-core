@@ -12,6 +12,17 @@ bool is_output_mode(char *arg) { return strcmp("-o", arg) == 0; }
 
 bool is_steps_mode(char *arg) { return strcmp("-steps", arg) == 0; }
 
+bool is_help_command(char *arg) { return strcmp("-help", arg) == 0; }
+
+void print_help_list() {
+  printf("Call: i8080-core [Arguments]\nOptions:\n");
+  printf("\t-i <Path>\t\tInput file to be loaded in memory\n");
+  printf("\t-o <Path>\t\tOutput file for the debug information from the cpu\n");
+  printf("\t-steps <number>\t\tSteps for the cpu to take in machine cycles. An "
+         "input of -1 is an infinite run.\n");
+  printf("\t-help\t\t\tPrint the list of available commands\n");
+}
+
 void process_arguments(int argc, char **argv) {
   for (int i = 1; i < argc; i++) {
     if (is_input_mode(argv[i]) == true) {
@@ -32,6 +43,8 @@ void process_arguments(int argc, char **argv) {
         current_running_mode = INDEFINITE;
         steps_to_run = -1;
       }
+    } else if (is_help_command(argv[i]) == true) {
+      print_help_list();
     } else {
       printf("%s is an invalid command\n", argv[i]);
     }
