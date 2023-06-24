@@ -34,7 +34,7 @@ void test_process_file_input() {
     stdout = temp_stdout;
 
     // Simulate command line arguments
-    char* testArgs[] = { "program", "-i", "/home/robin/Dokumente/Projects/i8080-core/rom/8080EXER.COM" };
+    char* testArgs[] = { "program", "-i", "rom/8080EXER.COM" };
     int testArgc = sizeof(testArgs) / sizeof(testArgs[0]);
 
     // Call the process_arguments function
@@ -45,7 +45,7 @@ void test_process_file_input() {
     stdout = original_stdout;
 
     // Compare the output with the expected value
-    TEST_ASSERT_EQUAL_STRING(output, "Loading file: /home/robin/Dokumente/Projects/i8080-core/rom/8080EXER.COM\n");
+    TEST_ASSERT_EQUAL_STRING(output, "Loading file: rom/8080EXER.COM\n");
 }
 
 void test_process_file_output() {
