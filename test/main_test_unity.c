@@ -4,7 +4,7 @@
 #include "../src/register/register_controller.h"
 
 void setUp(void) {
-    load_file("/home/robin/Dokumente/Projects/i8080-core/rom/EMPTY_ROM.COM", 0);
+    load_file("rom/EMPTY_ROM.COM", 0);
     set_stack_pointer(0);
 
     set_register_pair(PAIR_B, 0);

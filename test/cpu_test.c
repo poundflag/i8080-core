@@ -33,7 +33,7 @@ interceptBDOSCall(char* output) {
 }
 
 void test_read_file_and_load() {
-    load_file("/home/robin/Dokumente/Projects/i8080-core/rom/test_file", 0);
+    load_file("rom/test_file", 0);
     TEST_ASSERT_EQUAL_INT(read(0), 1);
     TEST_ASSERT_EQUAL_INT(read(1), 2);
     TEST_ASSERT_EQUAL_INT(read(2), 3);
@@ -45,7 +45,7 @@ void test_read_file_and_load() {
 void test_diagnostic_test_1() {
     char* output = malloc(100);
     output[0] = '\0';
-    load_file("/home/robin/Dokumente/Projects/i8080-core/rom/TST8080.COM", 0x100);
+    load_file("rom/TST8080.COM", 0x100);
     write(5, 0xC9);
     set_program_counter(0xFF);
 
@@ -67,7 +67,7 @@ void test_diagnostic_test_1() {
 void test_diagnostic_test_2() {
     char* output = malloc(100);
     output[0] = '\0';
-    load_file("/home/robin/Dokumente/Projects/i8080-core/rom/8080PRE.COM", 0x100);
+    load_file("rom/8080PRE.COM", 0x100);
     write(5, 0xC9);
     set_program_counter(0xFF);
 
@@ -90,7 +90,7 @@ void test_diagnostic_test_3() {
     TEST_IGNORE();
     char* output = malloc(100);
     output[0] = '\0';
-    load_file("/home/robin/Dokumente/Projects/i8080-core/rom/CPUTEST.COM", 0x100);
+    load_file("rom/CPUTEST.COM", 0x100);
     write(5, 0xC9);
     set_program_counter(0xFF);
 
@@ -110,7 +110,7 @@ void test_diagnostic_test_4() {
     TEST_IGNORE();
     char* output = malloc(100);
     output[0] = '\0';
-    load_file("/home/robin/Dokumente/Projects/i8080-core/rom/8080EXER.COM", 0x100);
+    load_file("rom/8080EXER.COM", 0x100);
     write(5, 0xC9);
     set_program_counter(0xFF);
 
