@@ -1,6 +1,6 @@
-#include <stdint.h>
-#include <stdbool.h>
 #include "../register/register_controller.h"
+#include <stdbool.h>
+#include <stdint.h>
 
 #ifndef _LOGICAL_INSTRUCTION_H_
 #define _LOGICAL_INSTRUCTION_H_
@@ -15,22 +15,24 @@ bool mvi(Register destination, int machine_cycle);
 bool lxi(Register_Pair destination, int machine_cycle);
 
 // LDA a     00111010 lb hb - Load A from memory
-bool lda(int machine_cycle, uint16_t* temporary_address);
+bool lda(int machine_cycle, uint16_t *temporary_address);
 
 // STA a     00110010 lb hb - Store A to memory
-bool sta(int machine_cycle, uint16_t* temporary_address);
+bool sta(int machine_cycle, uint16_t *temporary_address);
 
 // LHLD a    00101010 lb hb - Load H:L from memory
-bool lhld(int machine_cycle, uint16_t* temporary_address);
+bool lhld(int machine_cycle, uint16_t *temporary_address);
 
 // SHLD a    00100010 lb hb - Store H:L to memory
-bool shld(int machine_cycle, uint16_t* temporary_address);
+bool shld(int machine_cycle, uint16_t *temporary_address);
 
 // LDAX RP   00RP1010 *1 - Load indirect through BC or DE
-bool ldax(Register_Pair indirect_pair, int machine_cycle, uint16_t* temporary_address);
+bool ldax(Register_Pair indirect_pair, int machine_cycle,
+          uint16_t *temporary_address);
 
 // STAX RP   00RP0010 *1 - Store indirect through BC or DE
-bool stax(Register_Pair indirect_pair, int machine_cycle, uint16_t* temporary_address);
+bool stax(Register_Pair indirect_pair, int machine_cycle,
+          uint16_t *temporary_address);
 
 // XCHG      11101011 - Exchange DE and HL content
 bool xchg();
@@ -39,10 +41,12 @@ bool xchg();
 bool rst(int number);
 
 // PUSH RP   11RP0101 *2       -       Push register pair on the stack
-bool push(Register_Pair register_pair, int machine_cycle, uint16_t* temporary_address);
+bool push(Register_Pair register_pair, int machine_cycle,
+          uint16_t *temporary_address);
 
 // POP RP    11RP0001 *2       *2      Pop  register pair from the stack
-bool pop(Register_Pair register_pair, int machine_cycle, uint16_t* temporary_address);
+bool pop(Register_Pair register_pair, int machine_cycle,
+         uint16_t *temporary_address);
 
 // XTHL      11100011          -       Swap H:L with top word on stack
 bool xthl();

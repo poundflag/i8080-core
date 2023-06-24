@@ -1,5 +1,5 @@
-#include <stdbool.h>
 #include "../register/register_controller.h"
+#include <stdbool.h>
 
 #ifndef _ARITHMETIC_INSTRUCTION_H_
 #define _ARITHMETIC_INSTRUCTION_H_

@@ -4,19 +4,33 @@ on:
   workflow_dispatch:
 
 jobs:
-  cpp-linter:
+  cppcheck:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: cpp-linter/cpp-linter-action@v2
-        id: linter
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          style: file
-
-      - name: Fail fast?!
-        if: steps.linter.outputs.checks-failed > 0
-        run: echo "Some files failed the linting checks!"
-        # for actual deployment
-        # run: exit 1
+      - name: Install cppcheck
+        run: sudo apt-get install cppcheck
+      - name: Run Code analysis
+        run: cppcheck src/ test/ 2> err.txt
+      - name: Check if the linting failed
+        run: |
+          if [ -s err.txt ]; then
+            echo File is not empty
+            cat err.txt
+            exit 1
+          fi
+  clang-format:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install clang-format
+        run: sudo apt-get install clang-format
+      - name: Check formatting
+        run: clang-format --dry-run --Werror src/**/*.c src/*.c src/**/*.h test/*.c test/**/*.c -- > err.txt
+      - name: Check if the linting failed
+        run: |
+          if [ -s err.txt ]; then
+            echo File is not empty
+            cat err.txt
+            exit 1
+          fi

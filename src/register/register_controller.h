@@ -1,37 +1,37 @@
-#include <stdint.h>
 #include <stdbool.h>
+#include <stdint.h>
 
 #ifndef _REGISTER_CONTROLLER_H_
 #define _REGISTER_CONTROLLER_H_
 
 typedef enum {
-    REG_A,
-    REG_B,
-    REG_C,
-    REG_D,
-    REG_E,
-    REG_H,
-    REG_L,
-    REG_F,
-    REG_ENUM_SIZE,
-    REG_M
+  REG_A,
+  REG_B,
+  REG_C,
+  REG_D,
+  REG_E,
+  REG_H,
+  REG_L,
+  REG_F,
+  REG_ENUM_SIZE,
+  REG_M
 } Register;
 
 typedef enum {
-    PAIR_PSW,
-    PAIR_B,
-    PAIR_D,
-    PAIR_H,
-    PAIR_ENUM_SIZE,
-    PAIR_SP
+  PAIR_PSW,
+  PAIR_B,
+  PAIR_D,
+  PAIR_H,
+  PAIR_ENUM_SIZE,
+  PAIR_SP
 } Register_Pair;
 
 typedef enum {
-    CARRY = 0,
-    PARITY = 2,
-    AUXILIARY = 4,
-    ZERO = 6,
-    SIGNED = 7
+  CARRY = 0,
+  PARITY = 2,
+  AUXILIARY = 4,
+  ZERO = 6,
+  SIGNED = 7
 } Flag_Type;
 
 uint8_t get_register(Register destination);
