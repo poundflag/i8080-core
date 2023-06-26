@@ -1,6 +1,6 @@
-# Project Name Contribution Guidelines <!-- omit in toc -->
+# i8080-core Contribution Guidelines <!-- omit in toc -->
 
-Welcome to the contribution guidelines for the **i8080-core** emulator! I appreciate your interest in contributing to my project.<br>
+Welcome to the contribution guidelines for **i8080-core**! I appreciate your interest in contributing to my project.<br>
 This document will guide you through the process of contributing.
 
 ## Table of Contents <!-- omit in toc -->
@@ -28,11 +28,9 @@ This document will guide you through the process of contributing.
 
 ## Contributing Code
 
-In this section, outline the steps for contributing code to the project. Include the following subsections:
-
 ### Step 1: Fork the Repository
 
-1. Go to the **Project Name** repository on GitHub: [github.com/your-username/Project-Name](https://github.com/your-username/Project-Name).
+1. Go to the **i8080-core** repository on GitHub: [github.com/poundflag/i8080-core](https://github.com/poundflag/i8080-core).
 2. Click on the "Fork" button in the top-right corner of the repository page.
 3. After forking, you will have a copy of the repository in your GitHub account.
 
@@ -41,7 +39,7 @@ In this section, outline the steps for contributing code to the project. Include
 1. Clone your forked repository to your local machine:
 
    ```bash
-   git clone https://github.com/your-username/Project-Name.git
+   git clone https://github.com/poundflag/i8080-core.git
 
 2. Pull submodules
 3. Run tests
