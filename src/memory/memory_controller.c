@@ -7,7 +7,7 @@ uint8_t read(uint16_t address) { return memory[address]; }
 void write(uint16_t address, uint8_t value) { memory[address] = value; }
 
 void load_memory(uint8_t *file_data, long file_size, uint16_t address_offset) {
-  for (int i = 0; i < file_size; i++) {
-    write(address_offset + i, file_data[i]);
-  }
+    for (int i = 0; i < file_size; i++) {
+        write(address_offset + i, file_data[i]);
+    }
 }
