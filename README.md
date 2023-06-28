@@ -21,7 +21,7 @@ You have the option to install the following files from the current release
 
 ## Set Up the Development Environment
 
-Follow the guide to [Set Up the Development Environment](SETUP_DEV_ENVIRONMENT.md).
+Follow the guide to [Set Up the Development Environment](doc/SETUP_DEV_ENVIRONMENT.md).
 
 ## Documentation
 
