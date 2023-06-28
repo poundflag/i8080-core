@@ -34,7 +34,7 @@ Place opening braces on the **same line** as the corresponding control statement
 ```
 
 ## Line Length
-Limit lines to a maximum of **80 characters**. This helps maintain code readability across different environments and reduces the need for horizontal scrolling.
+Limit lines to a maximum of **150 characters**. This helps maintain code readability across different environments and reduces the need for horizontal scrolling.
 
 ## Naming Conventions
 Use descriptive and meaningful names for variables, functions, and types. Use **underscores** for variable and function names. Avoid using single-letter variable names except for loop counters or other well-known conventions.
