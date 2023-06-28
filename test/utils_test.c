@@ -23,7 +23,9 @@ void test_return_error_on_invalid_args() {
 
   // Compare the output with the expected value
   TEST_ASSERT_EQUAL_STRING(
-      "arg1 is an invalid command\narg2 is an invalid command\n", output);
+      "arg1 is an invalid command\n"
+      "Call --help to get a list of arguments\n",
+      output);
 }
 
 void test_process_file_input() {
@@ -84,7 +86,7 @@ void test_step_the_cpu_finite() {
   stdout = temp_stdout;
 
   // Simulate command line arguments
-  char *testArgs[] = {"program", "-steps", "10"};
+  char *testArgs[] = {"program", "-s", "10"};
   int testArgc = sizeof(testArgs) / sizeof(testArgs[0]);
 
   // Call the process_arguments function
@@ -109,7 +111,7 @@ void test_step_the_cpu_infinite() {
   stdout = temp_stdout;
 
   // Simulate command line arguments
-  char *testArgs[] = {"program", "-steps", "-1"};
+  char *testArgs[] = {"program", "-s", "-1"};
   int testArgc = sizeof(testArgs) / sizeof(testArgs[0]);
 
   // Call the process_arguments function
@@ -134,7 +136,7 @@ void test_the_help_list() {
   stdout = temp_stdout;
 
   // Simulate command line arguments
-  char *testArgs[] = {"program", "-help"};
+  char *testArgs[] = {"program", "--help"};
   int testArgc = sizeof(testArgs) / sizeof(testArgs[0]);
 
   // Call the process_arguments function
@@ -147,11 +149,19 @@ void test_the_help_list() {
   // Compare the output with the expected value
   TEST_ASSERT_EQUAL_STRING(
       output,
-      "Call: i8080-core [Arguments]\nOptions:\n\t-i <Path>\t\tInput file to be "
-      "loaded in memory\n\t-o <Path>\t\tOutput file for the debug information "
-      "from the cpu\n\t-steps <number>\t\tSteps for the cpu to take in machine "
-      "cycles. An input of -1 is an infinite run.\n\t-help\t\t\tPrint the list "
-      "of available commands\n");
+      " _   ___    ___    ___    ___                                \n"
+      "(_) / _ \\  / _ \\  / _ \\  / _ \\                               \n"
+      " _ | (_) || | | || (_) || | | | ______  ___  ___   _ __  ___ \n"
+      "| | > _ < | | | | > _ < | | | ||______|/ __|/ _ \\ | '__|/ _ \\\n"
+      "| || (_) || |_| || (_) || |_| |       | (__| (_) || |  |  __/\n"
+      "|_| \\___/  \\___/  \\___/  \\___/         \\___|\\___/ |_|   "
+      "\\___|\n\n"
+      "Call: i8080-core [Arguments]\nOptions:\n"
+      "\t-i <Path>\tInput file to be loaded in memory\n"
+      "\t-o <Path>\tOutput file for the debug information from the cpu\n"
+      "\t-s <number>\tSteps for the cpu to take in machine cycles. \n\t\t\tAn "
+      "input of -1 is an infinite run.\n"
+      "\t--help\t\tPrint the list of available commands\n");
 }
 
 void run_utils_test() {
