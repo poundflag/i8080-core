@@ -35,10 +35,10 @@ void step(int *machine_cycle, uint16_t *temporary_address) {
     bool result = decode_execute_instruction(current_opcode, *machine_cycle, temporary_address);
 
     if (result == true) {
-        if (output_file == true) {
+        /*if (output_file == true) {
             char *output = "THIS IS A TEST\n";
             writeStringToFile(output, file_path);
-        }
+        }*/
         set_first_machine_cycle(true);
         (*machine_cycle) = 0;
         (*temporary_address) = 0;
