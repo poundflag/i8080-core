@@ -24,9 +24,7 @@ void setUp(void) {
 
     set_program_counter(0);
 }
-void tearDown(void) {
-    output_file = false;
-}
+void tearDown(void) { output_file = false; }
 
 void run_cpu_test();
 void run_status_service_test();
