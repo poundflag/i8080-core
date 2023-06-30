@@ -4,27 +4,30 @@
 #include <stdio.h>
 
 uint8_t alu_add(uint8_t value_one, uint8_t value_two, bool carry_bit) {
-    set_register(REG_F, process_flag_register(value_one, value_two + carry_bit, PLUS_OPERATION));
+    set_register(REG_F, process_flag_register(value_one, value_two, carry_bit, PLUS_OPERATION));
     return value_one + value_two + carry_bit;
 }
 
 uint8_t alu_sub(uint8_t value_one, uint8_t value_two, bool carry_bit) {
-    set_register(REG_F, process_flag_register(value_one, value_two - carry_bit, SUBTRACTION_OPERATION));
-    return value_one - value_two - carry_bit;
+    set_register(REG_F, process_flag_register(value_one, value_two, carry_bit, SUBTRACTION_OPERATION));
+    value_two = (~value_two) & 0xFF;
+    return value_one + value_two + (carry_bit ? 0 : 1);
 }
 
 uint8_t alu_and(uint8_t value_one, uint8_t value_two) {
-    set_register(REG_F, process_flag_register(value_one & value_two, 0, PLUS_OPERATION));
+    set_register(REG_F, process_flag_register(value_one & value_two, 0, 0, PLUS_OPERATION));
+    set_register_bit(REG_F, CARRY, false);
+    set_register_bit(REG_F, AUXILIARY, ((value_one | value_two) & 0x08) != 0);
     return value_one & value_two;
 }
 
 uint8_t alu_or(uint8_t value_one, uint8_t value_two) {
-    set_register(REG_F, process_flag_register(value_one | value_two, 0, PLUS_OPERATION));
+    set_register(REG_F, process_flag_register(value_one | value_two, 0, 0, PLUS_OPERATION));
     return value_one | value_two;
 }
 
 uint8_t alu_xor(uint8_t value_one, uint8_t value_two) {
-    set_register(REG_F, process_flag_register(value_one ^ value_two, 0, PLUS_OPERATION));
+    set_register(REG_F, process_flag_register(value_one ^ value_two, 0, 0, PLUS_OPERATION));
     return value_one ^ value_two;
 }
 
@@ -132,8 +135,8 @@ bool dcx(Register_Pair destination) {
 
 bool dad(Register_Pair source) {
     uint16_t h_value = get_register_pair(PAIR_H);
-    set_register_pair(PAIR_H, (h_value + get_register_pair(source)) & 0xFFFF);
     bool carry = (h_value + get_register_pair(source)) > 0xFFFF;
+    set_register_pair(PAIR_H, h_value + get_register_pair(source));
     set_register_bit(REG_F, CARRY, carry);
     return true;
 }

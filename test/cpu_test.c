@@ -8,7 +8,7 @@ void interceptBDOSCall(char *output) {
     // Stolen from
     // https://github.com/GunshipPenguin/lib8080/blob/master/test/integration/cpmloader.c
     if (get_register(REG_C) == 2) {
-        if (get_register(REG_E) != 0) {
+        if (get_register(REG_E) != 0 && get_register(REG_E) >= 32 && get_register(REG_E) <= 126) {
             // printf("%c", get_register(REG_E));
             char ch[2];
             ch[0] = get_register(REG_E);
@@ -88,8 +88,7 @@ void test_diagnostic_test_2() {
 }
 
 void test_diagnostic_test_3() {
-    TEST_IGNORE();
-    char *output = malloc(100);
+    char *output = malloc(176 * sizeof(char));
     output[0] = '\0';
     load_file("rom/CPUTEST.COM", 0x100);
     write(5, 0xC9);
@@ -103,16 +102,14 @@ void test_diagnostic_test_3() {
         }
     }
 
-    TEST_ASSERT_EQUAL_STRING("DIAGNOSTICS II V1.2 - CPU TESTCOPYRIGHT (C) 1981 - SUPERSOFT "
-                             "ASSOCIATESABCDEFGHIJKLMNOPQRSTUVWXYZCPU IS 8080/8085BEGIN TIMING "
-                             "TESTEND TIMING TESTCPU TESTS OK",
+    TEST_ASSERT_EQUAL_STRING("DIAGNOSTICS II V1.2 - CPU TESTCOPYRIGHT (C) 1981 - SUPERSOFT ASSOCIATESABCDEFGHIJKLMNOPQRSTUVWXYZCPU IS 8080/8085BEGIN "
+                             "TIMING TESTEND TIMING TESTCPU TESTS OK",
                              output);
     free(output);
 }
 
 void test_diagnostic_test_4() {
-    TEST_IGNORE();
-    char *output = malloc(100);
+    char *output = malloc(891 * sizeof(char));
     output[0] = '\0';
     load_file("rom/8080EXER.COM", 0x100);
     write(5, 0xC9);
@@ -126,10 +123,15 @@ void test_diagnostic_test_4() {
         }
     }
 
-    TEST_ASSERT_EQUAL_STRING("DIAGNOSTICS II V1.2 - CPU TESTCOPYRIGHT (C) 1981 - SUPERSOFT "
-                             "ASSOCIATESABCDEFGHIJKLMNOPQRSTUVWXYZCPU IS 8080/8085BEGIN TIMING "
-                             "TESTEND TIMING TESTCPU TESTS OK",
-                             output);
+    TEST_ASSERT_EQUAL_STRING(
+        "8080 instruction exerciserdad <b,d,h,sp>................  OKaluop nn......................  OKaluop "
+        "<b,c,d,e,h,l,m,a>.......  OK<daa,cma,stc,cmc>.............  OK<inr,dcr> a...................  OK<inr,dcr> b...................  OK<inx,dcx> "
+        "b...................  OK<inr,dcr> c...................  OK<inr,dcr> d...................  OK<inx,dcx> d...................  OK<inr,dcr> "
+        "e...................  OK<inr,dcr> h...................  OK<inx,dcx> h...................  OK<inr,dcr> l...................  OK<inr,dcr> "
+        "m...................  OK<inx,dcx> sp..................  OKlhld nnnn.....................  OKshld nnnn.....................  OKlxi "
+        "<b,d,h,sp>,nnnn...........  OKldax <b,d>....................  OKmvi <b,c,d,e,h,l,m,a>,nn......  OKmov <bcdehla>,<bcdehla>.......  OKsta "
+        "nnnn / lda nnnn...........  OK<rlc,rrc,ral,rar>.............  OKstax <b,d>....................  OKTests complete",
+        output);
     free(output);
 }
 
