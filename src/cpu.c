@@ -36,8 +36,12 @@ void step(int *machine_cycle, uint16_t *temporary_address) {
 
     if (result == true) {
         if (output_file == true) {
-            char *output = "THIS IS A TEST";
+            char *output = malloc(100);
+            snprintf(output, 100, "A=%X B=%X C=%X D=%X E=%X H=%X L=%X F=%X SP=%X PC=%X\n", get_register(REG_A), get_register(REG_B),
+                     get_register(REG_C), get_register(REG_D), get_register(REG_E), get_register(REG_H), get_register(REG_L), get_register(REG_F),
+                     get_register_pair(PAIR_SP), get_program_counter());
             writeStringToFile(output, file_path);
+            free(output);
         }
         set_first_machine_cycle(true);
         (*machine_cycle) = 0;
