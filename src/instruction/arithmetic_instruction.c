@@ -4,80 +4,30 @@
 #include <stdio.h>
 
 uint8_t alu_add(uint8_t value_one, uint8_t value_two, bool carry_bit) {
-    bool zero = is_result_zero(value_one + value_two + carry_bit);
-    bool signedd = is_result_signed(value_one + value_two + carry_bit);
-    bool parity = is_result_parity(value_one + value_two + carry_bit);
-    bool auxiliary_carry = ((value_one & 0xF) + (value_two & 0xF) + carry_bit) & 0x10;
-    bool carry = (value_one + value_two + carry_bit) & 0x100;
-    set_register_bit(REG_F, ZERO, zero);
-    set_register_bit(REG_F, SIGNED, signedd);
-    set_register_bit(REG_F, PARITY, parity);
-    set_register_bit(REG_F, AUXILIARY, auxiliary_carry);
-    set_register_bit(REG_F, CARRY, carry);
-    set_register_bit(REG_F, 5, false);
-    set_register_bit(REG_F, 1, true);
-    set_register_bit(REG_F, 3, false);
+    set_register(REG_F, process_flag_register(value_one, value_two, carry_bit, PLUS_OPERATION));
     return value_one + value_two + carry_bit;
 }
 
 uint8_t alu_sub(uint8_t value_one, uint8_t value_two, bool carry_bit) {
+    set_register(REG_F, process_flag_register(value_one, value_two, carry_bit, SUBTRACTION_OPERATION));
     value_two = (~value_two) & 0xFF;
-
-    bool zero = is_result_zero(value_one + value_two + (carry_bit ? 0 : 1));
-    bool signedd = is_result_signed(value_one + value_two + (carry_bit ? 0 : 1));
-    bool parity = is_result_parity(value_one + value_two + (carry_bit ? 0 : 1));
-    bool auxiliary_carry = ((value_one & 0xF) + (value_two & 0xF) + (carry_bit ? 0 : 1)) & 0x10;
-    bool carry = (value_one + value_two + (carry_bit ? 0 : 1)) & 0x100;
-    set_register_bit(REG_F, ZERO, zero);
-    set_register_bit(REG_F, SIGNED, signedd);
-    set_register_bit(REG_F, PARITY, parity);
-    set_register_bit(REG_F, AUXILIARY, auxiliary_carry);
-    set_register_bit(REG_F, CARRY, !carry);
-    set_register_bit(REG_F, 5, false);
-    set_register_bit(REG_F, 1, true);
-    set_register_bit(REG_F, 3, false);
     return value_one + value_two + (carry_bit ? 0 : 1);
 }
 
 uint8_t alu_and(uint8_t value_one, uint8_t value_two) {
-    bool acResult = ((value_one | value_two) & 0x08) != 0;
-
-    bool zero = is_result_zero(value_one & value_two);
-    bool signedd = is_result_signed(value_one & value_two);
-    bool parity = is_result_parity(value_one & value_two);
-    set_register_bit(REG_F, ZERO, zero);
-    set_register_bit(REG_F, SIGNED, signedd);
-    set_register_bit(REG_F, PARITY, parity);
-    set_register_bit(REG_F, AUXILIARY, acResult);
+    set_register(REG_F, process_flag_register(value_one & value_two, 0, 0, PLUS_OPERATION));
     set_register_bit(REG_F, CARRY, false);
-    set_register_bit(REG_F, 5, false);
-    set_register_bit(REG_F, 1, true);
-    set_register_bit(REG_F, 3, false);
+    set_register_bit(REG_F, AUXILIARY, ((value_one | value_two) & 0x08) != 0);
     return value_one & value_two;
 }
 
 uint8_t alu_or(uint8_t value_one, uint8_t value_two) {
-    bool zero = is_result_zero(value_one | value_two);
-    bool signedd = is_result_signed(value_one | value_two);
-    bool parity = is_result_parity(value_one | value_two);
-    bool auxiliary_carry = ((value_one & 0xF) | (value_two & 0xF)) & 0x10;
-    bool carry = (value_one | value_two) & 0x100;
-    set_register_bit(REG_F, ZERO, zero);
-    set_register_bit(REG_F, SIGNED, signedd);
-    set_register_bit(REG_F, PARITY, parity);
-    set_register_bit(REG_F, AUXILIARY, auxiliary_carry);
-    set_register_bit(REG_F, CARRY, carry);
-    set_register_bit(REG_F, 5, false);
-    set_register_bit(REG_F, 1, true);
-    set_register_bit(REG_F, 3, false);
+    set_register(REG_F, process_flag_register(value_one | value_two, 0, 0, PLUS_OPERATION));
     return value_one | value_two;
 }
 
 uint8_t alu_xor(uint8_t value_one, uint8_t value_two) {
-    set_register(REG_F, process_flag_register(value_one ^ value_two, 0, PLUS_OPERATION));
-    set_register_bit(REG_F, 5, false);
-    set_register_bit(REG_F, 1, true);
-    set_register_bit(REG_F, 3, false);
+    set_register(REG_F, process_flag_register(value_one ^ value_two, 0, 0, PLUS_OPERATION));
     return value_one ^ value_two;
 }
 

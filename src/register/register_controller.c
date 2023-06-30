@@ -30,12 +30,7 @@ void set_register(Register source, uint8_t value) {
 }
 
 uint16_t get_register_pair(Register_Pair source) {
-    if (source < PAIR_ENUM_SIZE && source != PAIR_PSW) {
-        return register_array[register_pair_array[source].high] | (register_array[register_pair_array[source].low] << 8);
-    } else if (source == PAIR_PSW) {
-        set_register_bit(REG_F, 5, false);
-        set_register_bit(REG_F, 1, true);
-        set_register_bit(REG_F, 3, false);
+    if (source < PAIR_ENUM_SIZE) {
         return register_array[register_pair_array[source].high] | (register_array[register_pair_array[source].low] << 8);
     } else if (source == PAIR_SP) {
         return get_stack_pointer();
