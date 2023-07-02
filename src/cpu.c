@@ -24,7 +24,6 @@ void run(int steps) {
     }
 }
 
-
 void write_string_to_file(char *input, char *filename) {
     // creating file pointer to work with files
     FILE *fptr;

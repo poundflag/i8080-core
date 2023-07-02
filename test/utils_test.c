@@ -1,5 +1,5 @@
-#include "utils.h"
 #include "unity.h"
+#include "utils.h"
 #include <stdio.h>
 
 void test_return_error_on_invalid_args() {
