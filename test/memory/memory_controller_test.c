@@ -1,5 +1,6 @@
 #include "memory/memory_controller.h"
 #include "unity.h"
+#include <stdlib.h>
 
 void test_read_from_address_and_return_zero() { TEST_ASSERT_EQUAL_INT(read(1), 0); }
 

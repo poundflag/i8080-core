@@ -2,6 +2,7 @@
 #include "memory/memory_controller.h"
 #include "register/register_controller.h"
 #include "unity.h"
+#include <string.h>
 
 void interceptBDOSCall(char *output) {
     size_t output_size = strlen(output);

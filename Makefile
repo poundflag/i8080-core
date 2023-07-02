@@ -1,5 +1,5 @@
 CC = gcc
-ARGS = -Wall -Wextra -fPIC -Iinclude
+ARGS = -Wall -Wextra -fPIC -Iinclude -std=gnu17
 TEST_ARGS = $(ARGS) -Iunity/src
 
 # Folder Variables

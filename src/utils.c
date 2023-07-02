@@ -8,20 +8,21 @@ int steps_to_run = 0;
 
 typedef enum { ARG_INPUT, ARG_OUTPUT, ARG_STEPS, ARG_HELP, SIZE_ENUM_ARG } arguments;
 
-typedef struct {
+struct map_struct {
     char *key;
-    arguments value
-} map_struct;
+    arguments value;
+};
 
-map_struct lookup_table[] = {{"-i", ARG_INPUT}, {"-o", ARG_OUTPUT}, {"-s", ARG_STEPS}, {"--help", ARG_HELP}};
+struct map_struct lookup_table[] = {{"-i", ARG_INPUT}, {"-o", ARG_OUTPUT}, {"-s", ARG_STEPS}, {"--help", ARG_HELP}};
 
 int enum_from_string(char *argument) {
     for (int i = 0; i < SIZE_ENUM_ARG; i++) {
-        map_struct current_map_item = lookup_table[i];
+        struct map_struct current_map_item = lookup_table[i];
         if (strcmp(current_map_item.key, argument) == 0) {
             return current_map_item.value;
         }
     }
+    return 0;
 }
 
 void print_help_list() {
