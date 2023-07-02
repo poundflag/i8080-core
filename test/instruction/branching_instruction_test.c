@@ -1,7 +1,7 @@
-#include "../../src/instruction/branching_instruction.h"
-#include "../../src/memory/memory_controller.h"
-#include "../../src/register/register_controller.h"
-#include "../../src/register/stack.h"
+#include "instruction/branching_instruction.h"
+#include "memory/memory_controller.h"
+#include "register/register_controller.h"
+#include "register/stack.h"
 #include "unity.h"
 #include <stdbool.h>
 

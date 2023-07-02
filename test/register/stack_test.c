@@ -1,5 +1,5 @@
-#include "../../src/memory/memory_controller.h"
-#include "../../src/register/stack.h"
+#include "memory/memory_controller.h"
+#include "register/stack.h"
 #include "unity.h"
 
 void test_get_the_default_stack_pointer_address() { TEST_ASSERT_EQUAL_INT(get_stack_pointer(), 0); }

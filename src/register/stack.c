@@ -1,5 +1,5 @@
-#include "stack.h"
-#include "../memory/memory_controller.h"
+#include "register/stack.h"
+#include "memory/memory_controller.h"
 
 uint16_t stack_pointer = 0;
 

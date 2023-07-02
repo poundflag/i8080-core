@@ -1,6 +1,6 @@
-#include "register_controller.h"
-#include "../memory/memory_controller.h"
-#include "stack.h"
+#include "register/register_controller.h"
+#include "memory/memory_controller.h"
+#include "register/stack.h"
 
 uint8_t register_array[REG_ENUM_SIZE] = {[REG_F] = 0b00000010};
 

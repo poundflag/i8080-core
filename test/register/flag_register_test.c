@@ -1,4 +1,4 @@
-#include "../../src/register/flag_register.h"
+#include "register/flag_register.h"
 #include "unity.h"
 
 void test_set_the_carry_to_true() { TEST_ASSERT_EQUAL_INT(is_result_carry(0xFF + 1), 1); }

@@ -1,4 +1,4 @@
-#include "../../src/register/register_controller.h"
+#include "register/register_controller.h"
 #include "unity.h"
 
 void test_get_a_register_and_have_the_default_value() { TEST_ASSERT_EQUAL_INT(get_register(REG_A), 0); }

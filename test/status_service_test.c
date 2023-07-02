@@ -1,7 +1,7 @@
-#include "../src/cpu.h"
-#include "../src/instruction/logical_instruction.h"
-#include "../src/memory/memory_controller.h"
-#include "../src/status_service.h"
+#include "cpu.h"
+#include "instruction/logical_instruction.h"
+#include "memory/memory_controller.h"
+#include "status_service.h"
 #include "unity.h"
 
 void test_be_true_when_stack_is_accessed() {

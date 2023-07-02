@@ -1,8 +1,8 @@
-#include "logical_instruction.h"
-#include "../instruction/instruction.h"
-#include "../memory/memory_controller.h"
-#include "../register/stack.h"
-#include "../status_service.h"
+#include "instruction/logical_instruction.h"
+#include "instruction/instruction.h"
+#include "memory/memory_controller.h"
+#include "register/stack.h"
+#include "status_service.h"
 #include <stdio.h>
 
 void print_error_invalid_cycle(char *instruction_name) { fprintf(stderr, "Invalid machine cycle in logical instruction: %s\n", instruction_name); }

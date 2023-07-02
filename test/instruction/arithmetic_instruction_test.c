@@ -1,6 +1,6 @@
-#include "../../src/instruction/arithmetic_instruction.h"
-#include "../../src/memory/memory_controller.h"
-#include "../../src/register/register_controller.h"
+#include "instruction/arithmetic_instruction.h"
+#include "memory/memory_controller.h"
+#include "register/register_controller.h"
 #include "unity.h"
 #include <stdbool.h>
 

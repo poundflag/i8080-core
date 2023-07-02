@@ -1,4 +1,4 @@
-#include "memory_controller.h"
+#include "memory/memory_controller.h"
 
 uint8_t memory[0xFFFF] = {0};
 
