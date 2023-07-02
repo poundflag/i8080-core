@@ -1,43 +1,36 @@
 # i8080-core
+![Release](https://github.com/poundflag/i8080-core/actions/workflows/release.yml/badge.svg)
+![Lint](https://github.com/poundflag/i8080-core/actions/workflows/linter.yml/badge.svg)
 
 i8080-core is a core library that emulates the behaviour of the Intel 8080 Microprocessor.
 
-## Table of Contents
+![Project Logo](img/logo-official.png)
 
-- [Getting Started](#getting-started)
-- [Usage](#usage)
-- [Contributing](#contributing)
-- [License](#license)
+<!--## Features
 
-## Getting Started
+- Feature 1: [Description of feature 1]
+- Feature 2: [Description of feature 2]
+- ...-->
 
-These instructions will help you get a local copy of the project up and running on your machine.
+## Installation
 
-### Compile the project yourself
+You have the option to install the following files from the current release
 
-1. **Clone the project with `git clone https://github.com/poundflag/i8080-core`**
-2. **Run `make all` in the root directory of the project**
-3. **The compiled application is located under the directory `bin/`**
+1. A **binary executable** (*i8080-core*) to run Intel 8080 compatible code and check the output of the emulator.
+2. A **dynamic library** (*libi8080core.so*) to include this emulator in your own project. To create a Intel 8080 machine.
 
-### Run all tests
+## Set Up the Development Environment
 
-1. **Run `make test` in the root directory of the project**
-2. **The console output should display the failed testcases and passed suites**
+Follow the guide to [Set Up the Development Environment](doc/SETUP_DEV_ENVIRONMENT.md).
 
-### Development-Prerequisites
+## Documentation
 
-The following dependencies need to be installed in order to develop the project, or to run the tests.
+For detailed documentation on i8080-core, refer to the [Documentation Folder](doc/).
 
-| Dependency                                                                         |
-| ---------------------------------------------------------------------------------- |
-| [Check](https://libcheck.github.io/check/web/install.html#yum)                     |
-| [Check-Devel](https://yum-info.contradodigital.com/view-package/base/check-devel/) |
+## Contributing
 
-## Usage
-
-Due to the early version of this project there are really only two use-cases for this project.
-The project can either be used to develop an i8080 based machine around the interfaces of this project provided, or to run code and to check the output of the output file.
+I welcome contributions from the community! If you would like to contribute to i8080-core, please follow my [Contribution Guidelines](CONTRIBUTING.md) for a smooth collaboration process.
 
 ## License
 
-This project uses the MIT-License.
+This project is licensed under the MIT-License. For more information, see the [LICENSE](LICENSE) file.
