@@ -22,7 +22,7 @@ int enum_from_string(char *argument) {
             return current_map_item.value;
         }
     }
-    return 0;
+    return -1;
 }
 
 void print_help_list() {
