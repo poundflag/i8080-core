@@ -30,7 +30,7 @@ jobs:
       - name: Install clang-format
         run: sudo apt-get install clang-format
       - name: Check formatting
-        run: clang-format --dry-run --Werror src/**/*.c src/*.c src/**/*.h test/*.c test/**/*.c -- > err.txt
+        run: clang-format --dry-run --Werror src/**/*.c src/*.c include/**/*.h include/*.h test/*.c test/**/*.c -- > err.txt
       - name: Check if the linting failed
         run: |
           if [ -s err.txt ]; then
