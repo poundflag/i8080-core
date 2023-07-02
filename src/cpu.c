@@ -24,6 +24,23 @@ void run(int steps) {
     }
 }
 
+
+void write_string_to_file(char *input, char *filename) {
+    // creating file pointer to work with files
+    FILE *fptr;
+    // opening file in appending mode
+    fptr = fopen(filename, "a");
+    // exiting program if file cannot be opened
+    if (fptr == NULL) {
+        printf("Error opening file!");
+        exit(1);
+    }
+    // writing the string to the file
+    fprintf(fptr, "%s", input);
+    // closing the file
+    fclose(fptr);
+}
+
 void step(int *machine_cycle, uint16_t *temporary_address) {
     // Get the current opcode if this is called for the first time
     if (first_start_up == true) {
@@ -40,7 +57,7 @@ void step(int *machine_cycle, uint16_t *temporary_address) {
             snprintf(output, 100, "A=%X B=%X C=%X D=%X E=%X H=%X L=%X F=%X SP=%X PC=%X\n", get_register(REG_A), get_register(REG_B),
                      get_register(REG_C), get_register(REG_D), get_register(REG_E), get_register(REG_H), get_register(REG_L), get_register(REG_F),
                      get_register_pair(PAIR_SP), get_program_counter());
-            writeStringToFile(output, file_path);
+            write_string_to_file(output, file_path);
             free(output);
         }
         set_first_machine_cycle(true);
@@ -54,22 +71,6 @@ void step(int *machine_cycle, uint16_t *temporary_address) {
     }
 }
 
-void writeStringToFile(char *input, char *filename) {
-    // creating file pointer to work with files
-    FILE *fptr;
-    // opening file in appending mode
-    fptr = fopen(filename, "a");
-    // exiting program if file cannot be opened
-    if (fptr == NULL) {
-        printf("Error opening file!");
-        exit(1);
-    }
-    // writing the string to the file
-    fprintf(fptr, "%s", input);
-    // closing the file
-    fclose(fptr);
-}
-
 void load_file(char *file_path, uint16_t address_offset) {
     // Open file in binary mode
     FILE *file = fopen(file_path, "rb");
@@ -80,7 +81,7 @@ void load_file(char *file_path, uint16_t address_offset) {
 
     // Seek to the end of the file to determine its size
     fseek(file, 0, SEEK_END);
-    long file_size = ftell(file);
+    size_t file_size = ftell(file);
     fseek(file, 0, SEEK_SET);
 
     // Allocate memory for the file contents
