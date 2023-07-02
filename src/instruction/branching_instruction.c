@@ -1,5 +1,5 @@
-#include "branching_instruction.h"
-#include "../register/stack.h"
+#include "instruction/branching_instruction.h"
+#include "register/stack.h"
 
 bool jmp(int machine_cycle, uint16_t *temporary_address) {
     switch (machine_cycle) {

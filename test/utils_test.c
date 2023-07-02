@@ -1,4 +1,4 @@
-#include "../src/utils.h"
+#include "utils.h"
 #include "unity.h"
 #include <stdio.h>
 

@@ -1,7 +1,7 @@
-#include "instruction.h"
-#include "arithmetic_instruction.h"
-#include "branching_instruction.h"
-#include "logical_instruction.h"
+#include "instruction/instruction.h"
+#include "instruction/arithmetic_instruction.h"
+#include "instruction/branching_instruction.h"
+#include "instruction/logical_instruction.h"
 
 bool decode_execute_instruction(uint8_t opcode, int machine_cycle, uint16_t *temporary_address) {
     switch (opcode) {

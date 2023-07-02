@@ -1,8 +1,8 @@
-#include "../../src/instruction/instruction.h"
-#include "../../src/instruction/logical_instruction.h"
-#include "../../src/memory/memory_controller.h"
-#include "../../src/register/register_controller.h"
-#include "../../src/register/stack.h"
+#include "instruction/instruction.h"
+#include "instruction/logical_instruction.h"
+#include "memory/memory_controller.h"
+#include "register/register_controller.h"
+#include "register/stack.h"
 #include "unity.h"
 #include <stdbool.h>
 

@@ -1,5 +1,5 @@
-#include "../../src/instruction/instruction.h"
-#include "../../src/register/register_controller.h"
+#include "instruction/instruction.h"
+#include "register/register_controller.h"
 #include "unity.h"
 
 void test_getDestinationRegister_returns_the_valid_index() {

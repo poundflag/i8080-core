@@ -1,6 +1,6 @@
-#include "../src/cpu.h"
-#include "../src/register/register_controller.h"
-#include "../src/register/stack.h"
+#include "cpu.h"
+#include "register/register_controller.h"
+#include "register/stack.h"
 #include "unity.h"
 
 void setUp(void) {

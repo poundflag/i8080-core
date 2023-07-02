@@ -1,4 +1,4 @@
-#include "../../src/memory/memory_controller.h"
+#include "memory/memory_controller.h"
 #include "unity.h"
 
 void test_read_from_address_and_return_zero() { TEST_ASSERT_EQUAL_INT(read(1), 0); }

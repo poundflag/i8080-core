@@ -1,6 +1,6 @@
-#include "../src/cpu.h"
-#include "../src/memory/memory_controller.h"
-#include "../src/register/register_controller.h"
+#include "cpu.h"
+#include "memory/memory_controller.h"
+#include "register/register_controller.h"
 #include "unity.h"
 
 void interceptBDOSCall(char *output) {
