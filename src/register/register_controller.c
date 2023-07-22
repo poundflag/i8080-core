@@ -16,14 +16,14 @@ uint16_t program_counter = 0;
 
 uint8_t get_register(Register source) {
     if (source == REG_M) {
-        return read(get_register_pair(PAIR_H));
+        return read_from_memory(get_register_pair(PAIR_H));
     }
     return register_array[source];
 }
 
 void set_register(Register source, uint8_t value) {
     if (source == REG_M) {
-        write(get_register_pair(PAIR_H), value);
+        write_to_memory(get_register_pair(PAIR_H), value);
     } else {
         register_array[source] = value;
     }

@@ -2,11 +2,11 @@
 #include "unity.h"
 #include <stdlib.h>
 
-void test_read_from_address_and_return_zero() { TEST_ASSERT_EQUAL_INT(read(1), 0); }
+void test_read_from_address_and_return_zero() { TEST_ASSERT_EQUAL_INT(read_from_memory(1), 0); }
 
 void test_write_a_value_to_memory() {
-    write(1, 10);
-    TEST_ASSERT_EQUAL_INT(read(1), 10);
+    write_to_memory(1, 10);
+    TEST_ASSERT_EQUAL_INT(read_from_memory(1), 10);
 }
 
 void test_load_memory_test() {
@@ -15,9 +15,9 @@ void test_load_memory_test() {
     file_data[1] = 0x55;
 
     load_memory(file_data, 2, 0);
-    TEST_ASSERT_EQUAL_INT(read(0), 0x10);
-    TEST_ASSERT_EQUAL_INT(read(1), 0x55);
-    TEST_ASSERT_EQUAL_INT(read(2), 0);
+    TEST_ASSERT_EQUAL_INT(read_from_memory(0), 0x10);
+    TEST_ASSERT_EQUAL_INT(read_from_memory(1), 0x55);
+    TEST_ASSERT_EQUAL_INT(read_from_memory(2), 0);
 
     free(file_data);
 }

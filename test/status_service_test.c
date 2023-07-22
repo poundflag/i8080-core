@@ -63,7 +63,7 @@ void test_be_false_when_memory_is_not_read() {
 void test_be_true_when_first_machine_cycle() {
     uint16_t temporary_address = 0;
     int machine_cycle = 0;
-    write(1, 0xC6);
+    write_to_memory(1, 0xC6);
     step(&machine_cycle, &temporary_address);
     TEST_ASSERT_EQUAL_INT(true, is_first_machine_cycle());
 

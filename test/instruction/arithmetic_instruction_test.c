@@ -26,7 +26,7 @@ void test_add_overflow() {
 
 void test_adi_test() {
     set_program_counter(0);
-    write(1, 0x12);
+    write_to_memory(1, 0x12);
     set_register(REG_A, 0x12);
 
     bool result = adi(0);
@@ -41,7 +41,7 @@ void test_adi_test() {
 
 void test_adi_overflow() {
     set_program_counter(0);
-    write(1, 0xFF);
+    write_to_memory(1, 0xFF);
     set_register(REG_A, 0x10);
 
     bool result = adi(0);
@@ -78,7 +78,7 @@ void test_adc_carry() {
 
 void test_aci_no_carry() {
     set_program_counter(0);
-    write(1, 1);
+    write_to_memory(1, 1);
     set_register(REG_A, 1);
     set_register_bit(REG_F, CARRY, false);
 
@@ -94,7 +94,7 @@ void test_aci_no_carry() {
 
 void test_aci_carry() {
     set_program_counter(0);
-    write(1, 1);
+    write_to_memory(1, 1);
     set_register(REG_A, 1);
     set_register_bit(REG_F, CARRY, true);
 
@@ -130,7 +130,7 @@ void test_sub_overflow() {
 
 void test_sui_test() {
     set_program_counter(0);
-    write(1, 1);
+    write_to_memory(1, 1);
     set_register(REG_A, 5);
 
     bool result = sui(0);
@@ -145,7 +145,7 @@ void test_sui_test() {
 
 void test_sui_overflow() {
     set_program_counter(0);
-    write(1, 5);
+    write_to_memory(1, 5);
     set_register(REG_A, 1);
 
     bool result = sui(0);
@@ -180,7 +180,7 @@ void test_sbb_carry() {
 
 void test_sbi_no_carry() {
     set_program_counter(0);
-    write(1, 1);
+    write_to_memory(1, 1);
     set_register(REG_A, 5);
     set_register_bit(REG_F, CARRY, false);
 
@@ -195,7 +195,7 @@ void test_sbi_no_carry() {
 
 void test_sbi_carry() {
     set_program_counter(0);
-    write(1, 1);
+    write_to_memory(1, 1);
     set_register(REG_A, 5);
     set_register_bit(REG_F, CARRY, true);
 
@@ -302,7 +302,7 @@ void test_ana_test() {
 
 void test_ani_test() {
     set_register(REG_A, 4);
-    write(1, 6);
+    write_to_memory(1, 6);
 
     bool result = ani(0);
     TEST_ASSERT_EQUAL_INT(get_program_counter(), 1);
@@ -323,7 +323,7 @@ void test_ora_test() {
 
 void test_ori_test() {
     set_register(REG_A, 1);
-    write(1, 2);
+    write_to_memory(1, 2);
 
     bool result = ori(0);
     TEST_ASSERT_EQUAL_INT(get_program_counter(), 1);
@@ -344,7 +344,7 @@ void test_xra_test() {
 
 void test_xri_test() {
     set_register(REG_A, 2);
-    write(1, 2);
+    write_to_memory(1, 2);
 
     bool result = xri(0);
     TEST_ASSERT_EQUAL_INT(get_program_counter(), 1);
@@ -365,7 +365,7 @@ void test_cmp_test() {
 
 void test_cpi_test() {
     set_register(REG_A, 1);
-    write(1, 1);
+    write_to_memory(1, 1);
 
     bool result = cpi(0);
     TEST_ASSERT_EQUAL_INT(get_program_counter(), 1);
