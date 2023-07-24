@@ -16,7 +16,7 @@ void read_a_file() {
 
 void read_a_file_that_doesnt_exist() {
     File_Response file_response = read_binary_from_file("rom/doesnt_exist_file");
-    
+
     TEST_ASSERT_EQUAL_size_t(-1, file_response.file_size);
     TEST_ASSERT(file_response.file_data == NULL);
 }

@@ -57,6 +57,41 @@ void step(int *machine_cycle, uint16_t *temporary_address) {
 
 void load_file(char *file_path, uint16_t address_offset) {
     File_Response file_response = read_binary_from_file(file_path);
+
+    // Open file in binary mode
+    FILE *file = fopen(file_path, "rb");
+    if (file == NULL) {
+        printf("Failed to open the file: %s\n", file_path);
+        return;
+    }
+
+    // Seek to the end of the file to determine its size
+    fseek(file, 0, SEEK_END);
+    size_t file_size = ftell(file);
+    fseek(file, 0, SEEK_SET);
+
+    // Allocate memory for the file contents
+    uint8_t *file_data = (uint8_t *)malloc(file_size);
+    if (file_data == NULL) {
+        printf("Memory allocation failed.\n");
+        fclose(file);
+        return;
+    }
+
+    // Read the file contents into the array
+    size_t bytes_read = fread(file_data, 1, file_size, file);
+    if (bytes_read != file_size) {
+        printf("Failed to read the file: %s\n", file_path);
+        free(file_data);
+        fclose(file);
+        return;
+    }
+
+    load_memory(file_data, file_size, address_offset);
+
+    // Cleanup: close the file and free the memory
+    fclose(file);
+    free(file_data);
     if (file_response.file_data != NULL && file_response.file_size != -1) {
         load_memory(file_response.file_data, file_response.file_size, address_offset);
         free(file_response.file_data);
