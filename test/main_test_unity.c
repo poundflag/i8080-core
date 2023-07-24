@@ -6,6 +6,8 @@
 void setUp(void) {
     load_file("rom/EMPTY_ROM.COM", 0);
     set_stack_pointer(0);
+    set_program_counter(0);
+    set_system_halt(false);
 
     set_register_pair(PAIR_B, 0);
     set_register_pair(PAIR_D, 0);
@@ -21,8 +23,6 @@ void setUp(void) {
     set_register(REG_H, 0);
     set_register(REG_L, 0);
     set_register(REG_F, 2);
-
-    set_program_counter(0);
 }
 void tearDown(void) { output_file = false; }
 

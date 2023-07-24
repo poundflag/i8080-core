@@ -42,6 +42,12 @@ void test_read_file_and_load() {
     TEST_ASSERT_EQUAL_INT(read_from_memory(5), 0);
 }
 
+void check_if_the_system_successfully_halts() {
+    write_to_memory(1, 0x76);
+    run(2);
+    TEST_ASSERT_TRUE(has_system_halted());
+}
+
 void test_diagnostic_test_1() {
     char *output = malloc(100);
     output[0] = '\0';
@@ -139,6 +145,7 @@ void test_diagnostic_test_4() {
 void run_cpu_test() {
     printf("CPU:\n");
     RUN_TEST(test_read_file_and_load);
+    RUN_TEST(check_if_the_system_successfully_halts);
     RUN_TEST(test_diagnostic_test_1);
     RUN_TEST(test_diagnostic_test_2);
     RUN_TEST(test_diagnostic_test_3);

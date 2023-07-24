@@ -3,7 +3,7 @@
 #include "instruction/branching_instruction.h"
 #include "instruction/logical_instruction.h"
 
-bool decode_execute_instruction(uint8_t opcode, int machine_cycle, uint16_t *temporary_address) {
+bool decode_execute_instruction(uint8_t opcode, int machine_cycle, uint16_t *temporary_address, bool *halt_signal) {
     switch (opcode) {
     case 0x00:
     case 0x10:
@@ -170,7 +170,8 @@ bool decode_execute_instruction(uint8_t opcode, int machine_cycle, uint16_t *tem
     case 0x7F:
         return mov(get_destination_register(opcode), get_source_register(opcode));
     case 0x76:
-        // HLT
+        printf("True");
+        *halt_signal = true;
         return true;
     case 0x80:
     case 0x81:
