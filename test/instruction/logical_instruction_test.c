@@ -17,7 +17,7 @@ void test_mov_test() {
 void test_mvi_test() {
     set_program_counter(0);
     bool result = false;
-    write(1, 50);
+    write_to_memory(1, 50);
 
     result = mvi(REG_B, 0);
     TEST_ASSERT_EQUAL_INT(get_program_counter(), 1);
@@ -25,15 +25,15 @@ void test_mvi_test() {
 
     result = mvi(REG_B, 1);
     TEST_ASSERT_EQUAL_INT(get_register(REG_B), 50);
-    TEST_ASSERT_EQUAL_INT(get_register(REG_B), read(1));
+    TEST_ASSERT_EQUAL_INT(get_register(REG_B), read_from_memory(1));
     TEST_ASSERT_EQUAL_INT(result, true);
 }
 
 void test_lxi_test() {
     set_program_counter(0);
     bool result = false;
-    write(1, 0x12);
-    write(2, 0x34);
+    write_to_memory(1, 0x12);
+    write_to_memory(2, 0x34);
 
     result = lxi(PAIR_B, 0);
     TEST_ASSERT_EQUAL_INT(get_program_counter(), 1);
@@ -54,9 +54,9 @@ void test_lda_test() {
     set_program_counter(0);
     bool result = false;
     uint16_t temporary_address = 0;
-    write(1, 0x10);
-    write(2, 0x00);
-    write(0x0010, 55);
+    write_to_memory(1, 0x10);
+    write_to_memory(2, 0x00);
+    write_to_memory(0x0010, 55);
 
     result = lda(0, &temporary_address);
     TEST_ASSERT_EQUAL_INT(get_program_counter(), 1);
@@ -84,29 +84,29 @@ void test_sta_test() {
     set_program_counter(0);
     bool result = false;
     uint16_t temporary_address = 0;
-    write(1, 0x10);
-    write(2, 0x00);
+    write_to_memory(1, 0x10);
+    write_to_memory(2, 0x00);
     set_register(REG_A, 55);
 
     result = sta(0, &temporary_address);
     TEST_ASSERT_EQUAL_INT(get_program_counter(), 1);
-    TEST_ASSERT_EQUAL_INT(read(0x0010), 0);
+    TEST_ASSERT_EQUAL_INT(read_from_memory(0x0010), 0);
     TEST_ASSERT_EQUAL_INT(result, 0);
 
     result = sta(1, &temporary_address);
     TEST_ASSERT_EQUAL_INT(get_program_counter(), 2);
-    TEST_ASSERT_EQUAL_INT(read(0x0010), 0);
+    TEST_ASSERT_EQUAL_INT(read_from_memory(0x0010), 0);
     TEST_ASSERT_EQUAL_INT(result, 0);
 
     result = sta(2, &temporary_address);
     TEST_ASSERT_EQUAL_INT(get_program_counter(), 0x0010);
     TEST_ASSERT_EQUAL_INT(temporary_address, 2);
-    TEST_ASSERT_EQUAL_INT(read(0x0010), 0);
+    TEST_ASSERT_EQUAL_INT(read_from_memory(0x0010), 0);
     TEST_ASSERT_EQUAL_INT(result, 0);
 
     result = sta(3, &temporary_address);
     TEST_ASSERT_EQUAL_INT(get_register(REG_A), 55);
-    TEST_ASSERT_EQUAL_INT(read(0x0010), 55);
+    TEST_ASSERT_EQUAL_INT(read_from_memory(0x0010), 55);
     TEST_ASSERT_EQUAL_INT(get_program_counter(), 2);
     TEST_ASSERT_EQUAL_INT(result, 1);
 }
@@ -114,10 +114,10 @@ void test_sta_test() {
 void test_lhld_test() {
     bool result = false;
     uint16_t temporary_address = 0;
-    write(1, 0x10);
-    write(2, 0x00);
-    write(0x0010, 0x12);
-    write(0x0011, 0x34);
+    write_to_memory(1, 0x10);
+    write_to_memory(2, 0x00);
+    write_to_memory(0x0010, 0x12);
+    write_to_memory(0x0011, 0x34);
 
     result = lhld(0, &temporary_address);
     TEST_ASSERT_EQUAL_INT(result, false);
@@ -150,8 +150,8 @@ void test_lhld_test() {
 void test_shld_test() {
     bool result = false;
     uint16_t temporary_address = 0;
-    write(1, 0x10);
-    write(2, 0x00);
+    write_to_memory(1, 0x10);
+    write_to_memory(2, 0x00);
     set_register_pair(PAIR_H, 0x1234);
 
     result = shld(0, &temporary_address);
@@ -171,20 +171,20 @@ void test_shld_test() {
     TEST_ASSERT_EQUAL_INT(result, false);
     TEST_ASSERT_EQUAL_INT(get_program_counter(), 0x0011);
     TEST_ASSERT_EQUAL_INT(temporary_address, 2);
-    TEST_ASSERT_EQUAL_INT(read(0x0010), 0x34);
-    TEST_ASSERT_EQUAL_INT(read(0x0011), 0x00);
+    TEST_ASSERT_EQUAL_INT(read_from_memory(0x0010), 0x34);
+    TEST_ASSERT_EQUAL_INT(read_from_memory(0x0011), 0x00);
 
     result = shld(4, &temporary_address);
     TEST_ASSERT_EQUAL_INT(result, true);
     TEST_ASSERT_EQUAL_INT(get_program_counter(), 2);
-    TEST_ASSERT_EQUAL_INT(read(0x0010), 0x34);
-    TEST_ASSERT_EQUAL_INT(read(0x0011), 0x12);
+    TEST_ASSERT_EQUAL_INT(read_from_memory(0x0010), 0x34);
+    TEST_ASSERT_EQUAL_INT(read_from_memory(0x0011), 0x12);
 }
 
 void test_ldax_test() {
     bool result = false;
     uint16_t temporary_address = 0;
-    write(0x0010, 74);
+    write_to_memory(0x0010, 74);
     set_register_pair(PAIR_B, 0x0010);
 
     result = ldax(PAIR_B, 0, &temporary_address);
@@ -207,12 +207,12 @@ void test_stax_test() {
     result = stax(PAIR_B, 0, &temporary_address);
     TEST_ASSERT_EQUAL_INT(result, false);
     TEST_ASSERT_EQUAL_INT(get_program_counter(), 0x0010);
-    TEST_ASSERT_EQUAL_INT(read(0x0010), 0);
+    TEST_ASSERT_EQUAL_INT(read_from_memory(0x0010), 0);
 
     result = stax(PAIR_B, 1, &temporary_address);
     TEST_ASSERT_EQUAL_INT(result, true);
     TEST_ASSERT_EQUAL_INT(get_program_counter(), 0);
-    TEST_ASSERT_EQUAL_INT(read(0x0010), 74);
+    TEST_ASSERT_EQUAL_INT(read_from_memory(0x0010), 74);
 }
 
 void test_xchg_test() {

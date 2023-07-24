@@ -43,7 +43,7 @@ bool adi(int machine_cycle) {
         increment_program_counter();
         break;
     case 1:
-        uint8_t result = alu_add(get_register(REG_A), read(get_program_counter()), false);
+        uint8_t result = alu_add(get_register(REG_A), read_from_memory(get_program_counter()), false);
         set_register(REG_A, result);
         return true;
     }
@@ -62,7 +62,7 @@ bool aci(int machine_cycle) {
         increment_program_counter();
         break;
     case 1:
-        uint8_t result = alu_add(get_register(REG_A), read(get_program_counter()), get_register_bit(REG_F, CARRY));
+        uint8_t result = alu_add(get_register(REG_A), read_from_memory(get_program_counter()), get_register_bit(REG_F, CARRY));
         set_register(REG_A, result);
         return true;
     }
@@ -81,7 +81,7 @@ bool sui(int machine_cycle) {
         increment_program_counter();
         break;
     case 1:
-        uint8_t result = alu_sub(get_register(REG_A), read(get_program_counter()), false);
+        uint8_t result = alu_sub(get_register(REG_A), read_from_memory(get_program_counter()), false);
         set_register(REG_A, result);
         return true;
     }
@@ -100,7 +100,7 @@ bool sbi(int machine_cycle) {
         increment_program_counter();
         break;
     case 1:
-        uint8_t result = alu_sub(get_register(REG_A), read(get_program_counter()), get_register_bit(REG_F, CARRY));
+        uint8_t result = alu_sub(get_register(REG_A), read_from_memory(get_program_counter()), get_register_bit(REG_F, CARRY));
         set_register(REG_A, result);
         return true;
     }
@@ -182,7 +182,7 @@ bool ani(int machine_cycle) {
         increment_program_counter();
         break;
     case 1:
-        set_register(REG_A, alu_and(get_register(REG_A), read(get_program_counter())));
+        set_register(REG_A, alu_and(get_register(REG_A), read_from_memory(get_program_counter())));
         return true;
     }
     return false;
@@ -199,7 +199,7 @@ bool ori(int machine_cycle) {
         increment_program_counter();
         break;
     case 1:
-        set_register(REG_A, alu_or(get_register(REG_A), read(get_program_counter())));
+        set_register(REG_A, alu_or(get_register(REG_A), read_from_memory(get_program_counter())));
         return true;
     }
     return false;
@@ -216,7 +216,7 @@ bool xri(int machine_cycle) {
         increment_program_counter();
         break;
     case 1:
-        set_register(REG_A, alu_xor(get_register(REG_A), read(get_program_counter())));
+        set_register(REG_A, alu_xor(get_register(REG_A), read_from_memory(get_program_counter())));
         return true;
     }
     return false;
@@ -233,7 +233,7 @@ bool cpi(int machine_cycle) {
         increment_program_counter();
         break;
     case 1:
-        alu_sub(get_register(REG_A), read(get_program_counter()), false);
+        alu_sub(get_register(REG_A), read_from_memory(get_program_counter()), false);
         // printf("Instruction done\n");
         return true;
     }

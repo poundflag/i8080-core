@@ -13,8 +13,8 @@ void test_push_word_test() {
     set_stack_pointer(2);
     push_word(0x1234);
 
-    TEST_ASSERT_EQUAL_INT(read(0), 0x34);
-    TEST_ASSERT_EQUAL_INT(read(1), 0x12);
+    TEST_ASSERT_EQUAL_INT(read_from_memory(0), 0x34);
+    TEST_ASSERT_EQUAL_INT(read_from_memory(1), 0x12);
     TEST_ASSERT_EQUAL_INT(get_stack_pointer(), 0);
     TEST_ASSERT_EQUAL_INT(pull_word(), 0x1234);
     TEST_ASSERT_EQUAL_INT(get_stack_pointer(), 2);

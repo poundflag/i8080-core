@@ -28,7 +28,7 @@ void run(int steps) {
 void step(int *machine_cycle, uint16_t *temporary_address) {
     // Get the current opcode if this is called for the first time
     if (first_start_up == true) {
-        current_opcode = read(get_program_counter());
+        current_opcode = read_from_memory(get_program_counter());
         first_start_up = false;
     }
 
@@ -48,7 +48,7 @@ void step(int *machine_cycle, uint16_t *temporary_address) {
         (*machine_cycle) = 0;
         (*temporary_address) = 0;
         increment_program_counter();
-        current_opcode = read(get_program_counter());
+        current_opcode = read_from_memory(get_program_counter());
     } else {
         set_first_machine_cycle(false);
         (*machine_cycle)++;
