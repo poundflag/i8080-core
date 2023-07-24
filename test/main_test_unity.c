@@ -37,6 +37,7 @@ void run_arithmetic_instruction_test();
 void run_branching_instruction_test();
 void run_instruction_test();
 void run_logical_instruction_test();
+void run_file_io_test();
 
 int main(void) {
     UNITY_BEGIN();
@@ -50,6 +51,7 @@ int main(void) {
     run_branching_instruction_test();
     run_instruction_test();
     run_logical_instruction_test();
+    run_file_io_test();
     run_cpu_test();
     return UNITY_END();
 }
