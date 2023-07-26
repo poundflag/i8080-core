@@ -1,6 +1,6 @@
 #include "../register/register_controller.h"
-#include <stdint.h>
 #include <stdbool.h>
+#include <stdint.h>
 
 #ifndef _INSTRUCTION_H_
 #define _INSTRUCTION_H_

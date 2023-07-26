@@ -274,8 +274,8 @@ bool sphl() {
     return true;
 }
 
-bool in(int port_number) { return false; }
+bool in(int port_number) { return true; }
 
-bool out(int port_number) { return false; }
+bool out(int port_number) { return true; }
 
 bool hlt() { return true; }
