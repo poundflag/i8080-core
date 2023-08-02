@@ -3,30 +3,106 @@
 #include <stdbool.h>
 #include <stdint.h>
 
+/**
+ * @file branching_instruction.h
+ * @brief Defines branching instructions.
+ */
 #ifndef _BRANCHING_INSTRUCTION_H_
 #define _BRANCHING_INSTRUCTION_H_
 
-typedef enum { COND_CARRY, COND_NO_CARRY, COND_MINUS, COND_POSITIVE, COND_PARITY_EVEN, COND_PARITY_ODD, COND_ZERO, COND_NOT_ZERO } Condition;
+/**
+ * @brief Defines different conditions for branching instructions.
+ */
+typedef enum {
+    COND_CARRY,       ///< Carry flag is set
+    COND_NO_CARRY,    ///< Carry flag is not set
+    COND_MINUS,       ///< Negative (MSB of A is 1)
+    COND_POSITIVE,    ///< Positive or zero (MSB of A is 0)
+    COND_PARITY_EVEN, ///< Parity flag is even
+    COND_PARITY_ODD,  ///< Parity flag is odd
+    COND_ZERO,        ///< Zero flag is set
+    COND_NOT_ZERO     ///< Zero flag is not set
+} Condition;
 
-// JMP a     11000011 lb hb    -       Unconditional jump
+/**
+ * @brief Unconditionally jumps to the specified address.
+ *
+ * @details
+ * Opcode: `11000011 lb hb`
+ *
+ * @param[in] machine_cycle The machine cycle containing the address.
+ * @param[out] temporary_address The address to jump to.
+ * @return True if the operation was successful, otherwise false.
+ */
 bool jmp(int machine_cycle, uint16_t *temporary_address);
 
-// Jccc a    11CCC010 lb hb    -       Conditional jump
+/**
+ * @brief Conditionally jumps to the specified address based on the condition.
+ *
+ * @details
+ * Opcode: `11CCC010 lb hb`
+ *
+ * @param[in] machine_cycle The machine cycle containing the address.
+ * @param[out] temporary_address The address to jump to.
+ * @param[in] condition The condition for the jump.
+ * @return True if the operation was successful, otherwise false.
+ */
 bool jmp_conditional(int machine_cycle, uint16_t *temporary_address, Condition condition);
 
-// CALL a    11001101 lb hb    -       Unconditional subroutine call
+/**
+ * @brief Unconditionally calls a subroutine at the specified address.
+ *
+ * @details
+ * Opcode: `11001101 lb hb`
+ *
+ * @param[in] machine_cycle The machine cycle containing the address.
+ * @param[out] temporary_address The address of the subroutine.
+ * @return True if the operation was successful, otherwise false.
+ */
 bool call(int machine_cycle, uint16_t *temporary_address);
 
-// Cccc a    11CCC100 lb hb    -       Conditional subroutine call
+/**
+ * @brief Conditionally calls a subroutine at the specified address based on the condition.
+ *
+ * @details
+ * Opcode: `11CCC100 lb hb`
+ *
+ * @param[in] machine_cycle The machine cycle containing the address.
+ * @param[out] temporary_address The address of the subroutine.
+ * @param[in] condition The condition for the call.
+ * @return True if the operation was successful, otherwise false.
+ */
 bool call_conditional(int machine_cycle, uint16_t *temporary_address, Condition condition);
 
-// RET       11001001          -       Unconditional return from subroutine
+/**
+ * @brief Unconditionally returns from a subroutine.
+ *
+ * @details
+ * Opcode: `11001001`
+ *
+ * @return True if the operation was successful, otherwise false.
+ */
 bool ret();
 
-// Rccc      11CCC000          -       Conditional return from subroutine
+/**
+ * @brief Conditionally returns from a subroutine based on the condition.
+ *
+ * @details
+ * Opcode: `11CCC000`
+ *
+ * @param[in] condition The condition for the return.
+ * @return True if the operation was successful, otherwise false.
+ */
 bool ret_conditional(Condition condition);
 
-// PCHL      11101001          -       Jump to address in H:L
+/**
+ * @brief Jumps to the address specified in the H:L register pair.
+ *
+ * @details
+ * Opcode: `11101001`
+ *
+ * @return True if the operation was successful, otherwise false.
+ */
 bool pchl();
 
 #endif //_BRANCHING_INSTRUCTION_H_
