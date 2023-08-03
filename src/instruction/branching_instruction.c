@@ -5,11 +5,11 @@ bool jmp(int machine_cycle, uint16_t *temporary_address) {
     switch (machine_cycle) {
     case 0:
         increment_program_counter();
-        *temporary_address = read(get_program_counter());
+        *temporary_address = read_from_memory(get_program_counter());
         break;
     case 1:
         increment_program_counter();
-        *temporary_address |= read(get_program_counter()) << 8;
+        *temporary_address |= read_from_memory(get_program_counter()) << 8;
         break;
     case 2:
         set_program_counter(*temporary_address - 1);
@@ -49,11 +49,11 @@ bool jmp_conditional(int machine_cycle, uint16_t *temporary_address, Condition c
     switch (machine_cycle) {
     case 0:
         increment_program_counter();
-        *temporary_address = read(get_program_counter());
+        *temporary_address = read_from_memory(get_program_counter());
         break;
     case 1:
         increment_program_counter();
-        *temporary_address |= read(get_program_counter()) << 8;
+        *temporary_address |= read_from_memory(get_program_counter()) << 8;
         break;
     case 2:
         if (condition_success(condition)) {
@@ -70,11 +70,11 @@ bool call(int machine_cycle, uint16_t *temporary_address) {
     switch (machine_cycle) {
     case 0:
         increment_program_counter();
-        *temporary_address = read(get_program_counter());
+        *temporary_address = read_from_memory(get_program_counter());
         break;
     case 1:
         increment_program_counter();
-        *temporary_address |= read(get_program_counter()) << 8;
+        *temporary_address |= read_from_memory(get_program_counter()) << 8;
         break;
     case 2:
         push_word(get_program_counter() + 1);
@@ -90,11 +90,11 @@ bool call_conditional(int machine_cycle, uint16_t *temporary_address, Condition 
     switch (machine_cycle) {
     case 0:
         increment_program_counter();
-        *temporary_address = read(get_program_counter());
+        *temporary_address = read_from_memory(get_program_counter());
         break;
     case 1:
         increment_program_counter();
-        *temporary_address |= read(get_program_counter()) << 8;
+        *temporary_address |= read_from_memory(get_program_counter()) << 8;
         break;
     case 2:
         if (condition_success(condition)) {

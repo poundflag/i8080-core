@@ -1,0 +1,6 @@
+{
+  "files.associations": {
+    "memory_controller.h": "c",
+    "cpu.h": "c"
+  }
+}

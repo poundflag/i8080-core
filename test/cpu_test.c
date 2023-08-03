@@ -19,11 +19,11 @@ void interceptBDOSCall(char *output) {
     } else if (get_register(REG_C) == 9) {
         uint16_t addr = get_register_pair(PAIR_D);
 
-        while (read(addr) != '$') {
-            if (read(addr) != 0 && read(addr) >= 32 && read(addr) <= 126) {
-                // printf("%c", read(addr));
+        while (read_from_memory(addr) != '$') {
+            if (read_from_memory(addr) != 0 && read_from_memory(addr) >= 32 && read_from_memory(addr) <= 126) {
+                // printf("%c", read_from_memory(addr));
                 char ch[2];
-                ch[0] = read(addr);
+                ch[0] = read_from_memory(addr);
                 ch[1] = '\0';
                 strncat(output, ch, 1);
             }
@@ -34,19 +34,25 @@ void interceptBDOSCall(char *output) {
 
 void test_read_file_and_load() {
     load_file("rom/test_file", 0);
-    TEST_ASSERT_EQUAL_INT(read(0), 1);
-    TEST_ASSERT_EQUAL_INT(read(1), 2);
-    TEST_ASSERT_EQUAL_INT(read(2), 3);
-    TEST_ASSERT_EQUAL_INT(read(3), 4);
-    TEST_ASSERT_EQUAL_INT(read(4), 5);
-    TEST_ASSERT_EQUAL_INT(read(5), 0);
+    TEST_ASSERT_EQUAL_INT(read_from_memory(0), 1);
+    TEST_ASSERT_EQUAL_INT(read_from_memory(1), 2);
+    TEST_ASSERT_EQUAL_INT(read_from_memory(2), 3);
+    TEST_ASSERT_EQUAL_INT(read_from_memory(3), 4);
+    TEST_ASSERT_EQUAL_INT(read_from_memory(4), 5);
+    TEST_ASSERT_EQUAL_INT(read_from_memory(5), 0);
+}
+
+void check_if_the_system_successfully_halts() {
+    write_to_memory(1, 0x76);
+    run(2);
+    TEST_ASSERT_TRUE(has_system_halted());
 }
 
 void test_diagnostic_test_1() {
     char *output = malloc(100);
     output[0] = '\0';
     load_file("rom/TST8080.COM", 0x100);
-    write(5, 0xC9);
+    write_to_memory(5, 0xC9);
     set_program_counter(0xFF);
 
     for (int i = 0; i < 1310; i++) {
@@ -70,7 +76,7 @@ void test_diagnostic_test_2() {
     char *output = malloc(100);
     output[0] = '\0';
     load_file("rom/8080PRE.COM", 0x100);
-    write(5, 0xC9);
+    write_to_memory(5, 0xC9);
     set_program_counter(0xFF);
 
     for (int i = 0; i < 2000; i++) {
@@ -92,7 +98,7 @@ void test_diagnostic_test_3() {
     char *output = malloc(176 * sizeof(char));
     output[0] = '\0';
     load_file("rom/CPUTEST.COM", 0x100);
-    write(5, 0xC9);
+    write_to_memory(5, 0xC9);
     set_program_counter(0xFF);
 
     while (get_program_counter() != 0) {
@@ -113,7 +119,7 @@ void test_diagnostic_test_4() {
     char *output = malloc(891 * sizeof(char));
     output[0] = '\0';
     load_file("rom/8080EXER.COM", 0x100);
-    write(5, 0xC9);
+    write_to_memory(5, 0xC9);
     set_program_counter(0xFF);
 
     while (get_program_counter() != 0) {
@@ -139,6 +145,7 @@ void test_diagnostic_test_4() {
 void run_cpu_test() {
     printf("CPU:\n");
     RUN_TEST(test_read_file_and_load);
+    RUN_TEST(check_if_the_system_successfully_halts);
     RUN_TEST(test_diagnostic_test_1);
     RUN_TEST(test_diagnostic_test_2);
     RUN_TEST(test_diagnostic_test_3);

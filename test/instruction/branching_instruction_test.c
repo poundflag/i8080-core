@@ -7,8 +7,8 @@
 
 void test_jmp_test() {
     uint16_t temporary_address = 0;
-    write(1, 0x34);
-    write(2, 0x12);
+    write_to_memory(1, 0x34);
+    write_to_memory(2, 0x12);
     set_program_counter(0);
 
     bool result = jmp(0, &temporary_address);
@@ -29,8 +29,8 @@ void test_jmp_test() {
 
 void test_jmp_conditional_true() {
     uint16_t temporary_address = 0;
-    write(1, 0x34);
-    write(2, 0x12);
+    write_to_memory(1, 0x34);
+    write_to_memory(2, 0x12);
     set_program_counter(0);
     set_register_bit(REG_F, CARRY, true);
 
@@ -52,8 +52,8 @@ void test_jmp_conditional_true() {
 
 void test_jmp_conditional_false() {
     uint16_t temporary_address = 0;
-    write(1, 0x34);
-    write(2, 0x12);
+    write_to_memory(1, 0x34);
+    write_to_memory(2, 0x12);
     set_program_counter(0);
     set_register_bit(REG_F, CARRY, false);
 
@@ -75,8 +75,8 @@ void test_jmp_conditional_false() {
 
 void test_call_test() {
     uint16_t temporary_address = 0;
-    write(1, 0x34);
-    write(2, 0x12);
+    write_to_memory(1, 0x34);
+    write_to_memory(2, 0x12);
     set_program_counter(0);
     set_stack_pointer(10);
 
@@ -99,8 +99,8 @@ void test_call_test() {
 
 void test_call_conditional_true() {
     uint16_t temporary_address = 0;
-    write(1, 0x34);
-    write(2, 0x12);
+    write_to_memory(1, 0x34);
+    write_to_memory(2, 0x12);
     set_program_counter(0);
     set_stack_pointer(10);
     set_register_bit(REG_F, CARRY, true);
@@ -124,8 +124,8 @@ void test_call_conditional_true() {
 
 void test_call_conditional_false() {
     uint16_t temporary_address = 0;
-    write(1, 0x34);
-    write(2, 0x12);
+    write_to_memory(1, 0x34);
+    write_to_memory(2, 0x12);
     set_program_counter(0);
     set_stack_pointer(10);
     set_register_bit(REG_F, CARRY, false);
