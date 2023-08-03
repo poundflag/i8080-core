@@ -14,21 +14,20 @@ jobs:
     - name: Checkout Repository
       uses: actions/checkout@v2
 
-    - name: Set up Doxygen
-      run: |
-        mkdir -p doxygen
-        curl -L https://doxygen.nl/files/doxygen-1.9.2.linux.bin.tar.gz | tar xz -C doxygen --strip-components=1
+    - name: Create output directory
+      run: mkdir -p bin/doc
 
     - name: Generate Documentation
-      run: |
-        ./doxygen/bin/doxygen documentation.conf
+      uses: mattnotmitt/doxygen-action@v1.9.5
+      with:
+        doxyfile-path: './documentation.conf'
 
     - name: Clone i8080-core-doc Repository
       run: |
-        git clone https://github.com/your-username/i8080-core-doc.git i8080-core-doc
+        git clone https://github.com/poundflag/i8080-core-doc.git i8080-core-doc
         cp -r bin/doc/html/* i8080-core-doc/
       env:
-        GITHUB_TOKEN: ${{ secrets.DOC_REPO_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Check for Documentation Changes
       id: git-check
@@ -36,14 +35,11 @@ jobs:
         cd i8080-core-doc/
         git diff --exit-code || echo "Documentation has changed"
 
-    - name: Commit and Push Changes to i8080-core-doc
-      if: steps.git-check.outputs.return-code == '0'
-      run: |
-        cd i8080-core-doc
-        git config user.name "GitHub Actions"
-        git config user.email "actions@github.com"
-        git add .
-        git commit -m "Update documentation"
-        git push origin main
-      env:
-        GITHUB_TOKEN: ${{ secrets.DOC_REPO_TOKEN }}
+
+    - name: Commit & Push changes
+      uses: actions-js/push@master
+      with:
+        repository: 'poundflag/i8080-core-doc'
+        directory: 'i8080-core-doc/'
+        message: 'Updated documentation'
+        github_token: ${{ secrets.DOC_REPO_TOKEN }}

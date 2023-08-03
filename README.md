@@ -25,6 +25,7 @@ Follow the guide to [Set Up the Development Environment](https://github.com/poun
 
 ## Documentation
 
+For a documentation of the source code to use as a library, refer to [the documentation webpage](https://poundflag.github.io/i8080-core-doc/).
 For detailed documentation on i8080-core, refer to the [Documentation Folder](https://github.com/poundflag/i8080-core/tree/main/doc).
 
 ## Contributing

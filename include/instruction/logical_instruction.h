@@ -17,7 +17,7 @@
  *
  * @param[in] destination The destination register.
  * @param[in] source The source register.
- * @return True if the operation was successful, otherwise false.
+ * @return True if the instruction finished, otherwise false.
  */
 bool mov(Register destination, Register source);
 
@@ -29,7 +29,7 @@ bool mov(Register destination, Register source);
  *
  * @param[in] destination The destination register.
  * @param[in] machine_cycle The machine cycle containing the immediate value.
- * @return True if the operation was successful, otherwise false.
+ * @return True if the instruction finished, otherwise false.
  */
 bool mvi(Register destination, int machine_cycle);
 
@@ -41,7 +41,7 @@ bool mvi(Register destination, int machine_cycle);
  *
  * @param[in] destination The destination register pair.
  * @param[in] machine_cycle The machine cycle containing the immediate value.
- * @return True if the operation was successful, otherwise false.
+ * @return True if the instruction finished, otherwise false.
  */
 bool lxi(Register_Pair destination, int machine_cycle);
 
@@ -53,7 +53,7 @@ bool lxi(Register_Pair destination, int machine_cycle);
  *
  * @param[in] machine_cycle The machine cycle containing the memory address.
  * @param[out] temporary_address The temporary address that might be updated during execution.
- * @return True if the operation was successful, otherwise false.
+ * @return True if the instruction finished, otherwise false.
  */
 bool lda(int machine_cycle, uint16_t *temporary_address);
 
@@ -65,7 +65,7 @@ bool lda(int machine_cycle, uint16_t *temporary_address);
  *
  * @param[in] machine_cycle The machine cycle containing the memory address.
  * @param[out] temporary_address The temporary address that might be updated during execution.
- * @return True if the operation was successful, otherwise false.
+ * @return True if the instruction finished, otherwise false.
  */
 bool sta(int machine_cycle, uint16_t *temporary_address);
 
@@ -77,7 +77,7 @@ bool sta(int machine_cycle, uint16_t *temporary_address);
  *
  * @param[in] machine_cycle The machine cycle containing the memory address.
  * @param[out] temporary_address The temporary address that might be updated during execution.
- * @return True if the operation was successful, otherwise false.
+ * @return True if the instruction finished, otherwise false.
  */
 bool lhld(int machine_cycle, uint16_t *temporary_address);
 
@@ -89,7 +89,7 @@ bool lhld(int machine_cycle, uint16_t *temporary_address);
  *
  * @param[in] machine_cycle The machine cycle containing the memory address.
  * @param[out] temporary_address The temporary address that might be updated during execution.
- * @return True if the operation was successful, otherwise false.
+ * @return True if the instruction finished, otherwise false.
  */
 bool shld(int machine_cycle, uint16_t *temporary_address);
 
@@ -102,7 +102,7 @@ bool shld(int machine_cycle, uint16_t *temporary_address);
  * @param[in] indirect_pair The indirect register pair (BC or DE).
  * @param[in] machine_cycle The current machine cycle.
  * @param[out] temporary_address The temporary address that might be updated during execution.
- * @return True if the operation was successful, otherwise false.
+ * @return True if the instruction finished, otherwise false.
  */
 bool ldax(Register_Pair indirect_pair, int machine_cycle, uint16_t *temporary_address);
 
@@ -115,7 +115,7 @@ bool ldax(Register_Pair indirect_pair, int machine_cycle, uint16_t *temporary_ad
  * @param[in] indirect_pair The indirect register pair (BC or DE).
  * @param[in] machine_cycle The current machine cycle.
  * @param[out] temporary_address The temporary address that might be updated during execution.
- * @return True if the operation was successful, otherwise false.
+ * @return True if the instruction finished, otherwise false.
  */
 bool stax(Register_Pair indirect_pair, int machine_cycle, uint16_t *temporary_address);
 
@@ -125,7 +125,7 @@ bool stax(Register_Pair indirect_pair, int machine_cycle, uint16_t *temporary_ad
  * @details
  * Opcode: `11101011`
  *
- * @return True if the operation was successful, otherwise false.
+ * @return True if the instruction finished, otherwise false.
  */
 bool xchg();
 
@@ -136,7 +136,7 @@ bool xchg();
  * Opcode: `11NNN111`
  *
  * @param[in] number The restart number (n) multiplied by 8.
- * @return True if the operation was successful, otherwise false.
+ * @return True if the instruction finished, otherwise false.
  */
 bool rst(int number);
 
@@ -149,7 +149,7 @@ bool rst(int number);
  * @param[in] register_pair The register pair to push.
  * @param[in] machine_cycle The current machine cycle.
  * @param[out] temporary_address The temporary address that might be updated during execution.
- * @return True if the operation was successful, otherwise false.
+ * @return True if the instruction finished, otherwise false.
  */
 bool push(Register_Pair register_pair, int machine_cycle, uint16_t *temporary_address);
 
@@ -162,7 +162,7 @@ bool push(Register_Pair register_pair, int machine_cycle, uint16_t *temporary_ad
  * @param[in] register_pair The register pair to pop into.
  * @param[in] machine_cycle The current machine cycle.
  * @param[out] temporary_address The temporary address that might be updated during execution.
- * @return True if the operation was successful, otherwise false.
+ * @return True if the instruction finished, otherwise false.
  */
 bool pop(Register_Pair register_pair, int machine_cycle, uint16_t *temporary_address);
 
@@ -172,7 +172,7 @@ bool pop(Register_Pair register_pair, int machine_cycle, uint16_t *temporary_add
  * @details
  * Opcode: `11100011`
  *
- * @return True if the operation was successful, otherwise false.
+ * @return True if the instruction finished, otherwise false.
  */
 bool xthl();
 
@@ -182,7 +182,7 @@ bool xthl();
  * @details
  * Opcode: `11111001`
  *
- * @return True if the operation was successful, otherwise false.
+ * @return True if the instruction finished, otherwise false.
  */
 bool sphl();
 
@@ -193,7 +193,7 @@ bool sphl();
  * Opcode: `11011011 pa`
  *
  * @param[in] port_number The port number to read from.
- * @return True if the operation was successful, otherwise false.
+ * @return True if the instruction finished, otherwise false.
  */
 bool in(int port_number);
 
@@ -204,7 +204,7 @@ bool in(int port_number);
  * Opcode: `11010011 pa`
  *
  * @param[in] port_number The port number to write to.
- * @return True if the operation was successful, otherwise false.
+ * @return True if the instruction finished, otherwise false.
  */
 bool out(int port_number);
 
@@ -214,7 +214,7 @@ bool out(int port_number);
  * @details
  * Opcode: `01110110`
  *
- * @return True if the operation was successful, otherwise false.
+ * @return True if the instruction finished, otherwise false.
  */
 bool hlt();
 
