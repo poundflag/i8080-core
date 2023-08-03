@@ -32,7 +32,7 @@ typedef enum {
  *
  * @param[in] machine_cycle The machine cycle containing the address.
  * @param[out] temporary_address The address to jump to.
- * @return True if the operation was successful, otherwise false.
+ * @return True if the instruction finished, otherwise false.
  */
 bool jmp(int machine_cycle, uint16_t *temporary_address);
 
@@ -45,7 +45,7 @@ bool jmp(int machine_cycle, uint16_t *temporary_address);
  * @param[in] machine_cycle The machine cycle containing the address.
  * @param[out] temporary_address The address to jump to.
  * @param[in] condition The condition for the jump.
- * @return True if the operation was successful, otherwise false.
+ * @return True if the instruction finished, otherwise false.
  */
 bool jmp_conditional(int machine_cycle, uint16_t *temporary_address, Condition condition);
 
@@ -57,7 +57,7 @@ bool jmp_conditional(int machine_cycle, uint16_t *temporary_address, Condition c
  *
  * @param[in] machine_cycle The machine cycle containing the address.
  * @param[out] temporary_address The address of the subroutine.
- * @return True if the operation was successful, otherwise false.
+ * @return True if the instruction finished, otherwise false.
  */
 bool call(int machine_cycle, uint16_t *temporary_address);
 
@@ -70,7 +70,7 @@ bool call(int machine_cycle, uint16_t *temporary_address);
  * @param[in] machine_cycle The machine cycle containing the address.
  * @param[out] temporary_address The address of the subroutine.
  * @param[in] condition The condition for the call.
- * @return True if the operation was successful, otherwise false.
+ * @return True if the instruction finished, otherwise false.
  */
 bool call_conditional(int machine_cycle, uint16_t *temporary_address, Condition condition);
 
@@ -80,7 +80,7 @@ bool call_conditional(int machine_cycle, uint16_t *temporary_address, Condition 
  * @details
  * Opcode: `11001001`
  *
- * @return True if the operation was successful, otherwise false.
+ * @return True if the instruction finished, otherwise false.
  */
 bool ret();
 
@@ -91,7 +91,7 @@ bool ret();
  * Opcode: `11CCC000`
  *
  * @param[in] condition The condition for the return.
- * @return True if the operation was successful, otherwise false.
+ * @return True if the instruction finished, otherwise false.
  */
 bool ret_conditional(Condition condition);
 
@@ -101,7 +101,7 @@ bool ret_conditional(Condition condition);
  * @details
  * Opcode: `11101001`
  *
- * @return True if the operation was successful, otherwise false.
+ * @return True if the instruction finished, otherwise false.
  */
 bool pchl();
 

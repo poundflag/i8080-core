@@ -16,7 +16,7 @@
  * Flags Affected: Z, S, P, C, A
  *
  * @param[in] source The source register to be added to A.
- * @return True if the operation was successful, otherwise false.
+ * @return True if the instruction finished, otherwise false.
  */
 bool add(Register source);
 
@@ -28,7 +28,7 @@ bool add(Register source);
  * Flags Affected: Z, S, P, C, A
  *
  * @param[in] machine_cycle The machine cycle containing the immediate value.
- * @return True if the operation was successful, otherwise false.
+ * @return True if the instruction finished, otherwise false.
  */
 bool adi(int machine_cycle);
 
@@ -40,7 +40,7 @@ bool adi(int machine_cycle);
  * Flags Affected: Z, S, P, C, A
  *
  * @param[in] source The source register to be added to A.
- * @return True if the operation was successful, otherwise false.
+ * @return True if the instruction finished, otherwise false.
  */
 bool adc(Register source);
 
@@ -52,7 +52,7 @@ bool adc(Register source);
  * Flags Affected: Z, S, P, C, A
  *
  * @param[in] machine_cycle The machine cycle containing the immediate value.
- * @return True if the operation was successful, otherwise false.
+ * @return True if the instruction finished, otherwise false.
  */
 bool aci(int machine_cycle);
 
@@ -64,7 +64,7 @@ bool aci(int machine_cycle);
  * Flags Affected: Z, S, P, C, A
  *
  * @param[in] source The source register to be subtracted from A.
- * @return True if the operation was successful, otherwise false.
+ * @return True if the instruction finished, otherwise false.
  */
 bool sub(Register source);
 
@@ -76,7 +76,7 @@ bool sub(Register source);
  * Flags Affected: Z, S, P, C, A
  *
  * @param[in] machine_cycle The machine cycle containing the immediate value.
- * @return True if the operation was successful, otherwise false.
+ * @return True if the instruction finished, otherwise false.
  */
 bool sui(int machine_cycle);
 
@@ -88,7 +88,7 @@ bool sui(int machine_cycle);
  * Flags Affected: Z, S, P, C, A
  *
  * @param[in] source The source register to be subtracted from A.
- * @return True if the operation was successful, otherwise false.
+ * @return True if the instruction finished, otherwise false.
  */
 bool sbb(Register source);
 
@@ -100,7 +100,7 @@ bool sbb(Register source);
  * Flags Affected: Z, S, P, C, A
  *
  * @param[in] machine_cycle The machine cycle containing the immediate value.
- * @return True if the operation was successful, otherwise false.
+ * @return True if the instruction finished, otherwise false.
  */
 bool sbi(int machine_cycle);
 
@@ -112,7 +112,7 @@ bool sbi(int machine_cycle);
  * Flags Affected: Z, S, P, A
  *
  * @param[in] destination The register to be incremented.
- * @return True if the operation was successful, otherwise false.
+ * @return True if the instruction finished, otherwise false.
  */
 bool inr(Register destination);
 
@@ -124,7 +124,7 @@ bool inr(Register destination);
  * Flags Affected: Z, S, P, A
  *
  * @param[in] destination The register to be decremented.
- * @return True if the operation was successful, otherwise false.
+ * @return True if the instruction finished, otherwise false.
  */
 bool dcr(Register destination);
 
@@ -135,7 +135,7 @@ bool dcr(Register destination);
  * Opcode: `00RP0011`
  *
  * @param[in] destination The register pair to be incremented.
- * @return True if the operation was successful, otherwise false.
+ * @return True if the instruction finished, otherwise false.
  */
 bool inx(Register_Pair destination);
 
@@ -146,7 +146,7 @@ bool inx(Register_Pair destination);
  * Opcode: `00RP1011`
  *
  * @param[in] destination The register pair to be decremented.
- * @return True if the operation was successful, otherwise false.
+ * @return True if the instruction finished, otherwise false.
  */
 bool dcx(Register_Pair destination);
 
@@ -158,7 +158,7 @@ bool dcx(Register_Pair destination);
  * Flags Affected: C
  *
  * @param[in] source The source register pair to be added to HL.
- * @return True if the operation was successful, otherwise false.
+ * @return True if the instruction finished, otherwise false.
  */
 bool dad(Register_Pair source);
 
@@ -169,7 +169,7 @@ bool dad(Register_Pair source);
  * Opcode: `00100111`
  * Flags Affected: Z, S, P, C, A
  *
- * @return True if the operation was successful, otherwise false.
+ * @return True if the instruction finished, otherwise false.
  */
 bool daa();
 
@@ -181,7 +181,7 @@ bool daa();
  * Flags Affected: Z, S, P, C
  *
  * @param[in] source The source register to be ANDed with A.
- * @return True if the operation was successful, otherwise false.
+ * @return True if the instruction finished, otherwise false.
  */
 bool ana(Register source);
 
@@ -193,7 +193,7 @@ bool ana(Register source);
  * Flags Affected: Z, S, P, C
  *
  * @param[in] machine_cycle The machine cycle containing the immediate value.
- * @return True if the operation was successful, otherwise false.
+ * @return True if the instruction finished, otherwise false.
  */
 bool ani(int machine_cycle);
 
@@ -205,7 +205,7 @@ bool ani(int machine_cycle);
  * Flags Affected: Z, S, P, C
  *
  * @param[in] source The source register to be ORed with A.
- * @return True if the operation was successful, otherwise false.
+ * @return True if the instruction finished, otherwise false.
  */
 bool ora(Register source);
 
@@ -217,7 +217,7 @@ bool ora(Register source);
  * Flags Affected: Z, S, P, C
  *
  * @param[in] machine_cycle The machine cycle containing the immediate value.
- * @return True if the operation was successful, otherwise false.
+ * @return True if the instruction finished, otherwise false.
  */
 bool ori(int machine_cycle);
 
@@ -229,7 +229,7 @@ bool ori(int machine_cycle);
  * Flags Affected: Z, S, P, C
  *
  * @param[in] source The source register to be XORed with A.
- * @return True if the operation was successful, otherwise false.
+ * @return True if the instruction finished, otherwise false.
  */
 bool xra(Register source);
 
@@ -241,7 +241,7 @@ bool xra(Register source);
  * Flags Affected: Z, S, P, C
  *
  * @param[in] machine_cycle The machine cycle containing the immediate value.
- * @return True if the operation was successful, otherwise false.
+ * @return True if the instruction finished, otherwise false.
  */
 bool xri(int machine_cycle);
 
@@ -253,7 +253,7 @@ bool xri(int machine_cycle);
  * Flags Affected: Z, S, P, C, A
  *
  * @param[in] source The source register to be compared with A.
- * @return True if the operation was successful, otherwise false.
+ * @return True if the instruction finished, otherwise false.
  */
 bool cmp(Register source);
 
@@ -265,7 +265,7 @@ bool cmp(Register source);
  * Flags Affected: Z, S, P, C, A
  *
  * @param[in] machine_cycle The machine cycle containing the immediate value.
- * @return True if the operation was successful, otherwise false.
+ * @return True if the instruction finished, otherwise false.
  */
 bool cpi(int machine_cycle);
 
@@ -276,7 +276,7 @@ bool cpi(int machine_cycle);
  * Opcode: `00000111`
  * Flags Affected: C
  *
- * @return True if the operation was successful, otherwise false.
+ * @return True if the instruction finished, otherwise false.
  */
 bool rlc();
 
@@ -287,7 +287,7 @@ bool rlc();
  * Opcode: `00001111`
  * Flags Affected: C
  *
- * @return True if the operation was successful, otherwise false.
+ * @return True if the instruction finished, otherwise false.
  */
 bool rrc();
 
@@ -298,7 +298,7 @@ bool rrc();
  * Opcode: `00010111`
  * Flags Affected: C
  *
- * @return True if the operation was successful, otherwise false.
+ * @return True if the instruction finished, otherwise false.
  */
 bool ral();
 
@@ -309,7 +309,7 @@ bool ral();
  * Opcode: `00011111`
  * Flags Affected: C
  *
- * @return True if the operation was successful, otherwise false.
+ * @return True if the instruction finished, otherwise false.
  */
 bool rar();
 
@@ -319,7 +319,7 @@ bool rar();
  * @details
  * Opcode: `00101111`
  *
- * @return True if the operation was successful, otherwise false.
+ * @return True if the instruction finished, otherwise false.
  */
 bool cma();
 
@@ -330,7 +330,7 @@ bool cma();
  * Opcode: `00111111`
  * Flags Affected: C
  *
- * @return True if the operation was successful, otherwise false.
+ * @return True if the instruction finished, otherwise false.
  */
 bool cmc();
 
@@ -341,7 +341,7 @@ bool cmc();
  * Opcode: `00110111`
  * Flags Affected: C
  *
- * @return True if the operation was successful, otherwise false.
+ * @return True if the instruction finished, otherwise false.
  */
 bool stc();
 
