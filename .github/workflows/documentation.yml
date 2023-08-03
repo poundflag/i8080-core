@@ -1,0 +1,49 @@
+name: Generate and Update Documentation
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v2
+
+    - name: Set up Doxygen
+      run: |
+        mkdir -p doxygen
+        curl -L https://doxygen.nl/files/doxygen-1.9.2.linux.bin.tar.gz | tar xz -C doxygen --strip-components=1
+
+    - name: Generate Documentation
+      run: |
+        ./doxygen/bin/doxygen documentation.conf
+
+    - name: Clone i8080-core-doc Repository
+      run: |
+        git clone https://github.com/your-username/i8080-core-doc.git i8080-core-doc
+        cp -r bin/doc/html/* i8080-core-doc/
+      env:
+        GITHUB_TOKEN: ${{ secrets.DOC_REPO_TOKEN }}
+
+    - name: Check for Documentation Changes
+      id: git-check
+      run: |
+        cd i8080-core-doc/
+        git diff --exit-code || echo "Documentation has changed"
+
+    - name: Commit and Push Changes to i8080-core-doc
+      if: steps.git-check.outputs.return-code == '0'
+      run: |
+        cd i8080-core-doc
+        git config user.name "GitHub Actions"
+        git config user.email "actions@github.com"
+        git add .
+        git commit -m "Update documentation"
+        git push origin main
+      env:
+        GITHUB_TOKEN: ${{ secrets.DOC_REPO_TOKEN }}
