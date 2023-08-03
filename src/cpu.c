@@ -1,9 +1,9 @@
-#include "../include/cpu.h"
-#include "../include/file_io.h"
-#include "../include/instruction/instruction.h"
-#include "../include/memory/memory_controller.h"
-#include "../include/register/register_controller.h"
-#include "../include/status_service.h"
+#include "cpu.h"
+#include "file_io.h"
+#include "instruction/instruction.h"
+#include "memory/memory_controller.h"
+#include "register/register_controller.h"
+#include "status_service.h"
 
 bool output_file = false;
 char *file_path = "";
