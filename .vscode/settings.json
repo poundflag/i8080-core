@@ -1,6 +1,8 @@
 {
   "files.associations": {
     "memory_controller.h": "c",
-    "cpu.h": "c"
+    "cpu.h": "c",
+    "io_controller.h": "c",
+    "stack.h": "c"
   }
 }

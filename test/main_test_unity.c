@@ -1,7 +1,13 @@
 #include "cpu.h"
+#include "io/io_controller.h"
 #include "register/register_controller.h"
 #include "register/stack.h"
 #include "unity.h"
+
+uint8_t io_device_stub(uint8_t port_address, uint8_t value, ACCESS_MODE access_mode) {
+    set_register(REG_B, 0xEE);
+    return 0xFF;
+}
 
 void setUp(void) {
     load_file("rom/EMPTY_ROM.COM", 0);
@@ -23,6 +29,8 @@ void setUp(void) {
     set_register(REG_H, 0);
     set_register(REG_L, 0);
     set_register(REG_F, 2);
+
+    set_input_device(0, io_device_stub);
 }
 void tearDown(void) { output_file = false; }
 
@@ -38,6 +46,7 @@ void run_branching_instruction_test();
 void run_instruction_test();
 void run_logical_instruction_test();
 void run_file_io_test();
+void run_io_controller_test();
 
 int main(void) {
     UNITY_BEGIN();
@@ -47,6 +56,7 @@ int main(void) {
     run_stack_test();
     run_register_controller_test();
     run_memory_controller_test();
+    run_io_controller_test();
     run_arithmetic_instruction_test();
     run_branching_instruction_test();
     run_instruction_test();
