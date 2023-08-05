@@ -195,7 +195,7 @@ bool sphl();
  * @param[in] port_number The port number to read from.
  * @return True if the instruction finished, otherwise false.
  */
-bool in(int port_number);
+bool in(uint8_t port_number);
 
 /**
  * @brief Writes the contents of the accumulator (A) to a specified port.
@@ -206,7 +206,7 @@ bool in(int port_number);
  * @param[in] port_number The port number to write to.
  * @return True if the instruction finished, otherwise false.
  */
-bool out(int port_number);
+bool out(uint8_t port_number);
 
 /**
  * @brief Halts the processor, stopping further execution.

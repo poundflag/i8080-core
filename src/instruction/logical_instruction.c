@@ -1,5 +1,6 @@
 #include "instruction/logical_instruction.h"
 #include "instruction/instruction.h"
+#include "io/io_controller.h"
 #include "memory/memory_controller.h"
 #include "register/stack.h"
 #include "status_service.h"
@@ -274,8 +275,14 @@ bool sphl() {
     return true;
 }
 
-bool in(int port_number) { return true; }
+bool in(uint8_t port_number) {
+    set_register(REG_A, read_port(port_number));
+    return true;
+}
 
-bool out(int port_number) { return true; }
+bool out(uint8_t port_number) {
+    write_port(REG_A, get_register(REG_A));
+    return true;
+}
 
 bool hlt() { return true; }
