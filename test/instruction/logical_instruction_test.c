@@ -296,14 +296,15 @@ void test_sphl_test() {
 }
 
 void test_in_test() {
-    TEST_IGNORE();
-    bool result = in(1);
+    bool result = in(0);
+    TEST_ASSERT_EQUAL_INT(0xFF, get_register(REG_A));
     TEST_ASSERT_EQUAL_INT(result, true);
 }
 
 void test_out_test() {
-    TEST_IGNORE();
-    bool result = out(1);
+    bool result = out(0);
+    // The stub implementation of this specific io device sets the register b to 0xEE to validate access.
+    TEST_ASSERT_EQUAL_INT(0xEE, get_register(REG_B));
     TEST_ASSERT_EQUAL_INT(result, true);
 }
 
