@@ -275,14 +275,32 @@ bool sphl() {
     return true;
 }
 
-bool in(uint8_t port_number) {
-    set_register(REG_A, read_port(port_number));
-    return true;
+bool in(uint8_t machine_cycle) {
+    switch (machine_cycle) {
+    case 0:
+        increment_program_counter();
+        break;
+    case 1:
+        set_register(REG_A, read_port(read_from_memory(get_program_counter())));
+        return true;
+    default:
+        break;
+    }
+    return false;
 }
 
-bool out(uint8_t port_number) {
-    write_port(REG_A, get_register(REG_A));
-    return true;
+bool out(uint8_t machine_cycle) {
+    switch (machine_cycle) {
+    case 0:
+        increment_program_counter();
+        break;
+    case 1:
+        write_port(read_from_memory(get_program_counter()), get_register(REG_A));
+        return true;
+    default:
+        break;
+    }
+    return false;
 }
 
 bool hlt() { return true; }
