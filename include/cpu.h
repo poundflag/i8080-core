@@ -53,18 +53,5 @@ void step(int *machine_cycle, uint16_t *temporary_address);
  */
 void load_file(char *file_path, uint16_t address_offset);
 
-/**
- * @brief Reports whether the system has executed a HLT instruction and halted.
- *
- * @return If true, the system has halted and can't execute further instructions.
- */
-bool has_system_halted();
-
-/**
- * @brief Manually sets the system's halted state.
- *
- * @param[in] system_halt If true, the system is halted.
- */
-void set_system_halt(bool system_halt);
 
 #endif //_CPU_H_

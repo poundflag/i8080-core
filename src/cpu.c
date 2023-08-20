@@ -12,7 +12,6 @@ int machine_cycle = 0;
 uint16_t temporary_address = 0;
 uint8_t current_opcode = 0;
 bool first_start_up = true;
-bool halt_signal = false;
 
 void run_indefinite() {
     while (!has_system_halted()) {
@@ -35,7 +34,7 @@ void step(int *machine_cycle, uint16_t *temporary_address) {
         }
 
         // Decode & Execute
-        bool result = decode_execute_instruction(current_opcode, *machine_cycle, temporary_address, &halt_signal);
+        bool result = decode_execute_instruction(current_opcode, *machine_cycle, temporary_address);
 
         if (result == true) {
             if (output_file == true) {
@@ -57,10 +56,6 @@ void step(int *machine_cycle, uint16_t *temporary_address) {
         }
     }
 }
-
-bool has_system_halted() { return halt_signal; }
-
-void set_system_halt(bool system_halt) { halt_signal = system_halt; }
 
 void load_file(char *file_path, uint16_t address_offset) {
     File_Response file_response = read_binary_from_file(file_path);

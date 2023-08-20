@@ -111,10 +111,37 @@ void test_be_false_when_write_output() {
     TEST_ASSERT_EQUAL_INT(true, is_write_output());
 }
 
+void test_be_true_when_output_device() {
+    out(0);
+    TEST_ASSERT_EQUAL_INT(false, is_device_output());
+    out(1);
+    TEST_ASSERT_EQUAL_INT(true, is_device_output());
+    out(2);
+    TEST_ASSERT_EQUAL_INT(false, is_device_output());
+}
+
+void test_be_true_when_input_device() {
+    in(0);
+    TEST_ASSERT_EQUAL_INT(false, is_device_input());
+    in(1);
+    TEST_ASSERT_EQUAL_INT(true, is_device_input());
+    in(2);
+    TEST_ASSERT_EQUAL_INT(false, is_device_input());
+}
+
+void test_be_true_when_system_halts() {
+    TEST_ASSERT_EQUAL_INT(false, has_system_halted());
+    hlt();
+    TEST_ASSERT_EQUAL_INT(true, has_system_halted());
+}
+
 void run_status_service_test() {
     printf("Status Service:\n");
     RUN_TEST(test_be_true_when_stack_is_accessed);
     RUN_TEST(test_be_false_when_memory_is_not_read);
     RUN_TEST(test_be_true_when_first_machine_cycle);
     RUN_TEST(test_be_false_when_write_output);
+    RUN_TEST(test_be_true_when_output_device);
+    RUN_TEST(test_be_true_when_input_device);
+    RUN_TEST(test_be_true_when_system_halts);
 }

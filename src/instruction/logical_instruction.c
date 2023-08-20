@@ -281,7 +281,12 @@ bool in(uint8_t machine_cycle) {
         increment_program_counter();
         break;
     case 1:
+        set_device_input(true);
+        // TODO MODIFY DATA LIGHTS AND PC
         set_register(REG_A, read_port(read_from_memory(get_program_counter())));
+        break;
+    case 2:
+        set_device_input(false);
         return true;
     default:
         break;
@@ -295,7 +300,12 @@ bool out(uint8_t machine_cycle) {
         increment_program_counter();
         break;
     case 1:
+        set_device_output(true);
         write_port(read_from_memory(get_program_counter()), get_register(REG_A));
+        // TODO MODIFY DATA LIGHTS AND PC
+        break;
+    case 2:
+        set_device_output(false);
         return true;
     default:
         break;
@@ -303,4 +313,7 @@ bool out(uint8_t machine_cycle) {
     return false;
 }
 
-bool hlt() { return true; }
+bool hlt() { 
+    // TODO MODIFY LIGHTS
+    set_system_halt(true);
+    return true; }

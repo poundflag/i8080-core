@@ -19,10 +19,9 @@
  * @param[in] opcode The opcode of the instruction.
  * @param[in] machine_cycle The current machine cycle.
  * @param[out] temporary_address The temporary address that might be updated during execution.
- * @param[out] halt_signal The halt signal that might be updated during execution.
  * @return True if the operation was successful, otherwise false.
  */
-bool decode_execute_instruction(uint8_t opcode, int machine_cycle, uint16_t *temporary_address, bool *halt_signal);
+bool decode_execute_instruction(uint8_t opcode, int machine_cycle, uint16_t *temporary_address);
 
 /**
  * @brief Gets the destination register from the opcode.
