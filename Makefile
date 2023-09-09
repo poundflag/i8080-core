@@ -19,7 +19,7 @@ TEST_SOURCES = $(wildcard $(TEST_DIR)/*.c $(TEST_DIR)/**/*.c)
 TEST_SOURCES_NO_EXT = $(basename $(TEST_SOURCES))
 TEST_OBJECT_FILES = $(addprefix $(BIN_OBJ_DIR)/, $(addsuffix .o, $(TEST_SOURCES_NO_EXT)))
 
-.PHONY: all bin lib test clean
+.PHONY: all bin lib test lint clean
 
 hello:
 	@echo $(TEST_OBJECT_FILES)
@@ -46,6 +46,12 @@ test: $(TEST_OBJECT_FILES) $(OBJECT_FILES)
 $(BIN_OBJ_DIR)/$(TEST_DIR)/%.o: $(TEST_DIR)/%.c
 	@mkdir -p $(dir $@)
 	$(CC) $(TEST_ARGS) -c $< -o $@
+
+lint:
+	@echo Linting with cppcheck
+	cppcheck src/ test/
+	@echo Linting with clang-format
+	@clang-format -i --Werror src/**/*.c src/*.c include/**/*.h include/*.h test/*.c test/**/*.c
 
 clean:
 	@rm -rf $(BIN_OBJ_DIR)
