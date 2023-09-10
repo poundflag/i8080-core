@@ -1,8 +1,10 @@
 # Setting Up the Development Environment
 
-To contribute to i8080-core, you need to set up a local development environment. This guide will walk you through the necessary steps. This guide only shows how to set up the project on Linux.
+To contribute to i8080-core, you need to set up a local development environment. This guide will walk you through the necessary steps. This guide shows how to set up the project on Linux and docker.
 
-## Prerequisites
+## Local Development
+
+### Prerequisites
 
 Before you begin, ensure that you have the following installed on your system:
 
@@ -10,7 +12,7 @@ Before you begin, ensure that you have the following installed on your system:
 - Make
 - Clang-Formatter
 
-Installation Steps
+### Installation Steps
 
 1. Clone the repository to your local machine using the following command:
 
@@ -31,14 +33,20 @@ git checkout develop
 cd i8080-core
 ```
 
-4. Build the project by running the following command:
+4. Pull the dependencies:
+```bash
+git submodule init
+git submodule update
+```
+
+5. Build the project by running the following command:
 
 ```bash
 make all
 ```
 This command will compile the source files, create a library, and generate the binary file.
 
-5. If you want to run the tests, use the following command:
+6. If you want to run the tests, use the following command:
 
 ```bash
 make test
@@ -48,14 +56,81 @@ This command will compile the test files, link them with the project library, an
 
 Note: The test files should be located under the "test" directory within the project.
 
-6. Before commiting any code, please ensure that you've formatted the code using clang formatter. Either install a plugin or use the following command:
+7. Before commiting any code, please ensure that you've formatted the code using clang formatter. Either install a plugin or use the following command:
 
 ```bash
 clang-format -i <FILE> --
 ```
 This will ensure that the code is consistent throughout the project.
 
-7. After building the project and running the tests, you can find the compiled binary and library files under the "bin" directory.
+8. After building the project and running the tests, you can find the compiled binary and library files under the "bin" directory.
+
+## Docker Development
+
+### Prerequisites
+
+To develop this project in a docker container, ensure that you have either of the following installed on your system:
+
+- Docker Desktop
+- Docker Engine
+
+### Installation Steps
+
+1. Clone the repository to your local machine using the following command:
+
+```bash
+git clone https://github.com/poundflag/i8080-core.git
+```
+If you've forked the repository, please change the url to your own fork.
+
+2. It is recommended to only develop using the latest version, which is located under the `develop` branch. To check this branch out use the following command:
+
+```bash
+git checkout develop
+```
+
+3. Change to the project directory:
+
+```bash
+cd i8080-core
+```
+
+4. Pull the dependencies:
+```bash
+git submodule init
+git submodule update
+```
+
+6. Start the Docker Container up
+```bash
+docker compose up
+```
+
+5. Build the project by running the following command:
+
+```bash
+make all
+```
+This command will compile the source files, create a library, and generate the binary file.
+
+6. If you want to run the tests, use the following command:
+
+```bash
+make test
+```
+
+This command will compile the test files, link them with the project library, and execute the tests using the Unity testing framework.
+
+Note: The test files should be located under the "test" directory within the project.
+
+7. Before commiting any code, please ensure that you've formatted the code using clang formatter. Either install a plugin or use the following command:
+
+```bash
+clang-format -i <FILE> --
+```
+This will ensure that the code is consistent throughout the project.
+
+8. After building the project and running the tests, you can find the compiled binary and library files under the "bin" directory.
 
 ## Conclusion
 
