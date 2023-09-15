@@ -6,11 +6,11 @@ i8080-core is a core library that emulates the behaviour of the Intel 8080 Micro
 
 ![Project Logo](https://raw.githubusercontent.com/poundflag/i8080-core/main/img/logo-official.png)
 
-<!--## Features
+## Features
 
-- Feature 1: [Description of feature 1]
-- Feature 2: [Description of feature 2]
-- ...-->
+- Docker support: No need to install all dependencies. Just use the docker compose container to start the development environment.
+- Documentation: A great, understandable and interactive documentation to start development with this project.
+- CLI: A Command Line Interface to directly interact with the i8080.
 
 ## Installation
 
