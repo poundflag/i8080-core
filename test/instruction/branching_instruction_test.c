@@ -1,8 +1,8 @@
+#include "bus_controller.h"
 #include "instruction/branching_instruction.h"
 #include "memory/memory_controller.h"
 #include "register/register_controller.h"
 #include "register/stack.h"
-#include "bus_controller.h"
 #include "unity.h"
 #include <stdbool.h>
 

@@ -1,9 +1,9 @@
 #include "cpu.h"
+#include "bus_controller.h"
 #include "file_io.h"
 #include "instruction/instruction.h"
 #include "memory/memory_controller.h"
 #include "register/register_controller.h"
-#include "bus_controller.h"
 #include "status_service.h"
 
 bool output_file = false;

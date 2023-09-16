@@ -21,7 +21,7 @@ jobs:
     - name: Test the project
       run: make test
     - name: Build the bin and library
-      run: make all
+      run: make all RELEASE=1
     - name: Clean temporary files
       run: make clean
     - name: Get the next version of the release

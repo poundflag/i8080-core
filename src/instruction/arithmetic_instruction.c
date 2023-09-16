@@ -1,7 +1,7 @@
 #include "instruction/arithmetic_instruction.h"
+#include "bus_controller.h"
 #include "memory/memory_controller.h"
 #include "register/flag_register.h"
-#include "bus_controller.h"
 #include <stdio.h>
 
 uint8_t alu_add(uint8_t value_one, uint8_t value_two, bool carry_bit) {

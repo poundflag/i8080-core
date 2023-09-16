@@ -53,5 +53,4 @@ void step(int *machine_cycle, uint16_t *temporary_address);
  */
 void load_file(char *file_path, uint16_t address_offset);
 
-
 #endif //_CPU_H_

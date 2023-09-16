@@ -116,7 +116,6 @@ void test_diagnostic_test_3() {
 }
 
 void test_diagnostic_test_4() {
-    TEST_IGNORE();
     char *output = malloc(891 * sizeof(char));
     output[0] = '\0';
     load_file("rom/8080EXER.COM", 0x100);

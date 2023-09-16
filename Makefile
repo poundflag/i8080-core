@@ -2,6 +2,11 @@ CC = gcc
 ARGS = -Wall -Wextra -fPIC -Iinclude -std=gnu17
 TEST_ARGS = $(ARGS) -Iunity/src
 
+# If RELEASE variable is set, add '-O3' to CFLAGS
+ifeq ($(RELEASE), 1)
+    ARGS += -O3
+endif
+
 # Folder Variables
 SRC_DIR = src
 INCLUDE_DIR = include
@@ -20,9 +25,6 @@ TEST_SOURCES_NO_EXT = $(basename $(TEST_SOURCES))
 TEST_OBJECT_FILES = $(addprefix $(BIN_OBJ_DIR)/, $(addsuffix .o, $(TEST_SOURCES_NO_EXT)))
 
 .PHONY: all bin lib test lint clean
-
-hello:
-	@echo $(TEST_OBJECT_FILES)
 
 all: bin lib
 
