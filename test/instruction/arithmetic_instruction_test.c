@@ -1,6 +1,7 @@
 #include "instruction/arithmetic_instruction.h"
 #include "memory/memory_controller.h"
 #include "register/register_controller.h"
+#include "bus_controller.h"
 #include "unity.h"
 #include <stdbool.h>
 
@@ -31,6 +32,7 @@ void test_adi_test() {
 
     bool result = adi(0);
     TEST_ASSERT_EQUAL_INT(get_program_counter(), 1);
+    TEST_ASSERT_EQUAL_INT(get_data_bus(), 0x12);
 
     result = adi(1);
     TEST_ASSERT_EQUAL_INT(get_program_counter(), 1);
@@ -46,6 +48,7 @@ void test_adi_overflow() {
 
     bool result = adi(0);
     TEST_ASSERT_EQUAL_INT(get_program_counter(), 1);
+    TEST_ASSERT_EQUAL_INT(get_data_bus(), 0xFF);
 
     result = adi(1);
     TEST_ASSERT_EQUAL_INT(get_program_counter(), 1);
@@ -84,6 +87,7 @@ void test_aci_no_carry() {
 
     bool result = aci(0);
     TEST_ASSERT_EQUAL_INT(get_program_counter(), 1);
+    TEST_ASSERT_EQUAL_INT(get_data_bus(), 1);
 
     result = aci(1);
     TEST_ASSERT_EQUAL_INT(get_program_counter(), 1);
@@ -100,6 +104,7 @@ void test_aci_carry() {
 
     bool result = aci(0);
     TEST_ASSERT_EQUAL_INT(get_program_counter(), 1);
+    TEST_ASSERT_EQUAL_INT(get_data_bus(), 1);
 
     result = aci(1);
     TEST_ASSERT_EQUAL_INT(get_program_counter(), 1);
@@ -135,6 +140,7 @@ void test_sui_test() {
 
     bool result = sui(0);
     TEST_ASSERT_EQUAL_INT(get_program_counter(), 1);
+    TEST_ASSERT_EQUAL_INT(get_data_bus(), 1);
 
     result = sui(1);
     TEST_ASSERT_EQUAL_INT(get_program_counter(), 1);
@@ -150,6 +156,7 @@ void test_sui_overflow() {
 
     bool result = sui(0);
     TEST_ASSERT_EQUAL_INT(get_program_counter(), 1);
+    TEST_ASSERT_EQUAL_INT(get_data_bus(), 5);
 
     result = sui(1);
     TEST_ASSERT_EQUAL_INT(get_program_counter(), 1);
@@ -186,6 +193,7 @@ void test_sbi_no_carry() {
 
     bool result = sbi(0);
     TEST_ASSERT_EQUAL_INT(get_program_counter(), 1);
+    TEST_ASSERT_EQUAL_INT(get_data_bus(), 1);
 
     result = sbi(1);
     TEST_ASSERT_EQUAL_INT(get_program_counter(), 1);
@@ -201,6 +209,7 @@ void test_sbi_carry() {
 
     bool result = sbi(0);
     TEST_ASSERT_EQUAL_INT(get_program_counter(), 1);
+    TEST_ASSERT_EQUAL_INT(get_data_bus(), 1);
 
     result = sbi(1);
     TEST_ASSERT_EQUAL_INT(get_program_counter(), 1);
@@ -306,6 +315,7 @@ void test_ani_test() {
 
     bool result = ani(0);
     TEST_ASSERT_EQUAL_INT(get_program_counter(), 1);
+    TEST_ASSERT_EQUAL_INT(get_data_bus(), 6);
 
     result = ani(1);
     TEST_ASSERT_EQUAL_INT(get_register(REG_A), 4);
@@ -327,6 +337,7 @@ void test_ori_test() {
 
     bool result = ori(0);
     TEST_ASSERT_EQUAL_INT(get_program_counter(), 1);
+    TEST_ASSERT_EQUAL_INT(get_data_bus(), 2);
 
     result = ori(1);
     TEST_ASSERT_EQUAL_INT(get_register(REG_A), 3);
@@ -348,6 +359,7 @@ void test_xri_test() {
 
     bool result = xri(0);
     TEST_ASSERT_EQUAL_INT(get_program_counter(), 1);
+    TEST_ASSERT_EQUAL_INT(get_data_bus(), 2);
 
     result = xri(1);
     TEST_ASSERT_EQUAL_INT(get_register(REG_A), 0);
@@ -369,6 +381,7 @@ void test_cpi_test() {
 
     bool result = cpi(0);
     TEST_ASSERT_EQUAL_INT(get_program_counter(), 1);
+    TEST_ASSERT_EQUAL_INT(get_data_bus(), 1);
 
     result = cpi(1);
     TEST_ASSERT_EQUAL_INT(get_register(REG_A), 1);

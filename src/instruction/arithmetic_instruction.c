@@ -1,6 +1,7 @@
 #include "instruction/arithmetic_instruction.h"
 #include "memory/memory_controller.h"
 #include "register/flag_register.h"
+#include "bus_controller.h"
 #include <stdio.h>
 
 uint8_t alu_add(uint8_t value_one, uint8_t value_two, bool carry_bit) {
@@ -234,7 +235,6 @@ bool cpi(int machine_cycle) {
         break;
     case 1:
         alu_sub(get_register(REG_A), read_from_memory(get_program_counter()), false);
-        // printf("Instruction done\n");
         return true;
     }
     return false;

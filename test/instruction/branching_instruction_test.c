@@ -2,6 +2,7 @@
 #include "memory/memory_controller.h"
 #include "register/register_controller.h"
 #include "register/stack.h"
+#include "bus_controller.h"
 #include "unity.h"
 #include <stdbool.h>
 
@@ -14,16 +15,19 @@ void test_jmp_test() {
     bool result = jmp(0, &temporary_address);
     TEST_ASSERT_EQUAL_INT(temporary_address, 0x34);
     TEST_ASSERT_EQUAL_INT(get_program_counter(), 1);
+    TEST_ASSERT_EQUAL_INT(get_data_bus(), 0x34);
     TEST_ASSERT_EQUAL_INT(result, false);
 
     result = jmp(1, &temporary_address);
     TEST_ASSERT_EQUAL_INT(temporary_address, 0x1234);
     TEST_ASSERT_EQUAL_INT(get_program_counter(), 2);
+    TEST_ASSERT_EQUAL_INT(get_data_bus(), 0x12);
     TEST_ASSERT_EQUAL_INT(result, false);
 
     result = jmp(2, &temporary_address);
     TEST_ASSERT_EQUAL_INT(temporary_address, 0x1234);
     TEST_ASSERT_EQUAL_INT(get_program_counter(), 0x1233);
+    TEST_ASSERT_EQUAL_INT(get_data_bus(), 0);
     TEST_ASSERT_EQUAL_INT(result, true);
 }
 

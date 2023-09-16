@@ -55,10 +55,10 @@ int main(void) {
     run_stack_test();
     run_register_controller_test();
     run_memory_controller_test();
-    run_io_controller_test();
+    */run_io_controller_test();
     run_arithmetic_instruction_test();
     run_branching_instruction_test();
-    run_instruction_test();*/
+    run_instruction_test();
     run_logical_instruction_test();
     /*run_file_io_test();
     run_status_service_test();

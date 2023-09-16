@@ -1,9 +1,9 @@
+#include "bus_controller.h"
 #include "instruction/instruction.h"
 #include "instruction/logical_instruction.h"
 #include "memory/memory_controller.h"
 #include "register/register_controller.h"
 #include "register/stack.h"
-#include "bus_controller.h"
 #include "unity.h"
 #include <stdbool.h>
 
@@ -322,15 +322,28 @@ void test_sphl_test() {
 }
 
 void test_in_test() {
+    write_to_memory(1, 0);
+
     bool result = in(0);
-    TEST_ASSERT_EQUAL_INT(0xFF, get_register(REG_A));// TODO LATER BUS CONTROLLER
+    TEST_ASSERT_EQUAL_INT(1, get_program_counter());
+
+    result = in(1);
+    TEST_ASSERT_EQUAL_INT(0xFF, get_register(REG_A));
+
+    result = in(2);
     TEST_ASSERT_EQUAL_INT(result, true);
 }
 
 void test_out_test() {
-    bool result = out(0);// TODO LATER BUS CONTROLLER
-    // The stub implementation of this specific io device sets the register b to 0xEE to validate access.
+    write_to_memory(1, 0);
+
+    bool result = out(0);
+    TEST_ASSERT_EQUAL_INT(1, get_program_counter());
+
+    result = out(1);
     TEST_ASSERT_EQUAL_INT(0xEE, get_register(REG_B));
+
+    result = out(2);
     TEST_ASSERT_EQUAL_INT(result, true);
 }
 

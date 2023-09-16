@@ -18,6 +18,4 @@ uint16_t get_address_bus();
  */
 uint8_t get_data_bus();
 
-void set_data_bus(uint8_t value);
-
 #endif //_BUS_CONTROLLER_H_
