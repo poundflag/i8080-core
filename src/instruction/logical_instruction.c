@@ -323,11 +323,13 @@ bool out(uint8_t machine_cycle) {
         break;
     case 1:
         set_device_output(true);
+        set_write_output(true);
         write_port(read_from_memory(get_program_counter()), get_register(REG_A));
         // TODO MODIFY DATA LIGHTS AND PC
         break;
     case 2:
         set_device_output(false);
+        set_write_output(false);
         return true;
     default:
         break;

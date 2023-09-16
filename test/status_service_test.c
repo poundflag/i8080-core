@@ -114,10 +114,13 @@ void test_be_false_when_write_output() {
 void test_be_true_when_output_device() {
     out(0);
     TEST_ASSERT_EQUAL_INT(false, is_device_output());
+    TEST_ASSERT_EQUAL_INT(false, !is_write_output());
     out(1);
     TEST_ASSERT_EQUAL_INT(true, is_device_output());
+    TEST_ASSERT_EQUAL_INT(false, is_write_output());
     out(2);
     TEST_ASSERT_EQUAL_INT(false, is_device_output());
+    TEST_ASSERT_EQUAL_INT(false, !is_write_output());
 }
 
 void test_be_true_when_input_device() {

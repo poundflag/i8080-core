@@ -322,26 +322,30 @@ void test_sphl_test() {
 }
 
 void test_in_test() {
-    write_to_memory(1, 0);
+    write_to_memory(1, 0x20);
 
     bool result = in(0);
     TEST_ASSERT_EQUAL_INT(1, get_program_counter());
 
     result = in(1);
-    TEST_ASSERT_EQUAL_INT(0xFF, get_register(REG_A));
+    TEST_ASSERT_EQUAL_INT(0xFE, get_register(REG_A));
+    TEST_ASSERT_EQUAL_INT(0xFE, get_data_bus());
+    TEST_ASSERT_EQUAL_INT(0x2020, get_address_bus());
 
     result = in(2);
     TEST_ASSERT_EQUAL_INT(result, true);
 }
 
 void test_out_test() {
-    write_to_memory(1, 0);
+    write_to_memory(1, 0x20);
 
     bool result = out(0);
     TEST_ASSERT_EQUAL_INT(1, get_program_counter());
 
     result = out(1);
     TEST_ASSERT_EQUAL_INT(0xEE, get_register(REG_B));
+    TEST_ASSERT_EQUAL_INT(0xFF, get_data_bus());
+    TEST_ASSERT_EQUAL_INT(0x2020, get_address_bus());
 
     result = out(2);
     TEST_ASSERT_EQUAL_INT(result, true);
