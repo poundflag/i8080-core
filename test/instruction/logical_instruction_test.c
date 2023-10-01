@@ -284,22 +284,22 @@ void test_push_test() {
     TEST_ASSERT_EQUAL_INT(get_data_bus(), 0);
 }
 
-void test_pop_test() { // TODO TEST WITH BUS CONTROLLER LATER
+void test_pop_test() {
     set_stack_pointer(10);
     push_word(0x1234);
     uint16_t temporary_address = 0;
 
     bool result = pop(PAIR_B, 0, &temporary_address);
     TEST_ASSERT_EQUAL_INT(result, false);
-    TEST_ASSERT_EQUAL_INT(get_program_counter(), 7);
+    TEST_ASSERT_EQUAL_INT(get_address_bus(), 7);
 
     result = pop(PAIR_B, 1, &temporary_address);
     TEST_ASSERT_EQUAL_INT(result, false);
-    TEST_ASSERT_EQUAL_INT(get_program_counter(), 6);
+    TEST_ASSERT_EQUAL_INT(get_address_bus(), 6);
 
     result = pop(PAIR_B, 2, &temporary_address);
     TEST_ASSERT_EQUAL_INT(result, true);
-    TEST_ASSERT_EQUAL_INT(get_program_counter(), 0);
+    TEST_ASSERT_EQUAL_INT(get_address_bus(), 0);
     TEST_ASSERT_EQUAL_INT(get_register_pair(PAIR_B), 0x1234);
 }
 
@@ -351,6 +351,14 @@ void test_out_test() {
     TEST_ASSERT_EQUAL_INT(result, true);
 }
 
+void test_hlt_test() {
+    TEST_ASSERT_EQUAL_INT(0, get_address_bus());
+    TEST_ASSERT_EQUAL_INT(0, get_data_bus());
+    hlt();
+    TEST_ASSERT_EQUAL_INT(0xFF, get_address_bus());
+    TEST_ASSERT_EQUAL_INT(0xFF, get_data_bus());
+}
+
 void run_logical_instruction_test() {
     printf("Logical instruction:\n");
     RUN_TEST(test_mov_test);
@@ -370,4 +378,5 @@ void run_logical_instruction_test() {
     RUN_TEST(test_sphl_test);
     RUN_TEST(test_in_test);
     RUN_TEST(test_out_test);
+    RUN_TEST(test_hlt_test);
 }

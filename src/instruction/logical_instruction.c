@@ -1,5 +1,4 @@
 #include "instruction/logical_instruction.h"
-#include "bus_controller.h"
 #include "instruction/instruction.h"
 #include "io/io_controller.h"
 #include "memory/memory_controller.h"
@@ -122,7 +121,7 @@ bool sta(int machine_cycle, uint16_t *temporary_address) {
         break;
     case 2:
         set_memory_read(false);
-        set_write_output(true); // TODO CHECK IF YOU CAN TRIGGER DATA BUS USING THIS INSTEAD OF BUS CONTROLLER
+        set_write_output(true);
         write_memory_address(machine_cycle, temporary_address);
         break;
     case 3:
@@ -304,7 +303,6 @@ bool in(uint8_t machine_cycle) {
         break;
     case 1:
         set_device_input(true);
-        // TODO MODIFY DATA LIGHTS AND PC
         set_register(REG_A, read_port(read_from_memory(get_program_counter())));
         break;
     case 2:
@@ -325,7 +323,6 @@ bool out(uint8_t machine_cycle) {
         set_device_output(true);
         set_write_output(true);
         write_port(read_from_memory(get_program_counter()), get_register(REG_A));
-        // TODO MODIFY DATA LIGHTS AND PC
         break;
     case 2:
         set_device_output(false);
@@ -338,7 +335,6 @@ bool out(uint8_t machine_cycle) {
 }
 
 bool hlt() {
-    // TODO MODIFY LIGHTS
     set_system_halt(true);
     return true;
 }
