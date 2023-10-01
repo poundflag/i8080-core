@@ -1,5 +1,5 @@
-#ifndef _UTILS_H_
-#define _UTILS_H_
+#ifndef _CLI_HANDLER_H_
+#define _CLI_HANDLER_H_
 
 typedef enum { STEPPING, INDEFINITE } Running_Mode;
 
@@ -8,4 +8,4 @@ extern int steps_to_run;
 
 void process_arguments(int argc, char **argv);
 
-#endif // _UTILS_H_
+#endif // _CLI_HANDLER_H_

@@ -39,10 +39,10 @@ void run(int steps);
  * This method requires additional setup. For single instructions, consider using @ref run(int steps).
  *
  * @param[in, out] machine_cycle The current machine cycle of the instruction to execute.
- * @param[out] temporary_address A cache for temporary addresses saved between hardware cycles (e.g., PUSH instruction).
- * @todo Add opcode parameter
+ * @param[in, out] opcode The current opcode to execute
+ *
  */
-void step(int *machine_cycle, uint16_t *temporary_address);
+void step(int *machine_cycle, uint8_t *opcode);
 
 /**
  * @brief Loads a binary file into the system's memory.

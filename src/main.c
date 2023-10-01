@@ -1,6 +1,6 @@
 #include "cpu.h"
 #include "io/io_controller.h"
-#include "utils.h"
+#include "utils/cli_handler.h"
 #include <stdio.h>
 #include <string.h>
 

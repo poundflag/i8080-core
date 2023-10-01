@@ -1,5 +1,5 @@
 #include "unity.h"
-#include "utils.h"
+#include "utils/cli_handler.h"
 #include <stdio.h>
 
 void test_return_error_on_invalid_args() {
@@ -163,7 +163,7 @@ void test_the_help_list() {
 }
 
 void run_utils_test() {
-    printf("Utils:\n");
+    printf("CLI Handler:\n");
     RUN_TEST(test_return_error_on_invalid_args);
     RUN_TEST(test_process_file_input);
     RUN_TEST(test_process_file_output);
