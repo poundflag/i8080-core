@@ -34,12 +34,12 @@ void interceptBDOSCall(char *output) {
 
 void test_read_file_and_load() {
     load_file("rom/test_file", 0);
-    TEST_ASSERT_EQUAL_INT(read_from_memory(0), 1);
-    TEST_ASSERT_EQUAL_INT(read_from_memory(1), 2);
-    TEST_ASSERT_EQUAL_INT(read_from_memory(2), 3);
-    TEST_ASSERT_EQUAL_INT(read_from_memory(3), 4);
-    TEST_ASSERT_EQUAL_INT(read_from_memory(4), 5);
-    TEST_ASSERT_EQUAL_INT(read_from_memory(5), 0);
+    TEST_ASSERT_EQUAL_INT(1, read_from_memory(0));
+    TEST_ASSERT_EQUAL_INT(2, read_from_memory(1));
+    TEST_ASSERT_EQUAL_INT(3, read_from_memory(2));
+    TEST_ASSERT_EQUAL_INT(4, read_from_memory(3));
+    TEST_ASSERT_EQUAL_INT(5, read_from_memory(4));
+    TEST_ASSERT_EQUAL_INT(0, read_from_memory(5));
 }
 
 void check_if_the_system_successfully_halts() {

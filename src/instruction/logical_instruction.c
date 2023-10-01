@@ -35,6 +35,27 @@ void read_memory_address(int machine_cycle, uint16_t *temporary_address) {
     }
 }
 
+// Writes a memory address and then sets the program counter to it
+void write_memory_address(int machine_cycle, uint16_t *temporary_address) {
+    switch (machine_cycle) {
+    case 0:
+        increment_program_counter();
+        *temporary_address = read_from_memory(get_program_counter());
+        break;
+    case 1:
+        increment_program_counter();
+        *temporary_address |= read_from_memory(get_program_counter()) << 8;
+        break;
+    case 2:
+        swap_program_counter_and_value(temporary_address);
+        break;
+    default:
+        fprintf(stderr, "Wrong machine cycle when writing memory address in "
+                        "logical instruction\n");
+        break;
+    }
+}
+
 bool mov(Register destination, Register source) {
     set_register(destination, get_register(source));
     return true;
@@ -96,12 +117,12 @@ bool sta(int machine_cycle, uint16_t *temporary_address) {
     switch (machine_cycle) {
     case 0:
     case 1:
-        read_memory_address(machine_cycle, temporary_address);
+        write_memory_address(machine_cycle, temporary_address);
         break;
     case 2:
         set_memory_read(false);
         set_write_output(true);
-        read_memory_address(machine_cycle, temporary_address);
+        write_memory_address(machine_cycle, temporary_address);
         break;
     case 3:
         set_memory_read(true);
@@ -142,12 +163,12 @@ bool shld(int machine_cycle, uint16_t *temporary_address) {
     switch (machine_cycle) {
     case 0:
     case 1:
-        read_memory_address(machine_cycle, temporary_address);
+        write_memory_address(machine_cycle, temporary_address);
         break;
     case 2:
         set_memory_read(false);
         set_write_output(true);
-        read_memory_address(machine_cycle, temporary_address);
+        write_memory_address(machine_cycle, temporary_address);
         break;
     case 3:
         write_to_memory(get_program_counter(), get_register(REG_L));
@@ -275,14 +296,45 @@ bool sphl() {
     return true;
 }
 
-bool in(uint8_t port_number) {
-    set_register(REG_A, read_port(port_number));
-    return true;
+bool in(uint8_t machine_cycle) {
+    switch (machine_cycle) {
+    case 0:
+        increment_program_counter();
+        break;
+    case 1:
+        set_device_input(true);
+        set_register(REG_A, read_port(read_from_memory(get_program_counter())));
+        break;
+    case 2:
+        set_device_input(false);
+        return true;
+    default:
+        break;
+    }
+    return false;
 }
 
-bool out(uint8_t port_number) {
-    write_port(REG_A, get_register(REG_A));
-    return true;
+bool out(uint8_t machine_cycle) {
+    switch (machine_cycle) {
+    case 0:
+        increment_program_counter();
+        break;
+    case 1:
+        set_device_output(true);
+        set_write_output(true);
+        write_port(read_from_memory(get_program_counter()), get_register(REG_A));
+        break;
+    case 2:
+        set_device_output(false);
+        set_write_output(false);
+        return true;
+    default:
+        break;
+    }
+    return false;
 }
 
-bool hlt() { return true; }
+bool hlt() {
+    set_system_halt(true);
+    return true;
+}

@@ -1,4 +1,4 @@
-#include "file_io.h"
+#include "utils/file_io.h"
 #include <stdio.h>
 
 FILE *open_file_binary_mode(char *file_path) {

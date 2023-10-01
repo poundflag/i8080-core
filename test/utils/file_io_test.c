@@ -1,4 +1,4 @@
-#include "../include/file_io.h"
+#include "../include/utils/file_io.h"
 #include "unity.h"
 
 void read_a_file() {
@@ -18,7 +18,7 @@ void read_a_file_that_doesnt_exist() {
     File_Response file_response = read_binary_from_file("rom/doesnt_exist_file");
 
     TEST_ASSERT_EQUAL_size_t(-1, file_response.file_size);
-    TEST_ASSERT(file_response.file_data == NULL);
+    TEST_ASSERT_NULL(file_response.file_data);
 }
 
 void write_a_string_to_a_file() {

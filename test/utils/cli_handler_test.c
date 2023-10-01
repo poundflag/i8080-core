@@ -1,5 +1,5 @@
 #include "unity.h"
-#include "utils.h"
+#include "utils/cli_handler.h"
 #include <stdio.h>
 
 void test_return_error_on_invalid_args() {
@@ -47,7 +47,7 @@ void test_process_file_input() {
     stdout = original_stdout;
 
     // Compare the output with the expected value
-    TEST_ASSERT_EQUAL_STRING(output, "Loading file: rom/8080EXER.COM\n");
+    TEST_ASSERT_EQUAL_STRING("Loading file: rom/8080EXER.COM\n", output);
 }
 
 void test_process_file_output() {
@@ -73,7 +73,7 @@ void test_process_file_output() {
     remove("Hello.txt");
 
     // Compare the output with the expected value
-    TEST_ASSERT_EQUAL_STRING(output, "Set Output file: Hello.txt\n");
+    TEST_ASSERT_EQUAL_STRING("Set Output file: Hello.txt\n", output);
 }
 
 void test_step_the_cpu_finite() {
@@ -96,9 +96,9 @@ void test_step_the_cpu_finite() {
     stdout = original_stdout;
 
     // Compare the output with the expected value
-    TEST_ASSERT_EQUAL_STRING(output, "Running cpu for 10 steps\n");
-    TEST_ASSERT_EQUAL_INT(current_running_mode, STEPPING);
-    TEST_ASSERT_EQUAL_INT(steps_to_run, 10);
+    TEST_ASSERT_EQUAL_STRING("Running cpu for 10 steps\n", output);
+    TEST_ASSERT_EQUAL_INT(STEPPING, current_running_mode);
+    TEST_ASSERT_EQUAL_INT(10, steps_to_run);
 }
 
 void test_step_the_cpu_infinite() {
@@ -121,9 +121,9 @@ void test_step_the_cpu_infinite() {
     stdout = original_stdout;
 
     // Compare the output with the expected value
-    TEST_ASSERT_EQUAL_STRING(output, "Running cpu infinite\n");
-    TEST_ASSERT_EQUAL_INT(current_running_mode, INDEFINITE);
-    TEST_ASSERT_EQUAL_INT(steps_to_run, -1);
+    TEST_ASSERT_EQUAL_STRING("Running cpu infinite\n", output);
+    TEST_ASSERT_EQUAL_INT(INDEFINITE, current_running_mode);
+    TEST_ASSERT_EQUAL_INT(-1, steps_to_run);
 }
 
 void test_the_help_list() {
@@ -146,23 +146,24 @@ void test_the_help_list() {
     stdout = original_stdout;
 
     // Compare the output with the expected value
-    TEST_ASSERT_EQUAL_STRING(output, " _   ___    ___    ___    ___                                \n"
-                                     "(_) / _ \\  / _ \\  / _ \\  / _ \\                               \n"
-                                     " _ | (_) || | | || (_) || | | | ______  ___  ___   _ __  ___ \n"
-                                     "| | > _ < | | | | > _ < | | | ||______|/ __|/ _ \\ | '__|/ _ \\\n"
-                                     "| || (_) || |_| || (_) || |_| |       | (__| (_) || |  |  __/\n"
-                                     "|_| \\___/  \\___/  \\___/  \\___/         \\___|\\___/ |_|   "
-                                     "\\___|\n\n"
-                                     "Call: i8080-core [Arguments]\nOptions:\n"
-                                     "\t-i <Path>\tInput file to be loaded in memory\n"
-                                     "\t-o <Path>\tOutput file for the debug information from the cpu\n"
-                                     "\t-s <number>\tSteps for the cpu to take in machine cycles. \n\t\t\tAn "
-                                     "input of -1 is an infinite run.\n"
-                                     "\t--help\t\tPrint the list of available commands\n");
+    TEST_ASSERT_EQUAL_STRING(" _   ___    ___    ___    ___                                \n"
+                             "(_) / _ \\  / _ \\  / _ \\  / _ \\                               \n"
+                             " _ | (_) || | | || (_) || | | | ______  ___  ___   _ __  ___ \n"
+                             "| | > _ < | | | | > _ < | | | ||______|/ __|/ _ \\ | '__|/ _ \\\n"
+                             "| || (_) || |_| || (_) || |_| |       | (__| (_) || |  |  __/\n"
+                             "|_| \\___/  \\___/  \\___/  \\___/         \\___|\\___/ |_|   "
+                             "\\___|\n\n"
+                             "Call: i8080-core [Arguments]\nOptions:\n"
+                             "\t-i <Path>\tInput file to be loaded in memory\n"
+                             "\t-o <Path>\tOutput file for the debug information from the cpu\n"
+                             "\t-s <number>\tSteps for the cpu to take in machine cycles. \n\t\t\tAn "
+                             "input of -1 is an infinite run.\n"
+                             "\t--help\t\tPrint the list of available commands\n",
+                             output);
 }
 
 void run_utils_test() {
-    printf("Utils:\n");
+    printf("CLI Handler:\n");
     RUN_TEST(test_return_error_on_invalid_args);
     RUN_TEST(test_process_file_input);
     RUN_TEST(test_process_file_output);

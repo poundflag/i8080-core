@@ -6,7 +6,7 @@
 
 uint8_t io_device_stub(uint8_t port_address, uint8_t value, ACCESS_MODE access_mode) {
     set_register(REG_B, 0xEE);
-    return 0xFF;
+    return 0xFE;
 }
 
 void setUp(void) {
@@ -30,7 +30,7 @@ void setUp(void) {
     set_register(REG_L, 0);
     set_register(REG_F, 2);
 
-    set_input_device(0, io_device_stub);
+    set_input_device(0x20, io_device_stub);
 }
 void tearDown(void) { output_file = false; }
 
@@ -50,7 +50,6 @@ void run_io_controller_test();
 
 int main(void) {
     UNITY_BEGIN();
-    run_status_service_test();
     run_utils_test();
     run_flag_register_test();
     run_stack_test();
@@ -62,6 +61,7 @@ int main(void) {
     run_instruction_test();
     run_logical_instruction_test();
     run_file_io_test();
+    run_status_service_test();
     run_cpu_test();
     return UNITY_END();
 }

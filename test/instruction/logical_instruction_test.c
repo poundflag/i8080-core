@@ -1,3 +1,4 @@
+#include "bus_controller.h"
 #include "instruction/instruction.h"
 #include "instruction/logical_instruction.h"
 #include "memory/memory_controller.h"
@@ -25,7 +26,6 @@ void test_mvi_test() {
 
     result = mvi(REG_B, 1);
     TEST_ASSERT_EQUAL_INT(get_register(REG_B), 50);
-    TEST_ASSERT_EQUAL_INT(get_register(REG_B), read_from_memory(1));
     TEST_ASSERT_EQUAL_INT(result, true);
 }
 
@@ -37,11 +37,13 @@ void test_lxi_test() {
 
     result = lxi(PAIR_B, 0);
     TEST_ASSERT_EQUAL_INT(get_program_counter(), 1);
+    TEST_ASSERT_EQUAL_INT(get_data_bus(), 0x12);
     TEST_ASSERT_EQUAL_INT(get_register_pair(PAIR_B), 0);
     TEST_ASSERT_EQUAL_INT(result, 0);
 
     result = lxi(PAIR_B, 1);
     TEST_ASSERT_EQUAL_INT(get_program_counter(), 2);
+    TEST_ASSERT_EQUAL_INT(get_data_bus(), 0x34);
     TEST_ASSERT_EQUAL_INT(get_register_pair(PAIR_B), 0x0012);
     TEST_ASSERT_EQUAL_INT(result, 0);
 
@@ -60,16 +62,19 @@ void test_lda_test() {
 
     result = lda(0, &temporary_address);
     TEST_ASSERT_EQUAL_INT(get_program_counter(), 1);
+    TEST_ASSERT_EQUAL_INT(get_data_bus(), 0x10);
     TEST_ASSERT_EQUAL_INT(get_register(REG_A), 0);
     TEST_ASSERT_EQUAL_INT(result, 0);
 
     result = lda(1, &temporary_address);
     TEST_ASSERT_EQUAL_INT(get_program_counter(), 2);
+    TEST_ASSERT_EQUAL_INT(get_data_bus(), 0x00);
     TEST_ASSERT_EQUAL_INT(get_register(REG_A), 0);
     TEST_ASSERT_EQUAL_INT(result, 0);
 
     result = lda(2, &temporary_address);
     TEST_ASSERT_EQUAL_INT(get_program_counter(), 0x0010);
+    TEST_ASSERT_EQUAL_INT(get_data_bus(), 55);
     TEST_ASSERT_EQUAL_INT(temporary_address, 2);
     TEST_ASSERT_EQUAL_INT(get_register(REG_A), 0);
     TEST_ASSERT_EQUAL_INT(result, 0);
@@ -90,16 +95,19 @@ void test_sta_test() {
 
     result = sta(0, &temporary_address);
     TEST_ASSERT_EQUAL_INT(get_program_counter(), 1);
+    TEST_ASSERT_EQUAL_INT(get_data_bus(), 0x10);
     TEST_ASSERT_EQUAL_INT(read_from_memory(0x0010), 0);
     TEST_ASSERT_EQUAL_INT(result, 0);
 
     result = sta(1, &temporary_address);
     TEST_ASSERT_EQUAL_INT(get_program_counter(), 2);
+    TEST_ASSERT_EQUAL_INT(get_data_bus(), 0x00);
     TEST_ASSERT_EQUAL_INT(read_from_memory(0x0010), 0);
     TEST_ASSERT_EQUAL_INT(result, 0);
 
     result = sta(2, &temporary_address);
     TEST_ASSERT_EQUAL_INT(get_program_counter(), 0x0010);
+    TEST_ASSERT_EQUAL_INT(get_data_bus(), 0xFF);
     TEST_ASSERT_EQUAL_INT(temporary_address, 2);
     TEST_ASSERT_EQUAL_INT(read_from_memory(0x0010), 0);
     TEST_ASSERT_EQUAL_INT(result, 0);
@@ -108,6 +116,7 @@ void test_sta_test() {
     TEST_ASSERT_EQUAL_INT(get_register(REG_A), 55);
     TEST_ASSERT_EQUAL_INT(read_from_memory(0x0010), 55);
     TEST_ASSERT_EQUAL_INT(get_program_counter(), 2);
+    TEST_ASSERT_EQUAL_INT(get_data_bus(), 0);
     TEST_ASSERT_EQUAL_INT(result, 1);
 }
 
@@ -122,27 +131,32 @@ void test_lhld_test() {
     result = lhld(0, &temporary_address);
     TEST_ASSERT_EQUAL_INT(result, false);
     TEST_ASSERT_EQUAL_INT(get_program_counter(), 1);
+    TEST_ASSERT_EQUAL_INT(get_data_bus(), 0x10);
     TEST_ASSERT_EQUAL_INT(get_register_pair(PAIR_H), 0);
 
     result = lhld(1, &temporary_address);
     TEST_ASSERT_EQUAL_INT(result, false);
     TEST_ASSERT_EQUAL_INT(get_program_counter(), 2);
+    TEST_ASSERT_EQUAL_INT(get_data_bus(), 0x00);
     TEST_ASSERT_EQUAL_INT(get_register_pair(PAIR_H), 0);
 
     result = lhld(2, &temporary_address);
     TEST_ASSERT_EQUAL_INT(result, false);
     TEST_ASSERT_EQUAL_INT(get_program_counter(), 0x0010);
+    TEST_ASSERT_EQUAL_INT(get_data_bus(), 0x12);
     TEST_ASSERT_EQUAL_INT(temporary_address, 2);
     TEST_ASSERT_EQUAL_INT(get_register_pair(PAIR_H), 0);
 
     result = lhld(3, &temporary_address);
     TEST_ASSERT_EQUAL_INT(result, false);
     TEST_ASSERT_EQUAL_INT(get_program_counter(), 0x0011);
+    TEST_ASSERT_EQUAL_INT(get_data_bus(), 0x34);
     TEST_ASSERT_EQUAL_INT(temporary_address, 2);
     TEST_ASSERT_EQUAL_INT(get_register_pair(PAIR_H), 0x0012);
 
     result = lhld(4, &temporary_address);
     TEST_ASSERT_EQUAL_INT(result, true);
+    TEST_ASSERT_EQUAL_INT(get_data_bus(), 0);
     TEST_ASSERT_EQUAL_INT(get_program_counter(), 2);
     TEST_ASSERT_EQUAL_INT(get_register_pair(PAIR_H), 0x3412);
 }
@@ -157,15 +171,18 @@ void test_shld_test() {
     result = shld(0, &temporary_address);
     TEST_ASSERT_EQUAL_INT(result, false);
     TEST_ASSERT_EQUAL_INT(get_program_counter(), 1);
+    TEST_ASSERT_EQUAL_INT(get_data_bus(), 0x10);
 
     result = shld(1, &temporary_address);
     TEST_ASSERT_EQUAL_INT(result, false);
     TEST_ASSERT_EQUAL_INT(get_program_counter(), 2);
+    TEST_ASSERT_EQUAL_INT(get_data_bus(), 0x00);
 
     result = shld(2, &temporary_address);
     TEST_ASSERT_EQUAL_INT(result, false);
     TEST_ASSERT_EQUAL_INT(get_program_counter(), 0x0010);
     TEST_ASSERT_EQUAL_INT(temporary_address, 2);
+    TEST_ASSERT_EQUAL_INT(get_data_bus(), 0xFF);
 
     result = shld(3, &temporary_address);
     TEST_ASSERT_EQUAL_INT(result, false);
@@ -173,12 +190,14 @@ void test_shld_test() {
     TEST_ASSERT_EQUAL_INT(temporary_address, 2);
     TEST_ASSERT_EQUAL_INT(read_from_memory(0x0010), 0x34);
     TEST_ASSERT_EQUAL_INT(read_from_memory(0x0011), 0x00);
+    TEST_ASSERT_EQUAL_INT(get_data_bus(), 0xFF);
 
     result = shld(4, &temporary_address);
     TEST_ASSERT_EQUAL_INT(result, true);
     TEST_ASSERT_EQUAL_INT(get_program_counter(), 2);
     TEST_ASSERT_EQUAL_INT(read_from_memory(0x0010), 0x34);
     TEST_ASSERT_EQUAL_INT(read_from_memory(0x0011), 0x12);
+    TEST_ASSERT_EQUAL_INT(get_data_bus(), 0);
 }
 
 void test_ldax_test() {
@@ -190,11 +209,13 @@ void test_ldax_test() {
     result = ldax(PAIR_B, 0, &temporary_address);
     TEST_ASSERT_EQUAL_INT(result, false);
     TEST_ASSERT_EQUAL_INT(get_program_counter(), 0x0010);
+    TEST_ASSERT_EQUAL_INT(get_data_bus(), 74);
     TEST_ASSERT_EQUAL_INT(get_register(REG_A), 0);
 
     result = ldax(PAIR_B, 1, &temporary_address);
     TEST_ASSERT_EQUAL_INT(result, true);
     TEST_ASSERT_EQUAL_INT(get_program_counter(), 0);
+    TEST_ASSERT_EQUAL_INT(get_data_bus(), 0);
     TEST_ASSERT_EQUAL_INT(get_register(REG_A), 74);
 }
 
@@ -208,11 +229,13 @@ void test_stax_test() {
     TEST_ASSERT_EQUAL_INT(result, false);
     TEST_ASSERT_EQUAL_INT(get_program_counter(), 0x0010);
     TEST_ASSERT_EQUAL_INT(read_from_memory(0x0010), 0);
+    TEST_ASSERT_EQUAL_INT(get_data_bus(), 0xFF);
 
     result = stax(PAIR_B, 1, &temporary_address);
     TEST_ASSERT_EQUAL_INT(result, true);
     TEST_ASSERT_EQUAL_INT(get_program_counter(), 0);
     TEST_ASSERT_EQUAL_INT(read_from_memory(0x0010), 74);
+    TEST_ASSERT_EQUAL_INT(get_data_bus(), 0);
 }
 
 void test_xchg_test() {
@@ -247,15 +270,18 @@ void test_push_test() {
     bool result = push(PAIR_B, 0, &temporary_address);
     TEST_ASSERT_EQUAL_INT(result, false);
     TEST_ASSERT_EQUAL_INT(get_program_counter(), 9);
+    TEST_ASSERT_EQUAL_INT(get_data_bus(), 0xFF);
 
     result = push(PAIR_B, 1, &temporary_address);
     TEST_ASSERT_EQUAL_INT(result, false);
     TEST_ASSERT_EQUAL_INT(get_program_counter(), 8);
+    TEST_ASSERT_EQUAL_INT(get_data_bus(), 0xFF);
 
     result = push(PAIR_B, 2, &temporary_address);
     TEST_ASSERT_EQUAL_INT(result, true);
     TEST_ASSERT_EQUAL_INT(get_program_counter(), 0);
     TEST_ASSERT_EQUAL_INT(pull_word(), 0x1234);
+    TEST_ASSERT_EQUAL_INT(get_data_bus(), 0);
 }
 
 void test_pop_test() {
@@ -265,15 +291,15 @@ void test_pop_test() {
 
     bool result = pop(PAIR_B, 0, &temporary_address);
     TEST_ASSERT_EQUAL_INT(result, false);
-    TEST_ASSERT_EQUAL_INT(get_program_counter(), 7);
+    TEST_ASSERT_EQUAL_INT(get_address_bus(), 7);
 
     result = pop(PAIR_B, 1, &temporary_address);
     TEST_ASSERT_EQUAL_INT(result, false);
-    TEST_ASSERT_EQUAL_INT(get_program_counter(), 6);
+    TEST_ASSERT_EQUAL_INT(get_address_bus(), 6);
 
     result = pop(PAIR_B, 2, &temporary_address);
     TEST_ASSERT_EQUAL_INT(result, true);
-    TEST_ASSERT_EQUAL_INT(get_program_counter(), 0);
+    TEST_ASSERT_EQUAL_INT(get_address_bus(), 0);
     TEST_ASSERT_EQUAL_INT(get_register_pair(PAIR_B), 0x1234);
 }
 
@@ -296,16 +322,41 @@ void test_sphl_test() {
 }
 
 void test_in_test() {
+    write_to_memory(1, 0x20);
+
     bool result = in(0);
-    TEST_ASSERT_EQUAL_INT(0xFF, get_register(REG_A));
+    TEST_ASSERT_EQUAL_INT(1, get_program_counter());
+
+    result = in(1);
+    TEST_ASSERT_EQUAL_INT(0xFE, get_register(REG_A));
+    TEST_ASSERT_EQUAL_INT(0xFE, get_data_bus());
+    TEST_ASSERT_EQUAL_INT(0x2020, get_address_bus());
+
+    result = in(2);
     TEST_ASSERT_EQUAL_INT(result, true);
 }
 
 void test_out_test() {
+    write_to_memory(1, 0x20);
+
     bool result = out(0);
-    // The stub implementation of this specific io device sets the register b to 0xEE to validate access.
+    TEST_ASSERT_EQUAL_INT(1, get_program_counter());
+
+    result = out(1);
     TEST_ASSERT_EQUAL_INT(0xEE, get_register(REG_B));
+    TEST_ASSERT_EQUAL_INT(0xFF, get_data_bus());
+    TEST_ASSERT_EQUAL_INT(0x2020, get_address_bus());
+
+    result = out(2);
     TEST_ASSERT_EQUAL_INT(result, true);
+}
+
+void test_hlt_test() {
+    TEST_ASSERT_EQUAL_INT(0, get_address_bus());
+    TEST_ASSERT_EQUAL_INT(0, get_data_bus());
+    hlt();
+    TEST_ASSERT_EQUAL_INT(0xFF, get_address_bus());
+    TEST_ASSERT_EQUAL_INT(0xFF, get_data_bus());
 }
 
 void run_logical_instruction_test() {
@@ -327,4 +378,5 @@ void run_logical_instruction_test() {
     RUN_TEST(test_sphl_test);
     RUN_TEST(test_in_test);
     RUN_TEST(test_out_test);
+    RUN_TEST(test_hlt_test);
 }

@@ -39,10 +39,10 @@ void run(int steps);
  * This method requires additional setup. For single instructions, consider using @ref run(int steps).
  *
  * @param[in, out] machine_cycle The current machine cycle of the instruction to execute.
- * @param[out] temporary_address A cache for temporary addresses saved between hardware cycles (e.g., PUSH instruction).
- * @todo Add opcode parameter
+ * @param[in, out] opcode The current opcode to execute
+ *
  */
-void step(int *machine_cycle, uint16_t *temporary_address);
+void step(int *machine_cycle, uint8_t *opcode);
 
 /**
  * @brief Loads a binary file into the system's memory.
@@ -52,19 +52,5 @@ void step(int *machine_cycle, uint16_t *temporary_address);
  *                           For example, an offset of 10 starts writing at address 10.
  */
 void load_file(char *file_path, uint16_t address_offset);
-
-/**
- * @brief Reports whether the system has executed a HLT instruction and halted.
- *
- * @return If true, the system has halted and can't execute further instructions.
- */
-bool has_system_halted();
-
-/**
- * @brief Manually sets the system's halted state.
- *
- * @param[in] system_halt If true, the system is halted.
- */
-void set_system_halt(bool system_halt);
 
 #endif //_CPU_H_

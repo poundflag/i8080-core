@@ -1,4 +1,5 @@
 #include "instruction/arithmetic_instruction.h"
+#include "bus_controller.h"
 #include "memory/memory_controller.h"
 #include "register/flag_register.h"
 #include <stdio.h>
@@ -234,7 +235,6 @@ bool cpi(int machine_cycle) {
         break;
     case 1:
         alu_sub(get_register(REG_A), read_from_memory(get_program_counter()), false);
-        // printf("Instruction done\n");
         return true;
     }
     return false;
