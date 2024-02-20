@@ -5,5 +5,6 @@
     "io_controller.h": "c",
     "stack.h": "c",
     "file_io.h": "c"
-  }
+  },
+  "cmake.configureOnOpen": false
 }

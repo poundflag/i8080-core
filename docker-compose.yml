@@ -1,8 +1,0 @@
-services:
-  dev:
-    container_name: i8080-core-dev
-    build:
-      dockerfile: Dockerfile.dev
-    volumes:
-      - .:/app:rw
-    command: tail -f /dev/null
